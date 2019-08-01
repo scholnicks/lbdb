@@ -1,0 +1,75 @@
+package net.scholnick.lbdb.gui;
+
+import net.scholnick.lbdb.gui.author.AuthorSelectionEvent;
+import net.scholnick.lbdb.gui.author.AuthorSelectionListener;
+import net.scholnick.lbdb.gui.title.TitleSelectionEvent;
+import net.scholnick.lbdb.gui.title.TitleSelectionListener;
+
+import javax.swing.*;
+import javax.swing.text.JTextComponent;
+import java.awt.*;
+
+public abstract class BasePanel extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8974137108586567590L;
+
+	protected void buildGUI() {
+		setLayout(new BorderLayout());
+
+		add(getInputPanel(), BorderLayout.CENTER);
+		add(getButtonPanel(), BorderLayout.SOUTH);
+	}
+
+	protected abstract JPanel getInputPanel();
+
+	protected abstract JPanel getButtonPanel();
+
+	protected void reload() {
+		validate();
+		repaint();
+	}
+	
+	public final void addTitleSelectionListener(TitleSelectionListener listener) {
+		listenerList.add(TitleSelectionListener.class, listener);
+	}
+
+	public final void removeTitleSelectionListener(TitleSelectionListener listener) {
+		listenerList.remove(TitleSelectionListener.class, listener);
+	}
+
+	protected final void fireTitleSelection(TitleSelectionEvent event) {
+		Object[] listeners = listenerList.getListenerList();
+
+		for (int i = listeners.length - 2; i >= 0; i -= 2) {
+			if (listeners[i] == TitleSelectionListener.class) {
+				((TitleSelectionListener) listeners[i + 1]).select(event);
+			}
+		}
+	}
+
+	public final void addAuthorSelectionListener(AuthorSelectionListener listener) {
+		listenerList.add(AuthorSelectionListener.class, listener);
+	}
+
+	public final void removeAuthorSelectionListener(AuthorSelectionListener listener) {
+		listenerList.remove(AuthorSelectionListener.class, listener);
+	}
+
+	protected final void fireAuthorSelection(AuthorSelectionEvent event) {
+		Object[] listeners = listenerList.getListenerList();
+
+		for (int i = listeners.length - 2; i >= 0; i -= 2) {
+			if (listeners[i] == AuthorSelectionListener.class) {
+				((AuthorSelectionListener) listeners[i + 1]).select(event);
+			}
+		}
+	}
+
+	protected final void loadData(JTextComponent field, String value) {
+		if (value != null) {
+			field.setText(value);
+		}
+	}
+}

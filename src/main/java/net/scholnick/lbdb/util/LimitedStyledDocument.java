@@ -1,0 +1,30 @@
+package net.scholnick.lbdb.util;
+
+import javax.swing.text.*;
+import java.awt.Toolkit;
+
+public final class LimitedStyledDocument extends DefaultStyledDocument {
+	private final int maxCharacters;
+
+	public LimitedStyledDocument(int maxChars) {
+		maxCharacters = maxChars;
+	}
+
+	@Override
+	public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
+		// This rejects the entire insertion if it would make
+		// the contents too long. Another option would be
+		// to truncate the inserted string so the contents
+		// would be exactly maxCharacters in length.
+		if ((getLength() + str.length()) <= maxCharacters)
+			super.insertString(offs, str, a);
+		else
+			Toolkit.getDefaultToolkit().beep();
+	}
+
+	public int getMaxCharacters() {
+		return maxCharacters;
+	}
+
+	private static final long serialVersionUID = -5964395858044666011L;
+}
