@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+
+<dict>
+    <key>CFBundleName</key>
+        <string>Laurel Book Database</string>
+    <key>CFBundleDisplayName</key>
+        <string>>Laurel Book Database</string>
+    <key>CFBundleIdentifier</key>
+        <string>net.scholnick.lbdb</string>
+    <key>CFBundleVersion</key>
+        <string>4.4.3</string>
+    <key>CFBundlePackageType</key>
+        <string>APPL</string>
+    <key>CFBundleSignature</key>
+        <string>????</string>
+    <key>CFBundleExecutable</key>
+        <string>lbdb.sh</string>
+    <key>CFBundleShortVersionString</key>
+        <string>4.3</string>
+    <key>CFBundleIconFile</key>
+        <string>book_case.icns</string>
+    <key>NSPrincipalClass</key>
+        <string>NSApplication</string>
+</dict>
+</plist>
