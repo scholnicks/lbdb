@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
+@Deprecated
 public final class CacheManager {
 	public static void clear() {
 		try {

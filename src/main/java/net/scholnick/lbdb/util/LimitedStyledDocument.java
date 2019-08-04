@@ -25,6 +25,4 @@ public final class LimitedStyledDocument extends DefaultStyledDocument {
 	public int getMaxCharacters() {
 		return maxCharacters;
 	}
-
-	private static final long serialVersionUID = -5964395858044666011L;
 }

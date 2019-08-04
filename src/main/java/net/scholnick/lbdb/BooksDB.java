@@ -49,7 +49,7 @@ public final class BooksDB extends JFrame {
 		this.titleMaintenance.setMessageListener(text -> getNotificationLabel().setText(text));
 	}
 
-	public void init() {
+	void init() {
 		try {
 			setSize(WINDOW_SIZE);
 			center(this);
@@ -230,6 +230,4 @@ public final class BooksDB extends JFrame {
 	public Dimension getMaximumSize() {
 		return WINDOW_SIZE;
 	}
-
-	private static final long serialVersionUID = -9127790385127242508L;
 }

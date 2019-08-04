@@ -1,32 +1,17 @@
 package net.scholnick.lbdb.util;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Locale;
 import java.util.Objects;
-import java.util.Set;
 
-/**
- * @author steve
- */
 public final class NullSafe {
-	private NullSafe() {
-	}
+	private NullSafe() {}
 
-	/** Returns if the String is empty */
 	public static boolean isEmpty(String s) {
-		if (s == null)
-			return true;
-
+		if (s == null) return true;
 		return s.trim().length() == 0;
 	}
 
-	/** Returns an empty String as null. */
 	public static String asNull(String s) {
-		if (isEmpty(s))
-			return null;
-
-		return s;
+		return isEmpty(s) ? null : s;
 	}
 
 	public static String concatenate(String s1, String s2, String s3) {
@@ -38,9 +23,7 @@ public final class NullSafe {
 	}
 
 	public static String notNullSubst(String s, boolean trim) {
-		if (s == null)
-			return "";
-
+		if (s == null) return "";
 		return trim ? s.trim() : s;
 	}
 
@@ -49,30 +32,20 @@ public final class NullSafe {
 	}
 
 	public static <T extends Comparable<? super T>> int compare(T o1, T o2) {
-		if (o1 == null && o2 == null) 
-			return 0;
-
-		if (o1 != null && o2 == null)
-			return 1;
-
-		if (o1 == null && o2 != null)
-			return -1;
+		if (o1 == null && o2 == null) return 0;
+		if (o1 != null && o2 == null) return 1;
+		if (o1 == null) return -1;
 
 		return o1.compareTo(o2);
 	}
 
 	public static boolean equals(Object o1, Object o2) {
-		if (o1 == null)
-			return false;
-
+		if (o1 == null) return false;
 		return o1.equals(o2);
 	}
 	
 	public static boolean canonicalEquals(String s1, String s2) {
-		if (s1 == null || s2 == null) {
-			return false;
-		}
-		
+		if (s1 == null || s2 == null) return false;
 		return Objects.equals(toCanonical(s1), toCanonical(s2));
 	}
 
@@ -80,18 +53,18 @@ public final class NullSafe {
 		return s == null ? null : s.replaceAll("\\s*","").trim().toLowerCase();
 	}
 	
-	public static boolean toBoolean(String s) {
-		if (s == null) {
-			return false;
-		}
+//	public static boolean toBoolean(String s) {
+//		if (s == null) {
+//			return false;
+//		}
+//
+//		return POSITIVE_VALUES.contains(s.toLowerCase(Locale.getDefault()));
+//	}
 
-		return POSITIVE_VALUES.contains(s.toLowerCase(Locale.getDefault()));
-	}
-
-	private static final Set<String> POSITIVE_VALUES = new HashSet<>(Arrays.asList("1", "true", "yes"));
-
-    public static boolean startsWithIgnoreCase(String str1, String str2) {
-    	if (str1 == null || str2 == null) return false;
-        return str1.toLowerCase().startsWith(str2.toLowerCase());
-    }
+//	private static final Set<String> POSITIVE_VALUES = new HashSet<>(Arrays.asList("1", "true", "yes"));
+//
+//    public static boolean startsWithIgnoreCase(String str1, String str2) {
+//    	if (str1 == null || str2 == null) return false;
+//        return str1.toLowerCase().startsWith(str2.toLowerCase());
+//    }
 }

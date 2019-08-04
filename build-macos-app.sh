@@ -1,17 +1,16 @@
-#!bin/bash
+#!/bin/bash
 
 ./gradlew clean build || exit -1
 
-rm -rf lbdb.app
-mkdir -p lbdb.app/Contents/MacOS lbdb.app/Contents/Resources
+app_directory=build/lbdb.app
 
-cp macos/lbdb.sh        lbdb.app/Contents/MacOS
-cp macos/Info.plist     lbdb.app/Contents
-cp macos/PkgInfo        lbdb.app/Contents
-cp macos/book_case.icns lbdb.app/Contents/Resources
+mkdir -p $app_directory/Contents/MacOS $app_directory/Contents/Resources
 
-cp build/libs/laurel-book-database-*.jar lbdb.app/Contents/Resources
+cp macos/lbdb.sh        $app_directory/Contents/MacOS
+cp macos/Info.plist     $app_directory/Contents
+cp macos/PkgInfo        $app_directory/Contents
+cp macos/book_case.icns $app_directory/Contents/Resources
 
-./gradlew clean
+cp build/libs/laurel-book-database-*.jar $app_directory/Contents/Resources
 
 exit 0
