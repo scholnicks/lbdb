@@ -1,11 +1,17 @@
 package net.scholnick.lbdb.gui;
 
-
-import net.scholnick.lbdb.domain.*;
-import net.scholnick.lbdb.gui.author.*;
-import net.scholnick.lbdb.gui.title.*;
+import net.scholnick.lbdb.domain.Author;
+import net.scholnick.lbdb.domain.Book;
+import net.scholnick.lbdb.domain.Media;
+import net.scholnick.lbdb.gui.author.AuthorSelectionEvent;
+import net.scholnick.lbdb.gui.author.AuthorSelectionPopUp;
+import net.scholnick.lbdb.gui.title.TitleSearchTable;
+import net.scholnick.lbdb.gui.title.TitleSearchTableModel;
+import net.scholnick.lbdb.gui.title.TitleSelectionEvent;
 import net.scholnick.lbdb.service.BookService;
-import net.scholnick.lbdb.util.*;
+import net.scholnick.lbdb.util.GUIUtilities;
+import net.scholnick.lbdb.util.LabelFactory;
+import net.scholnick.lbdb.util.NullSafe;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,7 +44,6 @@ public class SearchPanel extends BasePanel {
 	private Thread searchThread;
 
 	private final SearchAction searchAction;
-	
 	private final BookService bookService;
 
 	@Autowired
@@ -271,8 +276,7 @@ public class SearchPanel extends BasePanel {
 
 	private JTextField getAuthorFirstNameField() {
 		if (authorFirstName == null) {
-			authorFirstName = new TrimmedTextField(20);
-			authorFirstName.setDocument(new LimitedStyledDocument(100));
+			authorFirstName = new TrimmedTextField(20,100);
 			authorFirstName.setToolTipText("First name");
 			authorFirstName.addActionListener(searchAction);
 		}
@@ -281,8 +285,7 @@ public class SearchPanel extends BasePanel {
 
 	private JTextField getAuthorLastNameField() {
 		if (authorLastName == null) {
-			authorLastName = new TrimmedTextField(20);
-			authorLastName.setDocument(new LimitedStyledDocument(100));
+			authorLastName = new TrimmedTextField(20,100);
 			authorLastName.setToolTipText("Last name");
 			authorLastName.addActionListener(searchAction);
 		}
@@ -344,13 +347,7 @@ public class SearchPanel extends BasePanel {
 
 		AuthorSelectionPopUp selection = new AuthorSelectionPopUp(b.getAuthors());
 		selection.setVisible(true);
-
-		if (selection.isApproved()) {
-			return selection.getSelectedAuthor();
-		}
-		else {
-			return null;
-		}
+		return selection.isApproved() ? selection.getSelectedAuthor() : null;
 	}
 
 	private JButton getEditBookButton() {
@@ -371,8 +368,7 @@ public class SearchPanel extends BasePanel {
 
 	private JTextField getTitleField() {
 		if (title == null) {
-			title = new JTextField(20);
-			title.setDocument(new LimitedStyledDocument(100));
+			title = new TrimmedTextField(20,100);
 			title.addActionListener(searchAction);
 		}
 		return title;
@@ -380,8 +376,7 @@ public class SearchPanel extends BasePanel {
 
 	private JTextField getSeriesField() {
 		if (series == null) {
-			series = new JTextField(20);
-			series.setDocument(new LimitedStyledDocument(100));
+			series = new TrimmedTextField(20,100);
 			series.addActionListener(searchAction);
 		}
 		return series;
@@ -391,8 +386,6 @@ public class SearchPanel extends BasePanel {
 	protected JPanel getInputPanel() {
 		return null;
 	}
-
-	private static final long serialVersionUID = 6835258910942672966L;
 
     /** SearchAction is initiated when the user clicks the Search button */
     private class SearchAction extends AbstractAction implements Runnable {
@@ -425,7 +418,5 @@ public class SearchPanel extends BasePanel {
             search();
             searchThread = null;
         }
-
-        private static final long serialVersionUID = 7505766496341980946L;
     }
 }

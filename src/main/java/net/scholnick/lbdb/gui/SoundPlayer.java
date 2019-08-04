@@ -1,16 +1,16 @@
 package net.scholnick.lbdb.gui;
 
+import net.scholnick.lbdb.domain.ApplicationException;
+
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.Line;
 import java.net.URL;
 
-public final class SoundPlayer {
-	public static void playAhh() {
-		new Thread(() -> {
-			playFile(SoundPlayer.class.getClassLoader().getResource("aaaaahhhhh.aif"));
-		}).start();
+final class SoundPlayer {
+ 	static void playAhh() {
+		new Thread(() -> playFile(SoundPlayer.class.getClassLoader().getResource("aaaaahhhhh.aif"))).start();
 	}
 
 	private static void playFile(URL soundURL) {
@@ -23,7 +23,7 @@ public final class SoundPlayer {
 			clip.start();
 		}
 		catch (Throwable t) {
-			//LogManager.error(SoundPlayer.class, t);
+			throw new ApplicationException("Unable to play audio", t);
 		}
 	}
 

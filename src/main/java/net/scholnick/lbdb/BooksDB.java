@@ -21,19 +21,15 @@ import java.awt.event.WindowEvent;
 import static net.scholnick.lbdb.util.GUIUtilities.center;
 import static net.scholnick.lbdb.util.GUIUtilities.showMessageDialog;
 
-/**
- * @author Steve Scholnick
- */
 @Component
 public final class BooksDB extends JFrame {
 	private JTabbedPane tabbedPane;
 
-	private final SearchPanel searchPanel;
-	private final TitleMaintenance titleMaintenance;
+	private final SearchPanel       searchPanel;
+	private final TitleMaintenance  titleMaintenance;
 	private final AuthorMaintenance authorMaintenance;
-
-	private final BookService bookService;
-	private final AuthorService authorService;
+	private final BookService       bookService;
+	private final AuthorService     authorService;
 
 	private static final Dimension WINDOW_SIZE = new Dimension(900, 600);
 
@@ -123,16 +119,7 @@ public final class BooksDB extends JFrame {
 	}
 
 	private void updateTitle() {
-		try {
-			String buf = "Laurel's Book Database : " +
-					bookService.count() +
-					" books / " +
-					authorService.count() + " authors";
-			setTitle(buf);
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+		setTitle("Laurel's Book Database : " + bookService.count() + " books / " + authorService.count() + " authors");
 	}
 
 	/** creates the menus */

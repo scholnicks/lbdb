@@ -4,8 +4,6 @@ import net.scholnick.lbdb.util.*;
 
 import javax.swing.*;
 
-
-
 public abstract class AbstractUpdateMaintenance extends BasePanel {
 	private JButton saveButton;
 	private JButton clearButton;
@@ -17,7 +15,6 @@ public abstract class AbstractUpdateMaintenance extends BasePanel {
 		JPanel p = new JPanel();
 		p.add(getSaveButton());
 		p.add(getClearButton());
-
 		return p;
 	}
 
@@ -56,9 +53,7 @@ public abstract class AbstractUpdateMaintenance extends BasePanel {
 	}
 
 	protected final JLabel getAddedDateLabel() {
-		if (addedDateLabel == null)
-			addedDateLabel = LabelFactory.createDataLabel();
-
+		if (addedDateLabel == null) addedDateLabel = LabelFactory.createDataLabel();
 		return addedDateLabel;
 	}
 

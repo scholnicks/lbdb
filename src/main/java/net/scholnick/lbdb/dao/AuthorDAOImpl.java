@@ -129,6 +129,7 @@ public class AuthorDAOImpl implements AuthorDAO {
 		a.setLastName(rs.getString("auth_last_name"));
 		a.setFirstName(rs.getString("auth_first_name"));
 		a.setWebSite(rs.getString("auth_website"));
+		a.setAddedTimestamp(rs.getString("auth_created_date"));
 		return a;
     }
 }

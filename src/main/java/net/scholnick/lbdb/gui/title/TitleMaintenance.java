@@ -1,14 +1,16 @@
 package net.scholnick.lbdb.gui.title;
 
 
+import net.scholnick.lbdb.coverphoto.GoogleService;
 import net.scholnick.lbdb.domain.*;
 import net.scholnick.lbdb.gui.AbstractUpdateMaintenance;
 import net.scholnick.lbdb.gui.TrimmedTextField;
 import net.scholnick.lbdb.gui.author.AuthorQuickSearch;
 import net.scholnick.lbdb.gui.author.MultipleAuthorsDialog;
-import net.scholnick.lbdb.service.AuthorService;
 import net.scholnick.lbdb.service.BookService;
-import net.scholnick.lbdb.util.*;
+import net.scholnick.lbdb.util.CacheManager;
+import net.scholnick.lbdb.util.LabelFactory;
+import net.scholnick.lbdb.util.NullSafe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,16 +21,12 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collections;
 
 import static javax.swing.BorderFactory.*;
 import static net.scholnick.lbdb.util.GUIUtilities.showMessageDialog;
 
-/**
- * @author steve
- */
 @Component
 public class TitleMaintenance extends AbstractUpdateMaintenance {
 	private final Logger log = LoggerFactory.getLogger(TitleMaintenance.class);
@@ -38,24 +36,22 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 	private JTextField publishedYearField;
 	private JTextField isbnField;
 	private JTextField numberOfPagesField;
+	private JCheckBox  anthologyCheckBox;
+	private JTextArea  commentsArea;
+	private JLabel     imageLabel;
+	private JButton    deleteButton;
+	private JTable     authorsList;
+
 	private JComboBox<BookType> typeCombo;
 	private JComboBox<Media>    mediaCombo;
-	private JCheckBox           anthologyCheckBox;
-	private JTextArea commentsArea;
-	private JLabel imageLabel;
-	private JButton saveAndClearButton;
-	private JButton deleteButton;
-	private JTable authorsList;
 
 	private Book book;
 
-	@Autowired
 	private BookService bookService;
-	//@Autowired private GoogleService googleService;
-	@Autowired private AuthorQuickSearch authorQuickSearch;
-	@Autowired private MultipleAuthorsDialog multipleAuthorDialog;
-	@Autowired private AuthorService authorService;
-
+	private GoogleService googleService;
+	private AuthorQuickSearch authorQuickSearch;
+	private MultipleAuthorsDialog multipleAuthorDialog;
+	//private AuthorService authorService;
 
 	public TitleMaintenance() {
 		super();
@@ -98,7 +94,7 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 				clear();
 			}
 			catch (Exception e) {
-				log.error("",e);
+				log.error("Unable to delete book",e);
 				showMessageDialog("Unable to delete book");
 			}
 		}
@@ -314,17 +310,15 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 		return imageLabel;
 	}
 
-	private void downloadCoverPhoto() throws FileNotFoundException, IOException {
-		String existingImageFile = getDownloadedImage();
-		if (existingImageFile != null) {
-			loadImage(existingImageFile);
-			return;
-		}
-		
+	private void downloadCoverPhoto() {
 		try {
-			//LogManager.debug(getClass(), "Check for cover for "  + getBook());
-			
-			//googleService.setCoverPhoto(getBook());
+			String existingImageFile = getDownloadedImage();
+			if (existingImageFile != null) {
+				loadImage(existingImageFile);
+				return;
+			}
+
+			googleService.setCoverPhoto(getBook());
 			if (getBook().getCoverPhotoPath() != null) {
 				loadImage(getBook().getCoverPhotoPath().toAbsolutePath().toString());
 				getISBNField().setText(getBook().getIsbn());
@@ -357,7 +351,7 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 	}
 	
 	private String getDownloadedImage() throws IOException {
-		File imageFilePath = new File(CacheManager.getDestinationDirectory(),String.valueOf(getBook().getId()) + ".jpg");
+		File imageFilePath = new File(CacheManager.getDestinationDirectory(), getBook().getId() + ".jpg");
 		
 		if (imageFilePath.exists() && imageFilePath.canRead()) {
 			log.debug("Using cached file path " + imageFilePath.getCanonicalPath());
@@ -381,67 +375,43 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 		repaint();
 	}
 
-	protected JComponent getInitialFocusComponent() {
-		return getTitleField();
-	}
+//	protected JComponent getInitialFocusComponent() {
+//		return getTitleField();
+//	}
 
 	private JTextField getTitleField() {
-		if (titleField == null) {
-			titleField = new TrimmedTextField(30);
-			titleField.setDocument(new LimitedStyledDocument(255));
-		}
-
+		if (titleField == null) titleField = new TrimmedTextField(30,255);
 		return titleField;
 	}
 
 	private JTextField getSeriesField() {
-		if (seriesField == null) {
-			seriesField = new TrimmedTextField(20);
-			seriesField.setDocument(new LimitedStyledDocument(255));
-		}
-
+		if (seriesField == null) seriesField = new TrimmedTextField(20,255);
 		return seriesField;
 	}
 
 	private JTextField getPublishedYearField() {
-		if (publishedYearField == null) {
-			publishedYearField = new TrimmedTextField(5);
-			publishedYearField.setDocument(new LimitedStyledDocument(4));
-		}
-
+		if (publishedYearField == null) publishedYearField = new TrimmedTextField(5,4);
 		return publishedYearField;
 	}
 
 	private JPanel getImagePanel() {
 		JPanel p = new JPanel();
 		p.add(getImageLabel());
-
 		return p;
 	}
 
 	private JTextField getISBNField() {
-		if (isbnField == null) {
-			isbnField = new TrimmedTextField(15);
-			isbnField.setDocument(new LimitedStyledDocument(20));
-		}
-
+		if (isbnField == null) isbnField = new TrimmedTextField(15,20);
 		return isbnField;
 	}
 
 	private JTextField getNumberOfPagesField() {
-		if (numberOfPagesField == null) {
-			numberOfPagesField = new TrimmedTextField(15);
-			numberOfPagesField.setDocument(new LimitedStyledDocument(20));
-		}
-
+		if (numberOfPagesField == null) numberOfPagesField = new TrimmedTextField(15,20);
 		return numberOfPagesField;
 	}
 
 	private JCheckBox getAnthologyCheckBox() {
-		if (anthologyCheckBox == null) {
-			anthologyCheckBox = new JCheckBox();
-		}
-
+		if (anthologyCheckBox == null) anthologyCheckBox = new JCheckBox();
 		return anthologyCheckBox;
 	}
 
@@ -450,22 +420,16 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 			commentsArea = new JTextArea(5,30);
 			commentsArea.setLineWrap(true);
 		}
-
 		return commentsArea;
 	}
 
 	private JComboBox<BookType> getTypeCombo() {
-		if (typeCombo == null) {
-			typeCombo = new JComboBox<BookType>(BookType.values());
-		}
-
+		if (typeCombo == null) typeCombo = new JComboBox<>(BookType.values());
 		return typeCombo;
 	}
 
 	private JComboBox<Media> getMediaCombo() {
-		if (mediaCombo == null) {
-			mediaCombo = new JComboBox<Media>(Media.values());
-		}
+		if (mediaCombo == null) mediaCombo = new JComboBox<>(Media.values());
 		return mediaCombo;
 	}
 
@@ -530,12 +494,8 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 			Book b = createBookFromFormData();
 
 			if (validateData(b)) {
-				setEnabledAll(false);
 				if (databaseUpdate(b)) {
 					setBook(b);
-				}
-				else {
-					setEnabledAll(true);
 				}
 			}
 		}
@@ -545,12 +505,12 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 		}
 	}
 
-	private void saveAndClear() {
-		ok();
-		clear();
-		resetFocus();
-		repaint();
-	}
+//	private void saveAndClear() {
+//		ok();
+//		clear();
+//		resetFocus();
+//		repaint();
+//	}
 
 	private Book createBookFromFormData() {
 		Book b = getBook() == null ? new Book() : getBook();
@@ -605,24 +565,17 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 		this.book = b;
 
 		if (book != null) {
-			setEnabledAll(false);
 			loadAllData();
 		}
 	}
 
 	private void loadAllData() {
 		loadData();
-		setEnabledAll(true);
-		
+
 		new SwingWorker<Object,Boolean>() {
-			@Override protected Boolean doInBackground() throws Exception {
-				try {
-					getImageLabel().setIcon( new ImageIcon(ClassLoader.getSystemResource("images/loading.gif")) );
-					downloadCoverPhoto();
-				}
-				catch (Exception e) {
-					log.error("",e);
-				}
+			@Override protected Boolean doInBackground() {
+				getImageLabel().setIcon( new ImageIcon(ClassLoader.getSystemResource("images/loading.gif")) );
+				downloadCoverPhoto();
 				return Boolean.TRUE;
 			}
 		}.execute();
@@ -638,11 +591,11 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 		getPublishedYearField().setText(getBook().getPublishedYear());
 		getMediaCombo().setSelectedItem(getBook().getMedia());
 
-		if (getBook().getNumberOfPages() != null && getBook().getNumberOfPages().intValue() > 0) {
+		if (getBook().getNumberOfPages() != null && getBook().getNumberOfPages() > 0) {
 			getNumberOfPagesField().setText(String.valueOf(getBook().getNumberOfPages()));
 		}
 
-		getAddedDateLabel().setText(TextFormatter.toText(getBook().getAddedDate()));
+		getAddedDateLabel().setText(book.getAddedTimestamp());
 
 		getAuthorTableModel().clear();
 
@@ -655,20 +608,30 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 		reload();
 	}
 
-	private void setEnabledAll(boolean b) {
-		Cursor c = b ? new Cursor(Cursor.DEFAULT_CURSOR) : new Cursor(Cursor.WAIT_CURSOR);
-
-		for (JComponent comp : components) {
-			comp.setEnabled(b);
-			comp.setCursor(c);
-		}
-
-		setCursor(c);
+	@Autowired
+	public void setBookService(BookService bookService) {
+		this.bookService = bookService;
 	}
 
-	private JComponent[] components = { getAnthologyCheckBox(), getClearButton(), getISBNField(), getNumberOfPagesField(), 
-			                            getPublishedYearField(), getSeriesField(), getTitleField(), getCommentsArea(), getAuthorsList(), 
-			                            getSaveButton(), getTypeCombo(), getDeleteButton(), getMediaCombo() };
+	@Autowired
+	public void setGoogleService(GoogleService googleService) {
+		this.googleService = googleService;
+	}
+
+	@Autowired
+	public void setAuthorQuickSearch(AuthorQuickSearch authorQuickSearch) {
+		this.authorQuickSearch = authorQuickSearch;
+	}
+
+	@Autowired
+	public void setMultipleAuthorDialog(MultipleAuthorsDialog multipleAuthorDialog) {
+		this.multipleAuthorDialog = multipleAuthorDialog;
+	}
+
+//	@Autowired
+//	public void setAuthorService(AuthorService authorService) {
+//		this.authorService = authorService;
+//	}
 
 	private static final Dimension AUTHOR_PANEL_SIZE = new Dimension(250, 100);
 

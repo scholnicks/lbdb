@@ -1,31 +1,26 @@
 package net.scholnick.lbdb.gui.title;
 
-
 import net.scholnick.lbdb.domain.Author;
 
 import javax.swing.table.AbstractTableModel;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
+import static java.util.stream.Collectors.toSet;
 
 final class AuthorTableModel extends AbstractTableModel {
 	private final List<Author> dataRows;
 
 	AuthorTableModel() {
-		dataRows = new LinkedList<Author>();
+		dataRows = new LinkedList<>();
 	}
 
-	public Set<Author> getEditors() {
-		Set<Author> editors = new HashSet<Author>();
-		
-		for (Author a : dataRows) {
-			if (a.isEditor()) {
-				editors.add(a);
-			}
-		}
-		
-		return editors;
+	Set<Author> getEditors() {
+		return dataRows.stream().filter(Author::isEditor).collect(toSet());
 	}
 	
-	public boolean contains(Author a) {
+	boolean contains(Author a) {
 		return dataRows.contains(a);
 	}
 	
@@ -81,7 +76,6 @@ final class AuthorTableModel extends AbstractTableModel {
 		if (columnIndex == 2) {
 			dataRows.get(rowIndex).setEditor((Boolean) value);
 		}
-
 		fireTableDataChanged();
 	}
 
@@ -99,7 +93,7 @@ final class AuthorTableModel extends AbstractTableModel {
 		return dataRows.get(row);
 	}
 
-	public int size() {
+	int size() {
 		return dataRows.size();
 	}
 

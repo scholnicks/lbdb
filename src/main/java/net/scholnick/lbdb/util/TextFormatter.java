@@ -9,6 +9,7 @@ import java.util.*;
  * 
  * @author Steven Scholnick
  */
+@Deprecated
 public final class TextFormatter {
 	/**
 	 * returns the textual representation of an object. <code>null</code> is returned as an empty string. 
@@ -75,13 +76,13 @@ public final class TextFormatter {
 		return buf.toString();
 	}
 
-	/** converts a Calendar to a String */
-	public static String toText(Calendar c) {
-		if (c == null)
-			return "";
-
-		return DATE_FORMAT.format(c.getTime());
-	}
+//	/** converts a Calendar to a String */
+//	public static String toText(Calendar c) {
+//		if (c == null)
+//			return "";
+//
+//		return DATE_FORMAT.format(c.getTime());
+//	}
 
 //	/** converts a boolean to a "Yes/No" String */
 //	private static String toText(boolean b) {

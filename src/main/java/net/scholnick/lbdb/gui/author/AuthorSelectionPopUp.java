@@ -10,13 +10,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
-/**
- * @author steve
- */
 public final class AuthorSelectionPopUp extends BaseDialog {
 	private JTable listingTable;
 
-	public AuthorSelectionPopUp() {
+	private AuthorSelectionPopUp() {
 		super();
 	}
 
@@ -34,7 +31,6 @@ public final class AuthorSelectionPopUp extends BaseDialog {
 		addAuthors(authors);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	protected void buildGUI() {
 		getContentPane().setLayout(new BorderLayout());
@@ -92,15 +88,11 @@ public final class AuthorSelectionPopUp extends BaseDialog {
 		return ((AuthorTableModel) getListingTable().getModel()).get(row);
 	}
 
-	private static final long serialVersionUID = -7523868692681805068L;
-
-	/** {@inheritDoc} */
 	@Override
 	protected JComponent getInitialFocusComponent() {
 		return getListingTable();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	protected JPanel getInputPanel() {
 		return new JPanel();

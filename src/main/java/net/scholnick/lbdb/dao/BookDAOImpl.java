@@ -75,7 +75,6 @@ public class BookDAOImpl implements BookDAO {
 
 	private static final String ADD_JOIN = "insert into author_book_xref(book_id,auth_id,abx_editor) values(?,?,?)";
 	
-	/** {@inheritDoc} */
 	@Override
 	public void update(Book b) {
 		log.debug("Updating " + b);
@@ -107,8 +106,8 @@ public class BookDAOImpl implements BookDAO {
 	}
 
 	@Override
-	public int removeJoinRecords(Book b) {
-		return jdbcTemplate.update("delete from author_book_xref where book_id=?",b.getId());
+	public void removeJoinRecords(Book b) {
+		jdbcTemplate.update("delete from author_book_xref where book_id=?",b.getId());
 	}
 
 	@Override
@@ -186,8 +185,7 @@ public class BookDAOImpl implements BookDAO {
 		b.setNumberOfPages( rs.getInt("book_number_of_pages") );
 		b.setType(          BookType.from(rs.getInt("bot_id")));
 		b.setMedia(         Media.from(rs.getInt("med_id")) );
-
-		//b.setAddedDate( PrintableCalendar.fromFormattedString(rs.getString("book_created_date")) );
+		b.setAddedTimestamp( rs.getString("book_created_date") );
 
 		return b;
     }

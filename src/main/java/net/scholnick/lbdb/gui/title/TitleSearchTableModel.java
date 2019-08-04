@@ -1,37 +1,26 @@
 package net.scholnick.lbdb.gui.title;
 
-
 import net.scholnick.lbdb.domain.Book;
 import net.scholnick.lbdb.domain.Media;
 import net.scholnick.lbdb.util.NullSafe;
 
 import javax.swing.table.AbstractTableModel;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
-/**
- * @author Steve Scholnick <steve@scholnick.net>
- */
 public final class TitleSearchTableModel extends AbstractTableModel {
 	private final List<Book> dataRows;
 	private int              sortedColumn;
 	private Direction[]      sortingDirections;
 
-	/** Constructor */
-	public TitleSearchTableModel() {
-		dataRows = new ArrayList<Book>();
+	TitleSearchTableModel() {
+		dataRows = new ArrayList<>();
 		setSortingDefaults();
 	}
 
 	private void setSortingDefaults() {
 		sortedColumn = 0;
-
 		sortingDirections = new Direction[columnNames.length];
-		for (int i = 0; i < sortingDirections.length; i++) {
-			sortingDirections[i] = Direction.ASCENDING;
-		}
+		Arrays.fill(sortingDirections, Direction.ASCENDING);
 	}
 
 	@Override
@@ -96,7 +85,7 @@ public final class TitleSearchTableModel extends AbstractTableModel {
 		fireTableDataChanged();
 	}
 
-	public void sort(int column) {
+	void sort(int column) {
 		if (column == sortedColumn) {
 			sortingDirections[column] = sortingDirections[column] == Direction.ASCENDING ? Direction.DESCENDING : Direction.ASCENDING;
 		}
@@ -104,7 +93,7 @@ public final class TitleSearchTableModel extends AbstractTableModel {
 		//LogManager.debug(getClass(), "Selected column = " + column + ",Old column = " + sortedColumn + ",Direction = " + sortingDirections[column]);
 
 		sortedColumn = column;
-		Collections.sort(dataRows, new DataSorter(column));
+		dataRows.sort(new DataSorter(column));
 		fireTableDataChanged();
 	}
 
@@ -112,7 +101,7 @@ public final class TitleSearchTableModel extends AbstractTableModel {
 
 	private enum Direction {
 		ASCENDING, DESCENDING
-	};
+	}
 
 	private final class DataSorter implements Comparator<Book> {
 		private final int column;
@@ -158,6 +147,4 @@ public final class TitleSearchTableModel extends AbstractTableModel {
 			return cmp;
 		}
 	}
-
-	private static final long serialVersionUID = 6499478587310181950L;
 }

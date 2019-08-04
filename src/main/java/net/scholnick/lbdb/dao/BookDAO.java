@@ -9,7 +9,7 @@ public interface BookDAO {
 	Long create(Book b);
 	void update(Book b);
 	int delete(Book b);
-	int removeJoinRecords(Book b);
+	void removeJoinRecords(Book b);
 	void addJoinRecords(Book b);
 	Book get(Long id);
 	Long count();

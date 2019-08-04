@@ -3,9 +3,6 @@ package net.scholnick.lbdb.dao;
 
 import net.scholnick.lbdb.util.NullSafe;
 
-/**
- * @author Steve Scholnick
- */
 public final class BookSearchFactory {
 	private final StringBuilder sql;
 	private final String title;
@@ -70,6 +67,5 @@ public final class BookSearchFactory {
 	}
 
 	private static final String SELECT = "select * from v_search where book_id is not null ";
-
 	private static final String ORDER_BY = "order by book_title";
 }

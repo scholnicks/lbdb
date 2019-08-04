@@ -5,7 +5,11 @@ import net.scholnick.lbdb.domain.Author;
 import net.scholnick.lbdb.gui.AbstractUpdateMaintenance;
 import net.scholnick.lbdb.gui.TrimmedTextField;
 import net.scholnick.lbdb.service.AuthorService;
-import net.scholnick.lbdb.util.*;
+import net.scholnick.lbdb.util.GUIUtilities;
+import net.scholnick.lbdb.util.LabelFactory;
+import net.scholnick.lbdb.util.NullSafe;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,19 +18,24 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import static net.scholnick.lbdb.util.GUIUtilities.showMessageDialog;
+
 @Component
 public class AuthorMaintenance extends AbstractUpdateMaintenance {
+	private final Logger log = LoggerFactory.getLogger(AuthorMaintenance.class);
+
 	private JTextField lastNameField;
 	private JTextField firstNameField;
 	private JTextField webSiteField;
-	private JButton deleteButton;
+	private JButton    deleteButton;
 
 	private Author author;
 
+	private final AuthorService authorService;
+
 	@Autowired
-	private AuthorService authorService;
-	
-	public AuthorMaintenance() {
+	public AuthorMaintenance(AuthorService authorService) {
+		this.authorService = authorService;
 		buildGUI();
 	}
 
@@ -48,7 +57,6 @@ public class AuthorMaintenance extends AbstractUpdateMaintenance {
 			deleteButton = new JButton("Delete");
 			deleteButton.addActionListener(e -> removeAuthor());
 		}
-
 		return deleteButton;
 	}
 
@@ -56,11 +64,12 @@ public class AuthorMaintenance extends AbstractUpdateMaintenance {
 		if (JOptionPane.showConfirmDialog(this, "Delete Author?") == JOptionPane.YES_OPTION) {
 			try {
 				authorService.delete(getAuthor());
-				GUIUtilities.showMessageDialog(author + " deleted");
+				showMessageDialog(author + " deleted");
 				clear();
 			}
 			catch (Exception e) {
-				GUIUtilities.showMessageDialog("Unable to delete author");
+				showMessageDialog("Unable to delete author");
+				log.error("Unable to delete author", e);
 			}
 		}
 	}
@@ -111,34 +120,18 @@ public class AuthorMaintenance extends AbstractUpdateMaintenance {
 		return p;
 	}
 
-	protected JComponent getInitialFocusComponent() {
-		return getFirstNameField();
-	}
-
 	private JTextField getFirstNameField() {
-		if (firstNameField == null) {
-			firstNameField = new TrimmedTextField(10);
-			firstNameField.setDocument(new LimitedStyledDocument(100));
-		}
-
+		if (firstNameField == null) firstNameField = new TrimmedTextField(10,100);
 		return firstNameField;
 	}
 
 	private JTextField getLastNameField() {
-		if (lastNameField == null) {
-			lastNameField = new TrimmedTextField(20);
-			lastNameField.setDocument(new LimitedStyledDocument(100));
-		}
-
+		if (lastNameField == null) lastNameField = new TrimmedTextField(20,100);
 		return lastNameField;
 	}
 
 	private JTextField getWebSiteField() {
-		if (webSiteField == null) {
-			webSiteField = new TrimmedTextField(30);
-			webSiteField.setDocument(new LimitedStyledDocument(100));
-		}
-
+		if (webSiteField == null) webSiteField = new TrimmedTextField(30,100);
 		return webSiteField;
 	}
 
@@ -172,9 +165,7 @@ public class AuthorMaintenance extends AbstractUpdateMaintenance {
 		getFirstNameField().setText(author.getFirstName());
 		getLastNameField().setText(author.getLastName());
 		getWebSiteField().setText(author.getWebSite());
-
-		getAddedDateLabel().setText(TextFormatter.toText(author.getAddedDate()));
-
+		getAddedDateLabel().setText(author.getAddedTimestamp());
 		validate();
 		repaint();
 	}
@@ -186,25 +177,15 @@ public class AuthorMaintenance extends AbstractUpdateMaintenance {
 			String errors = getAuthor().validate();
 
 			if (NullSafe.isEmpty(errors)) {
-				databaseUpdate();
-				GUIUtilities.showMessageDialog(author.getName() + " saved");
+				authorService.save(getAuthor(),false);
+				showMessageDialog(author.getName() + " saved");
 			}
 			else {
-				GUIUtilities.showMessageDialog(errors);
+				showMessageDialog(errors);
 			}
 		}
 		catch (Exception e) {
-			//LogManager.error(getClass(), e);
-		}
-	}
-
-	private void databaseUpdate() {
-		try {
-			authorService.save(getAuthor(),false);
-		}
-		catch (Exception e) {
-			//LogManager.error(getClass(), e);
-			throw new RuntimeException(e);
+			log.error("Unable to save author", e);
 		}
 	}
 

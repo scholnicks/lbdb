@@ -11,7 +11,7 @@ public final class Book extends BasicObject implements Validatable, Comparable<B
 	private BookType type;
 	private Media media;
 	private String series;
-	private Calendar addedDate;
+	private String addedTimestamp;
 	private String publishedYear;
 	private String isbn;
 	private String comments;
@@ -23,12 +23,12 @@ public final class Book extends BasicObject implements Validatable, Comparable<B
 	private Path coverPhotoPath;
 
 	public Book() {
-		authors = new ArrayList<Author>();
+		authors = new ArrayList<>();
 	}
 
-	public boolean isComplete() {
-		return getPublishedYear() != null && getIsbn() != null && getNumberOfPages() != null;
-	}
+//	public boolean isComplete() {
+//		return getPublishedYear() != null && getIsbn() != null && getNumberOfPages() != null;
+//	}
 
 	@Override
 	public String validate() {
@@ -100,16 +100,16 @@ public final class Book extends BasicObject implements Validatable, Comparable<B
 		}
 	}
 
-	public Set<Author> getEditors() {
-		Set<Author> editors = new HashSet<Author>();
-
-		for (Author each : getAuthors()) {
-			if (each.isEditor()) {
-				editors.add(each);
-			}
-		}
-		return editors;
-	}
+//	public Set<Author> getEditors() {
+//		Set<Author> editors = new HashSet<Author>();
+//
+//		for (Author each : getAuthors()) {
+//			if (each.isEditor()) {
+//				editors.add(each);
+//			}
+//		}
+//		return editors;
+//	}
 
 	public void setEditors(Set<Author> editors) {
 		for (Author a : editors) {
@@ -163,14 +163,6 @@ public final class Book extends BasicObject implements Validatable, Comparable<B
 		this.series = series;
 	}
 
-	public Calendar getAddedDate() {
-		return this.addedDate;
-	}
-
-	public void setAddedDate(Calendar addedDate) {
-		this.addedDate = addedDate;
-	}
-
 	public String getPublishedYear() {
 		return this.publishedYear;
 	}
@@ -217,5 +209,13 @@ public final class Book extends BasicObject implements Validatable, Comparable<B
 
 	public void setCoverPhotoPath(Path coverPhotoPath) {
 		this.coverPhotoPath = coverPhotoPath;
+	}
+
+	public String getAddedTimestamp() {
+		return addedTimestamp;
+	}
+
+	public void setAddedTimestamp(String addedTimestamp) {
+		this.addedTimestamp = addedTimestamp;
 	}
 }

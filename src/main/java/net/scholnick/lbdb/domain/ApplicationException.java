@@ -12,6 +12,4 @@ public class ApplicationException extends RuntimeException {
     public ApplicationException(Throwable cause) {
         super(cause);
     }
-
-    private static final long serialVersionUID = -220507352250632480L;
 }

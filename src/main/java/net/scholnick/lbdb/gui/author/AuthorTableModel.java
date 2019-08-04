@@ -1,6 +1,5 @@
 package net.scholnick.lbdb.gui.author;
 
-
 import net.scholnick.lbdb.domain.Author;
 
 import javax.swing.table.AbstractTableModel;
@@ -11,26 +10,23 @@ class AuthorTableModel extends AbstractTableModel {
 	private final List<Author> dataRows;
 
 	AuthorTableModel() {
-		dataRows = new ArrayList<Author>();
+		dataRows = new ArrayList<>();
 	}
 
-	public List<Author> getAllAuthors() {
+	List<Author> getAllAuthors() {
 		return dataRows;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public int getRowCount() {
 		return dataRows.size();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public int getColumnCount() {
 		return 2;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public String getColumnName(int col) {
 		switch (col) {
@@ -42,13 +38,11 @@ class AuthorTableModel extends AbstractTableModel {
 		return null;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public Class<?> getColumnClass(int c) {
 		return String.class;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public Object getValueAt(int row, int col) {
 		Author data = get(row);
@@ -74,6 +68,4 @@ class AuthorTableModel extends AbstractTableModel {
 		dataRows.clear();
 		fireTableDataChanged();
 	}
-
-	private static final long serialVersionUID = -8251950494914559534L;
 }

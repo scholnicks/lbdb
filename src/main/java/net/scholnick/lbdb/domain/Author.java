@@ -2,7 +2,7 @@ package net.scholnick.lbdb.domain;
 
 import net.scholnick.lbdb.util.NullSafe;
 
-import java.util.*;
+import java.util.Objects;
 
 /**
  * Note: this class has a natural ordering that is inconsistent with equals.
@@ -11,8 +11,8 @@ public final class Author extends BasicObject implements Validatable, Comparable
 	private String   lastName;
 	private String   firstName;
 	private String   webSite;
-	private Calendar addedDate;
 	private boolean  editor;
+	private String addedTimestamp;
 
 	public Author() {
 		// empty
@@ -110,19 +110,19 @@ public final class Author extends BasicObject implements Validatable, Comparable
 		this.webSite = webSite;
 	}
 
-	public Calendar getAddedDate() {
-		return this.addedDate;
-	}
-
-	public void setAddedDate(Calendar addedDate) {
-		this.addedDate = addedDate;
-	}
-
 	public void setEditor(boolean editor) {
 		this.editor = editor;
 	}
 
 	public boolean isEditor() {
 		return editor;
+	}
+
+	public String getAddedTimestamp() {
+		return addedTimestamp;
+	}
+
+	public void setAddedTimestamp(String addedTimestamp) {
+		this.addedTimestamp = addedTimestamp;
 	}
 }

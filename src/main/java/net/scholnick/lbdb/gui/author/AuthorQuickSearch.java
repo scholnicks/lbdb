@@ -1,6 +1,5 @@
 package net.scholnick.lbdb.gui.author;
 
-
 import net.scholnick.lbdb.domain.Author;
 import net.scholnick.lbdb.gui.BaseDialog;
 import net.scholnick.lbdb.service.AuthorService;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -34,7 +32,7 @@ public class AuthorQuickSearch extends BaseDialog {
 
 	private JTable resultsTable;
 
-	@Autowired private AuthorService authorService;
+	private AuthorService authorService;
 	
 	public AuthorQuickSearch() {
 		setTitle("Author Search");
@@ -238,11 +236,10 @@ public class AuthorQuickSearch extends BaseDialog {
 		return ((AuthorTableModel) getResultsTable().getModel()).get(row);
 	}
 
-	private final ActionListener searchAction = new ActionListener() {
-		public void actionPerformed(ActionEvent event) {
-			search();
-		}
-	};
+	@Autowired
+	public void setAuthorService(AuthorService authorService) {
+		this.authorService = authorService;
+	}
 
-	private static final long serialVersionUID = -7523868692681805068L;
+	private final ActionListener searchAction = event -> search();
 }

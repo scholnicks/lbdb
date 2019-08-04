@@ -7,8 +7,6 @@ import javax.swing.table.TableColumnModel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-
-
 public final class TitleSearchTable extends JTable {
 	public TitleSearchTable() {
 		super(new TitleSearchTableModel());
@@ -52,9 +50,8 @@ public final class TitleSearchTable extends JTable {
 		});
 	}
 
+	@Override
 	public String toString() {
 		return String.valueOf(getModel());
 	}
-
-	private static final long serialVersionUID = -5154833734860440424L;
 }

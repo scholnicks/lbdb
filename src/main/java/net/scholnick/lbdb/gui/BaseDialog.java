@@ -1,33 +1,20 @@
 package net.scholnick.lbdb.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JRootPane;
-import javax.swing.KeyStroke;
-import javax.swing.text.JTextComponent;
-
 public abstract class BaseDialog extends JDialog {
-	private static final long serialVersionUID = 9061414244058378906L;
-
 	private JButton okButton;
 	private JButton cancelButton;
-	private boolean dataChanged;
+//	private boolean dataChanged;
 	private boolean approved;
 
 	public BaseDialog() {
 		super();
 		setModal(true);
-
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent we) {
 				approved = false;
@@ -66,7 +53,7 @@ public abstract class BaseDialog extends JDialog {
 		return okButton;
 	}
 
-	protected final JButton getCancelButton() {
+	private JButton getCancelButton() {
 		if (cancelButton == null) {
 			cancelButton = new JButton("Cancel");
 			cancelButton.addActionListener(l -> cancel());
@@ -75,16 +62,14 @@ public abstract class BaseDialog extends JDialog {
 	}
 
 	protected void ok() {
-		approved = true;
-		close(approved);
+		close(true);
 	}
 
-	protected void cancel() {
-		approved = false;
-		close(approved);
+	private void cancel() {
+		close(false);
 	}
 
-	protected final void close(boolean approvedIn) {
+	private void close(boolean approvedIn) {
 		approved = approvedIn;
 		setVisible(false);
 	}
@@ -102,22 +87,21 @@ public abstract class BaseDialog extends JDialog {
 		return approved;
 	}
 
-	public boolean isDataChanged() {
-		return dataChanged;
-	}
+//	public boolean isDataChanged() {
+//		return dataChanged;
+//	}
+//
+//	public void setDataChanged(boolean b) {
+//		dataChanged = b;
+//	}
 
-	public void setDataChanged(boolean b) {
-		dataChanged = b;
-	}
+//	protected void loadData(JTextComponent field, String value) {
+//		if (value != null) {
+//			field.setText(value);
+//		}
+//	}
 
-	protected void loadData(JTextComponent field, String value) {
-		if (value != null) {
-			field.setText(value);
-		}
-	}
-
-	/** @param approved The approved to set. */
-	protected void setApproved(boolean approved) {
-		this.approved = approved;
-	}
+//	protected void setApproved(boolean approved) {
+//		this.approved = approved;
+//	}
 }

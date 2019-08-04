@@ -1,6 +1,5 @@
 package net.scholnick.lbdb.gui.author;
 
-
 import net.scholnick.lbdb.domain.Author;
 import net.scholnick.lbdb.gui.BaseDialog;
 import net.scholnick.lbdb.service.AuthorService;
@@ -25,10 +24,7 @@ public class MultipleAuthorsDialog extends BaseDialog {
 	private JTextField lastNameField;
 	private JTextField firstNameField;
 	private JButton searchButton;
-
 	private JTable resultsTable;
-
-	@Autowired
 	private AuthorService authorService;
 	
 	public MultipleAuthorsDialog() {
@@ -42,13 +38,11 @@ public class MultipleAuthorsDialog extends BaseDialog {
 		getOKButton().setName("Done");
 	}
 
-    /** {@inheritDoc} */
 	@Override
 	public void setVisible(boolean b) {
 		if (b) {
 			clear();
 		}
-		
 		super.setVisible(b);
 	}
 	
@@ -58,7 +52,6 @@ public class MultipleAuthorsDialog extends BaseDialog {
 		((AuthorTableModel) getResultsTable().getModel()).clear();
 	}
 	
-    /** {@inheritDoc} */
 	@Override
 	protected void buildGUI() {
 		getContentPane().setLayout(new BorderLayout());
@@ -199,18 +192,16 @@ public class MultipleAuthorsDialog extends BaseDialog {
 	}
 
 	private void addAuthor(String lastName, String firstName) {
-		try {
-			Author a = authorService.save(new Author(lastName,firstName),false);
-			((AuthorTableModel) getResultsTable().getModel()).add(a);
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+		Author a = authorService.save(new Author(lastName,firstName),false);
+		((AuthorTableModel) getResultsTable().getModel()).add(a);
 	}
 
 	public java.util.List<Author> getAuthors() {
 		return ((AuthorTableModel) getResultsTable().getModel()).getAllAuthors();
 	}
 
-	private static final long serialVersionUID = -7523868692681805068L;
+	@Autowired
+	public void setAuthorService(AuthorService authorService) {
+		this.authorService = authorService;
+	}
 }
