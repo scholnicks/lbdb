@@ -33,7 +33,7 @@ public final class BooksDB extends JFrame {
 
 	private static final Dimension WINDOW_SIZE = new Dimension(900, 600);
 
-	private static final String VERSION = "Version 4.4.3";
+	private static final String VERSION = "Version 4.5.0";
 
 	private JLabel notificationLabel;
 
@@ -50,35 +50,28 @@ public final class BooksDB extends JFrame {
 	}
 
 	void init() {
-		try {
-			setSize(WINDOW_SIZE);
-			center(this);
+		setSize(WINDOW_SIZE);
+		center(this);
 
-			addWindowListener(new WindowAdapter() {
-				public void windowClosing(WindowEvent e) {
-					System.exit(0);
-				}
-			});
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				System.exit(0);
+			}
+		});
 
-			JPanel content = (JPanel) getContentPane();
-			content.setLayout(new BorderLayout());
-			content.setBackground(Color.white);
+		JPanel content = (JPanel) getContentPane();
+		content.setLayout(new BorderLayout());
+		content.setBackground(Color.white);
 
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		loadInfoInBackground();
+		buildMenus();
+		loadSearchPanel();
+		getContentPane().add(getTabbedPane(), BorderLayout.CENTER);
 
-			loadInfoInBackground();
-			buildMenus();
-			loadSearchPanel();
-			getContentPane().add(getTabbedPane(), BorderLayout.CENTER);
-
-			JPanel p = new JPanel();
-			p.add(getNotificationLabel());
-			getContentPane().add(p, BorderLayout.SOUTH);
-			setVisible(true);
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+		JPanel p = new JPanel();
+		p.add(getNotificationLabel());
+		getContentPane().add(p, BorderLayout.SOUTH);
+		setVisible(true);
 	}
 
     private JLabel getNotificationLabel() {

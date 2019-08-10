@@ -10,7 +10,7 @@
     <key>CFBundleIdentifier</key>
         <string>net.scholnick.lbdb</string>
     <key>CFBundleVersion</key>
-        <string>4.4.3</string>
+        <string>4.5.0</string>
     <key>CFBundlePackageType</key>
         <string>APPL</string>
     <key>CFBundleSignature</key>
@@ -18,7 +18,7 @@
     <key>CFBundleExecutable</key>
         <string>lbdb.sh</string>
     <key>CFBundleShortVersionString</key>
-        <string>4.3</string>
+        <string>4.5</string>
     <key>CFBundleIconFile</key>
         <string>book_case.icns</string>
     <key>NSPrincipalClass</key>

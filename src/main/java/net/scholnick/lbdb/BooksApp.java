@@ -8,11 +8,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
+import javax.swing.*;
 import java.awt.*;
 
 @SpringBootApplication
 public class BooksApp {
     public static void main(String[] args) {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        }
+        catch (Exception e) {
+            System.exit(-1);
+        }
+
         ApplicationContext context = new SpringApplicationBuilder(BooksApp.class).headless(false).run(args);
         EventQueue.invokeLater( () -> context.getBean(BooksDB.class).init() );
     }
