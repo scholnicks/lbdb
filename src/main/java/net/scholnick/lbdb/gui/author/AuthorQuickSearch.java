@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -72,7 +74,14 @@ public class AuthorQuickSearch extends BaseDialog {
 	private JTextField getNameField() {
 		if (nameField == null) {
 			nameField = new TrimmedTextField(20,100);
-			nameField.addActionListener(e -> search());
+			nameField.addActionListener(e -> search(false));
+			nameField.addKeyListener(new KeyAdapter() {
+				@Override public void keyPressed(KeyEvent e) {
+					if (nameField.getText() != null && nameField.getText().length() > 3) {
+						search(true);
+					}
+				}
+			});
 		}
 		return nameField;
 	}
@@ -93,19 +102,15 @@ public class AuthorQuickSearch extends BaseDialog {
 
 			resultsTable.addMouseListener(new MouseAdapter() {
 				@Override public void mouseClicked(MouseEvent event) {
-				if (event.getClickCount() == 1) {
-					getOKButton().setEnabled(true);
-				}
-				else if (event.getClickCount() == 2) {
-					ok();
-				}
+					if (event.getClickCount() == 1) getOKButton().setEnabled(true);
+					else if (event.getClickCount() == 2) ok();
 				}
 			});
 		}
 		return resultsTable;
 	}
 
-	private void search() {
+	private void search(boolean existingOnly) {
 		AuthorTableModel model = (AuthorTableModel) getResultsTable().getModel();
 
 		getResultsTable().clearSelection();
@@ -117,31 +122,25 @@ public class AuthorQuickSearch extends BaseDialog {
 			for (Author a : foundAuthors) {
 				model.add(a);
 			}
+			repaintScreen();
 		}
 		else {
+			if (existingOnly) {
+				repaintScreen();
+				return;
+			}
+
 			String fullName = getNameField().getText();
 
 			String message = "Author ( " + fullName + " ) not found.  Add?";
 			int choice = showConfirmDialog(this, message, "Add Author?", JOptionPane.YES_NO_OPTION);
 			if (choice == JOptionPane.YES_OPTION) {
 				model.add(Author.parse(fullName));
+				getResultsTable().setRowSelectionInterval(0,0);
+				ok();
 			}
 		}
-
-		validate();
-		repaint();
 	}
-
-//	private void addAuthor(String lastName, String firstName) {
-//		Author a = new Author();
-//		a.setLastName(lastName);
-//		a.setFirstName(firstName);
-//		authorService.save(a,true);
-//
-//		((AuthorTableModel) getResultsTable().getModel()).add(a);
-//		getResultsTable().setRowSelectionInterval(0, 0);
-//		ok();
-//	}
 
 	public Author getSelectedAuthor() {
 		int row = getResultsTable().getSelectedRow();

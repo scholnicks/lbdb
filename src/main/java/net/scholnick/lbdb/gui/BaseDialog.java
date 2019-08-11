@@ -2,14 +2,11 @@ package net.scholnick.lbdb.gui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 
 public abstract class BaseDialog extends JDialog {
 	private JButton okButton;
 	private JButton cancelButton;
-//	private boolean dataChanged;
 	private boolean approved;
 
 	public BaseDialog() {
@@ -32,7 +29,6 @@ public abstract class BaseDialog extends JDialog {
 
 	protected void buildGUI() {
 		getContentPane().setLayout(new BorderLayout());
-
 		getContentPane().add(getInputPanel(), BorderLayout.CENTER);
 		getContentPane().add(getButtonPanel(), BorderLayout.SOUTH);
 	}
@@ -41,7 +37,6 @@ public abstract class BaseDialog extends JDialog {
 		JPanel p = new JPanel();
 		p.add(getOKButton());
 		p.add(getCancelButton());
-
 		return p;
 	}
 
@@ -83,25 +78,12 @@ public abstract class BaseDialog extends JDialog {
 		getInitialFocusComponent().requestFocus();
 	}
 
+	public void repaintScreen() {
+		validate();
+		repaint();
+	}
+
 	public boolean isApproved() {
 		return approved;
 	}
-
-//	public boolean isDataChanged() {
-//		return dataChanged;
-//	}
-//
-//	public void setDataChanged(boolean b) {
-//		dataChanged = b;
-//	}
-
-//	protected void loadData(JTextComponent field, String value) {
-//		if (value != null) {
-//			field.setText(value);
-//		}
-//	}
-
-//	protected void setApproved(boolean approved) {
-//		this.approved = approved;
-//	}
 }

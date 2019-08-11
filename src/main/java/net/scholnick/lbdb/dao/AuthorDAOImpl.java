@@ -29,8 +29,7 @@ public class AuthorDAOImpl implements AuthorDAO {
 		if (NullSafe.isEmpty(criteria)) return Collections.emptyList();
 
 		String sql = "select * from author where auth_id is not null" +
-		 	" and lower(auth_first_name) like lower(?)" +
-//		 	" or lower(auth_last_name) like lower(?)"+
+		 	" and lower(auth_first_name || ' ' || auth_last_name) like lower(?)" +
 		 	" order by auth_first_name, auth_last_name";
 
 		return jdbcTemplate.query(sql,this::mapRow,criteria.toLowerCase() + "%");
