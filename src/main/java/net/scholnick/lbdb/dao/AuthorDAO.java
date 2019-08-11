@@ -10,11 +10,9 @@ public interface AuthorDAO {
 	Long create(Author a);
 	void delete(Author a);
 	void update(Author a);
-
 	List<Author> get(Book b);
 	Set<Long> getEditors(Book b);
-	List<Author> search(Author a);
+	List<Author> search(String criteria);
 	Author get(Long id);
-
 	Long count();
 }

@@ -3,9 +3,14 @@
   <component name="ChangeListManager">
     <list default="true" id="de26adde-e421-4658-a7cc-846cdeb46a91" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Info.plist" beforeDir="false" afterPath="$PROJECT_DIR$/macos/Info.plist" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/BooksApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/BooksApp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/BooksDB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/BooksDB.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/dao/AuthorDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/dao/AuthorDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/dao/AuthorDAOImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/dao/AuthorDAOImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/domain/Author.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/domain/Author.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/author/AuthorQuickSearch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/author/AuthorQuickSearch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/author/MultipleAuthorsDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/author/MultipleAuthorsDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/autocomplete/DataSupplier.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/service/AuthorService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/service/AuthorService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/service/AuthorServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/service/AuthorServiceImpl.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

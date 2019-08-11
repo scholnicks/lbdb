@@ -14,6 +14,14 @@ public final class Author extends BasicObject implements Validatable, Comparable
 	private boolean  editor;
 	private String addedTimestamp;
 
+	public static Author parse(String fullName) {
+		int lastSpace = fullName.lastIndexOf(' ');
+		return new Author(
+			fullName.substring(lastSpace).trim(),
+			fullName.substring(0,lastSpace).trim()
+		);
+	}
+
 	public Author() {
 		// empty
 	}

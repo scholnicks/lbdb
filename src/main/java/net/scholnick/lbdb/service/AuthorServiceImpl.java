@@ -50,8 +50,8 @@ public class AuthorServiceImpl implements AuthorService {
 
 	@Override
 	@Transactional(readOnly=true)
-	public List<Author> search(Author a) {
-		return authorDAO.search(a);
+	public List<Author> search(String criteria) {
+		return authorDAO.search(criteria);
 	}
 
 	@Override

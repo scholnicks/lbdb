@@ -155,7 +155,7 @@ public class MultipleAuthorsDialog extends BaseDialog {
 
 			AuthorTableModel model = (AuthorTableModel) getResultsTable().getModel();
 
-			java.util.List<Author> foundAuthors = authorService.search( new Author(lastName,firstName) );
+			java.util.List<Author> foundAuthors = authorService.search(firstName);
 
 			if (foundAuthors.isEmpty()) {
 				String message = "Author ( " + lastName + "," + firstName + " ) not found.  Add?";

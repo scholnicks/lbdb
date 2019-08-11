@@ -8,11 +8,9 @@ import java.util.List;
 
 public interface AuthorService {
 	List<Author> get(Book b);
-	List<Author> search(Author a);
-	
+	List<Author> search(String criteria);
 	Author get(Long id);
 	void delete(Author a);
 	Author save(Author a, boolean createOnly);
-	
 	Long count();
 }

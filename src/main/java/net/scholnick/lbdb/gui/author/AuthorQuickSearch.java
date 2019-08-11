@@ -2,36 +2,26 @@ package net.scholnick.lbdb.gui.author;
 
 import net.scholnick.lbdb.domain.Author;
 import net.scholnick.lbdb.gui.BaseDialog;
+import net.scholnick.lbdb.gui.TrimmedTextField;
 import net.scholnick.lbdb.service.AuthorService;
 import net.scholnick.lbdb.util.GUIUtilities;
-import net.scholnick.lbdb.util.LabelFactory;
-import net.scholnick.lbdb.util.LimitedStyledDocument;
-import net.scholnick.lbdb.util.NullSafe;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
-@Component("authorQuickSearch")
+import static javax.swing.JOptionPane.showConfirmDialog;
+
+@Component
 @Scope("prototype")
 public class AuthorQuickSearch extends BaseDialog {
-	private final Logger log = LoggerFactory.getLogger(AuthorQuickSearch.class);
-
-	private JTextField lastNameField;
-	private JTextField firstNameField;
-	private JCheckBox  exactNameOnlyCheckbox;
-	private JButton    searchButton;
-
+	private JTextField nameField;
 	private JTable resultsTable;
-
 	private AuthorService authorService;
 	
 	public AuthorQuickSearch() {
@@ -43,10 +33,8 @@ public class AuthorQuickSearch extends BaseDialog {
 	}
 	
 	public void initialize() {
-		getLastNameField().setText("");
-		getFirstNameField().setText("");
+		getNameField().setText("");
 		((AuthorTableModel) getResultsTable().getModel()).clear();
-		
 		GUIUtilities.center(this);
 		getOKButton().setEnabled(false);
 	}
@@ -54,7 +42,6 @@ public class AuthorQuickSearch extends BaseDialog {
 	@Override
 	protected void buildGUI() {
 		getContentPane().setLayout(new BorderLayout());
-
 		getContentPane().add(getInputPanel(), BorderLayout.NORTH);
 
 		JScrollPane pane = new JScrollPane(getResultsTable());
@@ -73,74 +60,26 @@ public class AuthorQuickSearch extends BaseDialog {
 		gbc.gridheight = 1;
 		gbc.gridwidth = 1;
 		gbc.weightx = 1.00;
-		gbc.weighty = .50;
+		gbc.weighty = 1.00;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.insets = new Insets(5, 5, 0, 0);
 
-		p.add(LabelFactory.createLabel("Last Name:"), gbc);
-		gbc.gridx++;
-		p.add(getLastNameField(), gbc);
-
-		gbc.gridy++;
-		gbc.gridx = 0;
-		p.add(LabelFactory.createLabel("First Name:"), gbc);
-		gbc.gridx++;
-		p.add(getFirstNameField(), gbc);
-
-		gbc.gridy++;
-		gbc.gridx = 0;
-		p.add(LabelFactory.createLabel("Exact Name Only:"), gbc);
-		gbc.gridx++;
-		p.add(getExactNameOnlyCheckbox(), gbc);
-
-		gbc.gridy++;
-		gbc.gridx = 0;
-		gbc.insets = new Insets(5, 0, 0, 0);
-		p.add(getSearchButton(), gbc);
-
+		p.add(getNameField(), gbc);
 		return p;
 	}
 
-	private JTextField getFirstNameField() {
-		if (firstNameField == null) {
-			firstNameField = new JTextField(10);
-			firstNameField.setDocument(new LimitedStyledDocument(100));
-			firstNameField.setToolTipText("First name");
-			firstNameField.addActionListener(searchAction);
+	private JTextField getNameField() {
+		if (nameField == null) {
+			nameField = new TrimmedTextField(20,100);
+			nameField.addActionListener(e -> search());
 		}
-		return firstNameField;
-	}
-
-	private JTextField getLastNameField() {
-		if (lastNameField == null) {
-			lastNameField = new JTextField(10);
-			lastNameField.setDocument(new LimitedStyledDocument(100));
-			lastNameField.setToolTipText("Last name");
-			lastNameField.addActionListener(searchAction);
-		}
-		return lastNameField;
-	}
-
-	private JCheckBox getExactNameOnlyCheckbox() {
-		if (exactNameOnlyCheckbox == null) {
-			exactNameOnlyCheckbox = new JCheckBox();
-		}
-		return exactNameOnlyCheckbox;
-	}
-
-	/** returns the search button */
-	private JButton getSearchButton() {
-		if (searchButton == null) {
-			searchButton = new JButton("Search");
-			searchButton.addActionListener(searchAction);
-		}
-		return searchButton;
+		return nameField;
 	}
 
 	@Override
 	protected JComponent getInitialFocusComponent() {
-		return getLastNameField();
+		return getNameField();
 	}
 
 	private JTable getResultsTable() {
@@ -154,12 +93,12 @@ public class AuthorQuickSearch extends BaseDialog {
 
 			resultsTable.addMouseListener(new MouseAdapter() {
 				@Override public void mouseClicked(MouseEvent event) {
-					if (event.getClickCount() == 1) {
-						getOKButton().setEnabled(true);
-					}
-					else if (event.getClickCount() == 2) {
-						ok();
-					}
+				if (event.getClickCount() == 1) {
+					getOKButton().setEnabled(true);
+				}
+				else if (event.getClickCount() == 2) {
+					ok();
+				}
 				}
 			});
 		}
@@ -167,72 +106,46 @@ public class AuthorQuickSearch extends BaseDialog {
 	}
 
 	private void search() {
-		try {
-			String lastName = getLastNameField().getText();
-			String firstName = getFirstNameField().getText();
+		AuthorTableModel model = (AuthorTableModel) getResultsTable().getModel();
 
-			if (NullSafe.isEmpty(lastName) && NullSafe.isEmpty(firstName)) {
-				GUIUtilities.showMessageDialog("No search criteria specified.");
-				return;
+		getResultsTable().clearSelection();
+		model.clear();
+
+		List<Author> foundAuthors = authorService.search(getNameField().getText());
+
+		if (! foundAuthors.isEmpty()) {
+			for (Author a : foundAuthors) {
+				model.add(a);
 			}
-
-			AuthorTableModel model = (AuthorTableModel) getResultsTable().getModel();
-
-			getResultsTable().clearSelection();
-			model.clear();
-
-			Author searcher = new Author();
-			searcher.setFirstName(getFirstNameField().getText());
-			searcher.setLastName(getLastNameField().getText());
-			List<Author> foundAuthors =  authorService.search(searcher);
-
-			if (!foundAuthors.isEmpty()) {
-				for (Author a : foundAuthors) {
-					model.add(a);
-				}
-			}
-			else {
-				String message = "Author ( " + lastName + "," + firstName + " ) not found.  Add?";
-				int choice = JOptionPane.showConfirmDialog(this, message, "Add Author?", JOptionPane.YES_NO_OPTION);
-
-				if (choice == JOptionPane.YES_OPTION) {
-					addAuthor(lastName, firstName);
-				}
-			}
-
-			validate();
-			repaint();
 		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
+		else {
+			String fullName = getNameField().getText();
+
+			String message = "Author ( " + fullName + " ) not found.  Add?";
+			int choice = showConfirmDialog(this, message, "Add Author?", JOptionPane.YES_NO_OPTION);
+			if (choice == JOptionPane.YES_OPTION) {
+				model.add(Author.parse(fullName));
+			}
 		}
+
+		validate();
+		repaint();
 	}
 
-	private void addAuthor(String lastName, String firstName) {
-		try {
-			Author a = new Author();
-			a.setLastName(lastName);
-			a.setFirstName(firstName);
-			authorService.save(a,true);
-
-			//GUIUtilities.showMessageDialog("Author added");
-
-			((AuthorTableModel) getResultsTable().getModel()).add(a);
-			getResultsTable().setRowSelectionInterval(0, 0);
-			ok();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
+//	private void addAuthor(String lastName, String firstName) {
+//		Author a = new Author();
+//		a.setLastName(lastName);
+//		a.setFirstName(firstName);
+//		authorService.save(a,true);
+//
+//		((AuthorTableModel) getResultsTable().getModel()).add(a);
+//		getResultsTable().setRowSelectionInterval(0, 0);
+//		ok();
+//	}
 
 	public Author getSelectedAuthor() {
 		int row = getResultsTable().getSelectedRow();
-
-		if (row == -1) {
-			return null;
-		}
-
+		if (row == -1) return null;
 		return ((AuthorTableModel) getResultsTable().getModel()).get(row);
 	}
 
@@ -240,6 +153,4 @@ public class AuthorQuickSearch extends BaseDialog {
 	public void setAuthorService(AuthorService authorService) {
 		this.authorService = authorService;
 	}
-
-	private final ActionListener searchAction = event -> search();
 }
