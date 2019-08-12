@@ -135,7 +135,7 @@ public class AuthorQuickSearch extends BaseDialog {
 			String message = "Author ( " + fullName + " ) not found.  Add?";
 			int choice = showConfirmDialog(this, message, "Add Author?", JOptionPane.YES_NO_OPTION);
 			if (choice == JOptionPane.YES_OPTION) {
-				model.add(Author.parse(fullName));
+				model.add(Author.of(fullName));
 				getResultsTable().setRowSelectionInterval(0,0);
 				ok();
 			}

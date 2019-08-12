@@ -1,113 +1,70 @@
 package net.scholnick.lbdb.domain;
 
-import net.scholnick.lbdb.util.NullSafe;
-
 import java.util.Objects;
+import java.util.Set;
 
-/**
- * Note: this class has a natural ordering that is inconsistent with equals.
- */
-public final class Author extends BasicObject implements Validatable, Comparable<Author> {
-	private String   lastName;
-	private String   firstName;
+public final class Author extends BasicObject implements Comparable<Author> {
+	private String   name;
 	private String   webSite;
 	private boolean  editor;
-	private String addedTimestamp;
+	private String   addedTimestamp;
 
-	public static Author parse(String fullName) {
-		int lastSpace = fullName.lastIndexOf(' ');
-		return new Author(
-			fullName.substring(lastSpace).trim(),
-			fullName.substring(0,lastSpace).trim()
-		);
+	public static Author of(String name) {
+		Author a = new Author();
+		a.name = name;
+		return a;
 	}
 
-	public Author() {
-		// empty
-	}
+	public String lastName() {
+		int lastSpace = name.lastIndexOf(' ');
+		if (lastSpace == -1) return name;
 
-	public Author(String lastName, String firstName) {
-		this();
-		this.lastName = lastName;
-		this.firstName = firstName;
-	}
-
-    @Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
-		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) { return true; }
-		if (!(obj instanceof Author)) { return false; }
-
-		Author other = (Author) obj;
-		return Objects.equals(lastName,other.lastName) && Objects.equals(firstName,other.firstName);
-	}
-
-	@Override
-	public String validate() {
-		if (NullSafe.isEmpty(getFirstName()))
-			return "First Name is required";
-
-		if (NullSafe.isEmpty(getLastName()))
-			return "Last Name is required";
-
-		if (! NullSafe.isEmpty(getWebSite())) {
-			if (!(getWebSite().startsWith("http://") || getWebSite().startsWith("https://"))) {
-				return "Web site URL must be in the proper format";
-			}
+		String lastName = name.substring(lastSpace).trim();
+		if (SUFFIXES.contains(lastName)) {
+			lastSpace = name.substring(0,lastSpace).trim().lastIndexOf(' ');
+			if (lastSpace == -1) return name;
+			return name.substring(0,lastSpace).trim();
 		}
-
-		return "";
+		else {
+			return lastName;
+		}
 	}
 
-	public String getName() {
-		return NullSafe.concatenate(getLastName(), ",", getFirstName());
+	@Override
+	public int compareTo(Author o) {
+		return name.compareTo(o.name);
 	}
 
-	public String toCanonicalName() {
-		return NullSafe.toCanonical(NullSafe.notNullSubst(getFirstName(),true) + NullSafe.notNullSubst(getLastName(),true));
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Author author = (Author) o;
+		return Objects.equals(name, author.name) &&
+				Objects.equals(webSite, author.webSite);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, webSite);
 	}
 
 	@Override
 	public String toString() {
-		return getName();
+		return "Author{" +
+				"name='" + name + '\'' +
+				", webSite='" + webSite + '\'' +
+				", editor=" + editor +
+				", addedTimestamp='" + addedTimestamp + '\'' +
+				'}';
 	}
 
-	@Override
-	public int compareTo(Author other) {
-		if (this.editor && !other.editor)
-			return -1;
-		if (!this.editor && other.editor)
-			return 1;
-
-		int cmp = NullSafe.compare(getLastName(), other.getLastName());
-		if (cmp != 0)
-			return cmp;
-
-		return NullSafe.compare(getFirstName(), other.getFirstName());
+	public String getName() {
+		return name;
 	}
 
-	public String getLastName() {
-		return this.lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public String getFirstName() {
-		return this.firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getWebSite() {
@@ -133,4 +90,6 @@ public final class Author extends BasicObject implements Validatable, Comparable
 	public void setAddedTimestamp(String addedTimestamp) {
 		this.addedTimestamp = addedTimestamp;
 	}
+
+	private static final Set<String> SUFFIXES = Set.of("i","ii","iii","iv","jr","sr","jr.","sr.");
 }

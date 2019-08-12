@@ -2,26 +2,24 @@
 --
 
 create table book_type (
-   bot_created_date		datetime not null default (datetime(current_timestamp,'localtime')),
-   bot_modified_date	datetime,
+   bot_created_date	 datetime not null default (datetime(current_timestamp,'localtime')),
+   bot_modified_date	 datetime,
    bot_id             integer not null primary key,
    bot_desc           varchar(80) not null
 );
 
 create table media_type (
-   med_created_date		datetime not null default (datetime(current_timestamp,'localtime')),
-   med_modified_date	datetime,
+   med_created_date	 datetime not null default (datetime(current_timestamp,'localtime')),
+   med_modified_date	 datetime,
    med_id             integer not null primary key,
    med_desc           varchar(80) not null
 );
 
 create table author (
-   auth_created_date	datetime not null default (datetime(current_timestamp,'localtime')),
-   auth_modified_date datetime,
+   auth_created_date   datetime not null default (datetime(current_timestamp,'localtime')),
    auth_id		        integer not null primary key autoincrement,
-   auth_last_name		  varchar(100) not null,
-   auth_first_name		varchar(100),
-   auth_website			  varchar(100)
+   auth_name           varchar(200) not null,
+   auth_website		  varchar(100)
 );
 
 create table book (
@@ -52,16 +50,6 @@ create table author_book_xref (
    foreign key(book_id) references book(book_id)
 );
 
-create view v_search as
-    select
-        b.*, a.auth_id, a.auth_first_name, a.auth_last_name, x.abx_editor
-    from
-        book b
-    join
-		author_book_xref x on b.book_id=x.book_id
-    join
-        author a on a.auth_id=x.auth_id
-;
 
 insert into book_type(bot_id,bot_desc) values(1,'Fiction');
 insert into book_type(bot_id,bot_desc) values(2,'Non-Fiction');

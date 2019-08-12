@@ -29,8 +29,8 @@ public class AuthorDAOImpl implements AuthorDAO {
 		if (NullSafe.isEmpty(criteria)) return Collections.emptyList();
 
 		String sql = "select * from author where auth_id is not null" +
-		 	" and lower(auth_first_name || ' ' || auth_last_name) like lower(?)" +
-		 	" order by auth_first_name, auth_last_name";
+		 	" and lower(auth_name) like lower(?)" +
+		 	" order by auth_name";
 
 		return jdbcTemplate.query(sql,this::mapRow,criteria.toLowerCase() + "%");
 	}
@@ -39,10 +39,9 @@ public class AuthorDAOImpl implements AuthorDAO {
 	public Long create(Author a) {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update( (connection) -> {
-                PreparedStatement s = connection.prepareStatement("insert into author(auth_last_name,auth_first_name,auth_website) values(?,?,?)");
-                s.setString(1,a.getLastName());
-                s.setString(2,a.getFirstName());
-                s.setString(3,a.getWebSite());
+                PreparedStatement s = connection.prepareStatement("insert into author(auth_name,auth_website) values(?,?,?)");
+                s.setString(1,a.getName());
+                s.setString(2,a.getWebSite());
 				return s;
             },
             keyHolder
@@ -60,7 +59,7 @@ public class AuthorDAOImpl implements AuthorDAO {
 	@Override
 	public List<Author> get(Book b) {
 		return jdbcTemplate.query(
-		   "select * from author where auth_id in (select auth_id from author_book_xref where book_id=?) order by auth_last_name",
+		   "select * from author where auth_id in (select auth_id from author_book_xref where book_id=?) order by auth_name",
 		   this::mapRow,
 		   b.getId()
 		);
@@ -87,10 +86,8 @@ public class AuthorDAOImpl implements AuthorDAO {
 	
 	@Override
 	public void update(Author a) {
-		jdbcTemplate.update(
-			UPDATE,
-			a.getLastName(),
-			a.getFirstName(),
+		jdbcTemplate.update(UPDATE,
+			a.getName(),
 			a.getWebSite(),
 			a.getId()
 		);
@@ -104,8 +101,7 @@ public class AuthorDAOImpl implements AuthorDAO {
 	private Author mapRow(ResultSet rs, int rowCount) throws SQLException {
 		Author a = new Author();
 		a.setId(rs.getLong("auth_id"));
-		a.setLastName(rs.getString("auth_last_name"));
-		a.setFirstName(rs.getString("auth_first_name"));
+		a.setName(rs.getString("auth_name"));
 		a.setWebSite(rs.getString("auth_website"));
 		a.setAddedTimestamp(rs.getString("auth_created_date"));
 		return a;

@@ -31,22 +31,20 @@ final class AuthorTableModel extends AbstractTableModel {
 
 	@Override
 	public int getColumnCount() {
-		return 3;
+		return 2;
 	}
 
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		return columnIndex == 2;
+		return true;
 	}
 
 	@Override
 	public String getColumnName(int col) {
 		switch (col) {
 			case 0:
-				return "Last";
+				return "Name";
 			case 1:
-				return "First";
-			case 2:
 				return "Editor?";
 		}
 		return null;
@@ -54,26 +52,24 @@ final class AuthorTableModel extends AbstractTableModel {
 
 	@Override
 	public Class<?> getColumnClass(int c) {
-		return (c < 2) ? String.class : Boolean.class;
+		return (c != 1) ? String.class : Boolean.class;
 	}
 
 	@Override
 	public Object getValueAt(int row, int col) {
 		Author data = dataRows.get(row);
-		switch (col) {
-			case 0:
-				return data.getLastName();
-			case 1:
-				return data.getFirstName();
-			case 2:
-				return data.isEditor();
+		if (col == 0) {
+			return data.getName();
+		}
+		else if (col == 1) {
+			return data.isEditor();
 		}
 		return null;
 	}
 
 	@Override
 	public void setValueAt(Object value, int rowIndex, int columnIndex) {
-		if (columnIndex == 2) {
+		if (columnIndex == 1) {
 			dataRows.get(rowIndex).setEditor((Boolean) value);
 		}
 		fireTableDataChanged();

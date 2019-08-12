@@ -22,7 +22,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 
 import static javax.swing.BorderFactory.*;
 import static net.scholnick.lbdb.util.GUIUtilities.showMessageDialog;
@@ -598,13 +597,7 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 		getAddedDateLabel().setText(book.getAddedTimestamp());
 
 		getAuthorTableModel().clear();
-
-		Collections.sort(getBook().getAuthors());
-
-		for (Author a : getBook().getAuthors()) {
-			getAuthorTableModel().add(a);
-		}
-
+		getBook().getAuthors().stream().sorted().forEach(a -> getAuthorTableModel().add(a));
 		reload();
 	}
 

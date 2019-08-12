@@ -151,14 +151,9 @@ public class BookDAOImpl implements BookDAO {
 				criteria.add(a.getId().toString());
 			}
 			else {
-				if (! NullSafe.isEmpty(a.getFirstName())) {
-					sql += " and lower(auth_first_name) like lower(?)";
-					criteria.add("%" + a.getFirstName() + "%");
-				}
-				
-				if (! NullSafe.isEmpty(a.getLastName())) {
-					sql += " and lower(auth_last_name) like lower(?)";
-					criteria.add("%" + a.getLastName() + "%");
+				if (! NullSafe.isEmpty(a.getName())) {
+					sql += " and lower(auth_name) like lower(?)";
+					criteria.add("%" + a.getName() + "%");
 				}
 			}
 			

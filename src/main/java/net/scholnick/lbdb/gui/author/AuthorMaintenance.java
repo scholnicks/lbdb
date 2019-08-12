@@ -7,9 +7,6 @@ import net.scholnick.lbdb.gui.TrimmedTextField;
 import net.scholnick.lbdb.service.AuthorService;
 import net.scholnick.lbdb.util.GUIUtilities;
 import net.scholnick.lbdb.util.LabelFactory;
-import net.scholnick.lbdb.util.NullSafe;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,10 +19,7 @@ import static net.scholnick.lbdb.util.GUIUtilities.showMessageDialog;
 
 @Component
 public class AuthorMaintenance extends AbstractUpdateMaintenance {
-	private final Logger log = LoggerFactory.getLogger(AuthorMaintenance.class);
-
-	private JTextField lastNameField;
-	private JTextField firstNameField;
+	private JTextField nameField;
 	private JTextField webSiteField;
 	private JButton    deleteButton;
 
@@ -40,13 +34,12 @@ public class AuthorMaintenance extends AbstractUpdateMaintenance {
 	}
 
 	protected void resetFocus() {
-		getFirstNameField().requestFocus();
+		getNameField().requestFocus();
 	}
 
 	@Override
 	protected void clear() {
-		getLastNameField().setText("");
-		getFirstNameField().setText("");
+		getNameField().setText("");
 		getWebSiteField().setText("");
 		getAddedDateLabel().setText("");
 		author = null;
@@ -62,15 +55,9 @@ public class AuthorMaintenance extends AbstractUpdateMaintenance {
 
 	private void removeAuthor() {
 		if (JOptionPane.showConfirmDialog(this, "Delete Author?") == JOptionPane.YES_OPTION) {
-			try {
-				authorService.delete(getAuthor());
-				showMessageDialog(author + " deleted");
-				clear();
-			}
-			catch (Exception e) {
-				showMessageDialog("Unable to delete author");
-				log.error("Unable to delete author", e);
-			}
+			authorService.delete(getAuthor());
+			showMessageDialog(author + " deleted");
+			clear();
 		}
 	}
 
@@ -95,13 +82,7 @@ public class AuthorMaintenance extends AbstractUpdateMaintenance {
 
 		p.add(LabelFactory.createLabel("First Name"), gbc);
 		gbc.gridx++;
-		p.add(getFirstNameField(), gbc);
-
-		gbc.gridy++;
-		gbc.gridx = 0;
-		p.add(LabelFactory.createLabel("Last Name"), gbc);
-		gbc.gridx++;
-		p.add(getLastNameField(), gbc);
+		p.add(getNameField(), gbc);
 
 		gbc.gridy++;
 		gbc.gridx = 0;
@@ -120,14 +101,9 @@ public class AuthorMaintenance extends AbstractUpdateMaintenance {
 		return p;
 	}
 
-	private JTextField getFirstNameField() {
-		if (firstNameField == null) firstNameField = new TrimmedTextField(10,100);
-		return firstNameField;
-	}
-
-	private JTextField getLastNameField() {
-		if (lastNameField == null) lastNameField = new TrimmedTextField(20,100);
-		return lastNameField;
+	private JTextField getNameField() {
+		if (nameField == null) nameField = new TrimmedTextField(10,100);
+		return nameField;
 	}
 
 	private JTextField getWebSiteField() {
@@ -162,8 +138,7 @@ public class AuthorMaintenance extends AbstractUpdateMaintenance {
 	}
 
 	private void loadData() {
-		getFirstNameField().setText(author.getFirstName());
-		getLastNameField().setText(author.getLastName());
+		getNameField().setText(author.getName());
 		getWebSiteField().setText(author.getWebSite());
 		getAddedDateLabel().setText(author.getAddedTimestamp());
 		validate();
@@ -171,35 +146,17 @@ public class AuthorMaintenance extends AbstractUpdateMaintenance {
 	}
 
 	protected void ok() {
-		try {
-			loadDataFromForm();
-
-			String errors = getAuthor().validate();
-
-			if (NullSafe.isEmpty(errors)) {
-				authorService.save(getAuthor(),false);
-				showMessageDialog(author.getName() + " saved");
-			}
-			else {
-				showMessageDialog(errors);
-			}
-		}
-		catch (Exception e) {
-			log.error("Unable to save author", e);
-		}
+		authorService.save(getAuthor(),false);
 	}
 
-	private void loadDataFromForm() {
-		if (author == null) {
-			author = new Author();
-		}
-
-		author.setLastName(getLastNameField().getText());
-		author.setFirstName(getFirstNameField().getText());
-		author.setWebSite(getWebSiteField().getText());
-
-		setAuthor(author);
-	}
-
-	private static final long serialVersionUID = 8287206725962042277L;
+//	private void loadDataFromForm() {
+//		if (author == null) {
+//			author = new Author();
+//		}
+//
+//		author.setName(getNameField().getText());
+//		author.setWebSite(getWebSiteField().getText());
+//
+//		setAuthor(author);
+//	}
 }

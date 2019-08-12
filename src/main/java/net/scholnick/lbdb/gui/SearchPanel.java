@@ -20,7 +20,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Collections;
 import java.util.Objects;
 import java.util.Vector;
 
@@ -31,8 +30,7 @@ public class SearchPanel extends BasePanel {
 	private JButton editBookButton;
 	private JButton editAuthorButton;
 
-	private JTextField authorFirstName;
-	private JTextField authorLastName;
+	private JTextField authorName;
 	private JTextField title;
 	private JTextField series;
 	private JComboBox<MediaType> mediaCombo;
@@ -132,31 +130,23 @@ public class SearchPanel extends BasePanel {
 		leftPanel.add(LabelFactory.createLabel("Series"), gbc);
 		gbc.gridx++;
 		leftPanel.add(getSeriesField(), gbc);
-
-		gbc.gridy++;
-		gbc.gridx = 0;
-		leftPanel.add(LabelFactory.createLabel("Media"), gbc);
-		gbc.gridx++;
-		leftPanel.add(getMediaCombo(), gbc);
 		cp.add(leftPanel);
 
 		
 		JPanel rightPanel = new JPanel(new GridBagLayout());
 		Insets shiftedInsets = new Insets(0,20,0,0);
 		gbc = GUIUtilities.getDefaultGridBagConstraints();
-		rightPanel.add(LabelFactory.createLabel("Author Last Name"), gbc);
+		rightPanel.add(LabelFactory.createLabel("Author Name"), gbc);
 		gbc.gridx++;
 		gbc.insets = shiftedInsets;
-		rightPanel.add(getAuthorLastNameField(), gbc);
+		rightPanel.add(getAuthorNameField(), gbc);
 
 		gbc.gridy++;
 		gbc.gridx = 0;
-		gbc.insets = GUIUtilities.EMPTY_INSETS;
-		rightPanel.add(LabelFactory.createLabel("Author First Name"), gbc);
+		rightPanel.add(LabelFactory.createLabel("Media"), gbc);
 		gbc.gridx++;
-		gbc.insets = shiftedInsets;
-		rightPanel.add(getAuthorFirstNameField(), gbc);
-		
+		rightPanel.add(getMediaCombo(), gbc);
+
 		JPanel extra = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		extra.add(rightPanel);
 		cp.add(extra);
@@ -203,14 +193,8 @@ public class SearchPanel extends BasePanel {
 			b.setSeries( getSeriesField().getText() );
 			b.setMedia( Media.from( Objects.requireNonNull((MediaType) getMediaCombo().getSelectedItem()).getId()) );
 			
-			String firstName = getAuthorFirstNameField().getText();
-			String lastName = getAuthorLastNameField().getText();
-			
-			if (! NullSafe.isEmpty(firstName) || ! NullSafe.isEmpty(lastName)) {
-				Author a = new Author();
-				a.setFirstName(firstName);
-				a.setLastName(lastName);
-				b.setAuthors( Collections.singletonList(a) );
+			if (! NullSafe.isEmpty(getAuthorNameField().getText())) {
+				b.setAuthors(java.util.List.of(Author.of(getAuthorNameField().getText())));
 			}
 			
 			final java.util.List<Book> books = bookService.search(b);
@@ -239,14 +223,12 @@ public class SearchPanel extends BasePanel {
 
 	private void clear() {
 		getTitleField().setText("");
-		getAuthorFirstNameField().setText("");
-		getAuthorLastNameField().setText("");
+		getAuthorNameField().setText("");
 		getSeriesField().setText("");
 		getMediaCombo().setSelectedIndex(0);
 		getInfoLabel().setText(" ");
 
 		clearTableData();
-
 		getTitleField().requestFocus();
 		repaint();
 	}
@@ -274,22 +256,13 @@ public class SearchPanel extends BasePanel {
 		}
 	}
 
-	private JTextField getAuthorFirstNameField() {
-		if (authorFirstName == null) {
-			authorFirstName = new TrimmedTextField(20,100);
-			authorFirstName.setToolTipText("First name");
-			authorFirstName.addActionListener(searchAction);
+	private JTextField getAuthorNameField() {
+		if (authorName == null) {
+			authorName = new TrimmedTextField(20,100);
+			authorName.setToolTipText("First name");
+			authorName.addActionListener(searchAction);
 		}
-		return authorFirstName;
-	}
-
-	private JTextField getAuthorLastNameField() {
-		if (authorLastName == null) {
-			authorLastName = new TrimmedTextField(20,100);
-			authorLastName.setToolTipText("Last name");
-			authorLastName.addActionListener(searchAction);
-		}
-		return authorLastName;
+		return authorName;
 	}
 
 	private JTable getDataTable() {
@@ -406,8 +379,7 @@ public class SearchPanel extends BasePanel {
 
         private boolean isEmpty() {
             return NullSafe.isEmpty(getTitleField().getText()) &&
-                    NullSafe.isEmpty(getAuthorFirstNameField().getText()) &&
-                    NullSafe.isEmpty(getAuthorLastNameField().getText()) &&
+                    NullSafe.isEmpty(getAuthorNameField().getText()) &&
                     NullSafe.isEmpty(getSeriesField().getText()) &&
                     getMediaCombo().getSelectedIndex() == 0
                     ;

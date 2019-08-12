@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import static net.scholnick.lbdb.util.CacheManager.getDestinationDirectory;
+import static net.scholnick.lbdb.util.NullSafe.toCanonical;
 
 @Service
 public class GoogleServiceImpl implements GoogleService {
@@ -52,7 +53,7 @@ public class GoogleServiceImpl implements GoogleService {
 
         String url = String.format(SEARCH_URL,
             URLEncoder.encode(book.getTitle(), StandardCharsets.UTF_8),
-            URLEncoder.encode(book.getPrimaryAuthor().getLastName(), StandardCharsets.UTF_8)
+            URLEncoder.encode(book.getPrimaryAuthor().lastName(), StandardCharsets.UTF_8)
         );
 
         log.debug("Searching with GET: " + url);
@@ -78,7 +79,7 @@ public class GoogleServiceImpl implements GoogleService {
             if (NullSafe.canonicalEquals((String) volumeInfo.get("title"),book.getTitle())) {
                 for (String author: ((List<String>) volumeInfo.get("authors")) ) {
                     for (Author a: book.getAuthors()) {
-                        if (NullSafe.equals(NullSafe.toCanonical(author),a.toCanonicalName())) {
+                        if (canonicalEquals(author,a)) {
                             log.debug("Found cover photo match for " + book);
                             Map<String,String> imageLinks = (Map<String,String>) volumeInfo.get("imageLinks");
                             log.debug("Image Links: " + imageLinks);
@@ -95,7 +96,7 @@ public class GoogleServiceImpl implements GoogleService {
                             // if (volumeInfo.get("publishedDate") != null) {
                             // 	log.debug(getClass(),"Published Date: " + volumeInfo.get("publishedDate"));
                             // 	String publishedDate = (String) volumeInfo.get("publishedDate");
-                            // 	book.setPublishedYear(publishedDate.substring(0,publishedDate.indexOf("-")));
+                            // 	book.setPublishNullSafe.toCanonical(author)edYear(publishedDate.substring(0,publishedDate.indexOf("-")));
                             // }
 
                             return;
@@ -104,6 +105,10 @@ public class GoogleServiceImpl implements GoogleService {
                 }
             }
         }
+    }
+
+    private boolean canonicalEquals(String s, Author a) {
+        return NullSafe.equals(toCanonical(s), toCanonical(a.getName()));
     }
 
     private Path getBookCoverPath(Book b) throws IOException {

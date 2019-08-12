@@ -29,13 +29,7 @@ class AuthorTableModel extends AbstractTableModel {
 
 	@Override
 	public String getColumnName(int col) {
-		switch (col) {
-			case 0:
-				return "First";
-			case 1:
-				return "Last";
-		}
-		return null;
+		return "Name";
 	}
 
 	@Override
@@ -45,14 +39,7 @@ class AuthorTableModel extends AbstractTableModel {
 
 	@Override
 	public Object getValueAt(int row, int col) {
-		Author data = get(row);
-		switch (col) {
-			case 0:
-				return data.getFirstName();
-			case 1:
-				return data.getLastName();
-		}
-		return null;
+		return get(row).getName();
 	}
 
 	public void add(Author data) {
