@@ -3,7 +3,10 @@ package net.scholnick.lbdb.gui.title;
 import net.scholnick.lbdb.gui.SearchTableCellRenderer;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -21,6 +24,7 @@ public final class TitleSearchTable extends JTable {
 		setCellSelectionEnabled(false);
 		setRowSelectionAllowed(true);
 		getTableHeader().setReorderingAllowed(false);
+		getTableHeader().setDefaultRenderer(new HeaderRenderer(this));
 	}
 
 	private void defineColumnWidths() {
@@ -53,5 +57,19 @@ public final class TitleSearchTable extends JTable {
 	@Override
 	public String toString() {
 		return String.valueOf(getModel());
+	}
+
+	private static final class HeaderRenderer implements TableCellRenderer {
+		DefaultTableCellRenderer renderer;
+
+		public HeaderRenderer(JTable table) {
+			renderer = (DefaultTableCellRenderer) table.getTableHeader().getDefaultRenderer();
+			renderer.setHorizontalAlignment(JLabel.CENTER);
+		}
+
+		@Override
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) {
+			return renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+		}
 	}
 }

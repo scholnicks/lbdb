@@ -374,10 +374,6 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 		repaint();
 	}
 
-//	protected JComponent getInitialFocusComponent() {
-//		return getTitleField();
-//	}
-
 	private JTextField getTitleField() {
 		if (titleField == null) titleField = new TrimmedTextField(30,255);
 		return titleField;
@@ -460,18 +456,6 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 		}
 	}
 
-	private boolean validateData(Book b) {
-		String errors = b.validate();
-
-		if (NullSafe.isEmpty(errors)) {
-			return true;
-		}
-		else {
-			showMessageDialog(errors);
-			return false;
-		}
-	}
-
 	public void clear() {
 		getAnthologyCheckBox().setSelected(false);
 		getCommentsArea().setText("");
@@ -491,25 +475,15 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 	protected void ok() {
 		try {
 			Book b = createBookFromFormData();
-
-			if (validateData(b)) {
-				if (databaseUpdate(b)) {
-					setBook(b);
-				}
+			if (databaseUpdate(b)) {
+				setBook(b);
 			}
 		}
 		catch (Exception e) {
 			showMessageDialog("Error saving ");
-			log.error("",e);
+			log.error("Unable to save Book",e);
 		}
 	}
-
-//	private void saveAndClear() {
-//		ok();
-//		clear();
-//		resetFocus();
-//		repaint();
-//	}
 
 	private Book createBookFromFormData() {
 		Book b = getBook() == null ? new Book() : getBook();

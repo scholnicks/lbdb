@@ -11,10 +11,6 @@ public final class TrimmedTextField extends JTextField {
         setDocument(new LimitedStyledDocument(maxChars));
     }
 
-    public TrimmedTextField(String text) {
-        super(text);
-    }
-
     @Override
     public String getText() {
         return NullSafe.trim(super.getText());

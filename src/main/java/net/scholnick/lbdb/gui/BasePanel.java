@@ -28,10 +28,6 @@ public abstract class BasePanel extends JPanel {
 		listenerList.add(TitleSelectionListener.class, listener);
 	}
 
-//	public final void removeTitleSelectionListener(TitleSelectionListener listener) {
-//		listenerList.remove(TitleSelectionListener.class, listener);
-//	}
-
 	final void fireTitleSelection(TitleSelectionEvent event) {
 		Object[] listeners = listenerList.getListenerList();
 
@@ -46,10 +42,6 @@ public abstract class BasePanel extends JPanel {
 		listenerList.add(AuthorSelectionListener.class, listener);
 	}
 
-//	public final void removeAuthorSelectionListener(AuthorSelectionListener listener) {
-//		listenerList.remove(AuthorSelectionListener.class, listener);
-//	}
-
 	final void fireAuthorSelection(AuthorSelectionEvent event) {
 		Object[] listeners = listenerList.getListenerList();
 
@@ -60,9 +52,4 @@ public abstract class BasePanel extends JPanel {
 		}
 	}
 
-//	protected final void loadData(JTextComponent field, String value) {
-//		if (value != null) {
-//			field.setText(value);
-//		}
-//	}
 }

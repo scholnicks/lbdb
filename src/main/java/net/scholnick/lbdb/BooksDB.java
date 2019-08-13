@@ -115,7 +115,6 @@ public final class BooksDB extends JFrame {
 		setTitle("Laurel's Book Database : " + bookService.count() + " books / " + authorService.count() + " authors");
 	}
 
-	/** creates the menus */
 	private void buildMenus() {
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.add(getTitleMenu());
@@ -126,7 +125,6 @@ public final class BooksDB extends JFrame {
 		Desktop.getDesktop().setAboutHandler(e -> showMessageDialog(VERSION,"About"));
 	}
 
-	/** returns the standard edit menu */
 	private JMenu getEditMenu() {
 		JMenu editMenu = new JMenu("Edit");
 
@@ -173,7 +171,6 @@ public final class BooksDB extends JFrame {
 		return fileMenu;
 	}
 
-	/** returns the go menu */
 	private JMenu getGoMenu() {
 		JMenu goMenu = new JMenu("Go");
 

@@ -23,9 +23,9 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static net.scholnick.lbdb.util.CacheManager.getDestinationDirectory;
-import static net.scholnick.lbdb.util.NullSafe.toCanonical;
 
 @Service
 public class GoogleServiceImpl implements GoogleService {
@@ -76,7 +76,7 @@ public class GoogleServiceImpl implements GoogleService {
         for (Object record: items) {
             Map<Object,Object> volumeInfo = (Map<Object,Object>) ((Map<Object,Object>) record).get("volumeInfo");
 
-            if (NullSafe.canonicalEquals((String) volumeInfo.get("title"),book.getTitle())) {
+            if (canonicalEquals((String) volumeInfo.get("title"),book.getTitle())) {
                 for (String author: ((List<String>) volumeInfo.get("authors")) ) {
                     for (Author a: book.getAuthors()) {
                         if (canonicalEquals(author,a)) {
@@ -109,6 +109,15 @@ public class GoogleServiceImpl implements GoogleService {
 
     private boolean canonicalEquals(String s, Author a) {
         return NullSafe.equals(toCanonical(s), toCanonical(a.getName()));
+    }
+
+    private boolean canonicalEquals(String s1, String s2) {
+        if (s1 == null || s2 == null) return false;
+        return Objects.equals(toCanonical(s1), toCanonical(s2));
+    }
+
+    private String toCanonical(String s) {
+        return s == null ? null : s.replaceAll("\\s*","").trim().toLowerCase();
     }
 
     private Path getBookCoverPath(Book b) throws IOException {

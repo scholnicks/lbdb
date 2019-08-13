@@ -13,8 +13,7 @@ import java.net.URL;
 public class GUIUtilities {
 	private final static Logger log = LoggerFactory.getLogger(GUIUtilities.class);
 
-	private GUIUtilities() {
-	}
+	private GUIUtilities() {}
 
 	public static GridBagConstraints getDefaultGridBagConstraints() {
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -29,10 +28,6 @@ public class GUIUtilities {
 
 		return gbc;
 	}
-
-//	public static boolean hasValue(JTextComponent textComponent) {
-//		return !NullSafe.isEmpty(textComponent.getText());
-//	}
 
 	public static void openWebSite(String url) {
 		if (NullSafe.isEmpty(url)) {
@@ -71,5 +66,5 @@ public class GUIUtilities {
 
 	public static final Border EMPTY_BORDER = BorderFactory.createEmptyBorder(5, 5, 5, 5);
 
-	public static final Insets EMPTY_INSETS = new Insets(0,0,0,0);
+	private static final Insets EMPTY_INSETS = new Insets(0,0,0,0);
 }

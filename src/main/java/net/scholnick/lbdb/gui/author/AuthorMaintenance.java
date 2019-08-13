@@ -148,15 +148,4 @@ public class AuthorMaintenance extends AbstractUpdateMaintenance {
 	protected void ok() {
 		authorService.save(getAuthor(),false);
 	}
-
-//	private void loadDataFromForm() {
-//		if (author == null) {
-//			author = new Author();
-//		}
-//
-//		author.setName(getNameField().getText());
-//		author.setWebSite(getWebSiteField().getText());
-//
-//		setAuthor(author);
-//	}
 }

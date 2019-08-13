@@ -90,8 +90,6 @@ public final class TitleSearchTableModel extends AbstractTableModel {
 			sortingDirections[column] = sortingDirections[column] == Direction.ASCENDING ? Direction.DESCENDING : Direction.ASCENDING;
 		}
 
-		//LogManager.debug(getClass(), "Selected column = " + column + ",Old column = " + sortedColumn + ",Direction = " + sortingDirections[column]);
-
 		sortedColumn = column;
 		dataRows.sort(new DataSorter(column));
 		fireTableDataChanged();

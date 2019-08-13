@@ -59,7 +59,6 @@ public class SearchPanel extends BasePanel {
 		super.paintComponent(g);
 	}
 
-	/** Builds the GUI */
 	private void makePanels() {
 		JPanel middle = new JPanel(new BorderLayout());
 		middle.add(getTopPanel(), BorderLayout.NORTH);
@@ -69,7 +68,6 @@ public class SearchPanel extends BasePanel {
 		add(getBottomPanel(), BorderLayout.SOUTH);
 	}
 
-	/** Returns the bottom panel */
 	private JPanel getBottomPanel() {
 		JPanel p = new JPanel(new BorderLayout(1, 1));
 		p.add(getButtonPanel(), BorderLayout.CENTER);
@@ -77,7 +75,6 @@ public class SearchPanel extends BasePanel {
 		return p;
 	}
 
-	/** Returns the button panel */
 	protected JPanel getButtonPanel() {
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.add(getEditBookButton());
@@ -85,13 +82,11 @@ public class SearchPanel extends BasePanel {
 		return buttonPanel;
 	}
 
-	/** Returns the laziy iniated info label */
 	private JLabel getInfoLabel() {
 		if (infoLabel == null) {
 			infoLabel = LabelFactory.createLabel(" ");	// dont use "", swing will hide the component
 			infoLabel.setVisible(true);
 		}
-
 		return infoLabel;
 	}
 
@@ -103,7 +98,6 @@ public class SearchPanel extends BasePanel {
 		return topPanel;
 	}
 
-	/** returns the search button panel */
 	private JPanel getSearchButtonPanel() {
 		JPanel p = new JPanel();
 		p.add(getSearchButton());
@@ -111,7 +105,6 @@ public class SearchPanel extends BasePanel {
 		return p;
 	}
 
-	/** returns the input criteria panel */
 	private JPanel getCriteriaPanel() {
 		JPanel cp = new JPanel(new GridLayout(1,2));
 		
@@ -161,22 +154,11 @@ public class SearchPanel extends BasePanel {
 			for (Media m : Media.values()) {
 				types.add( new MediaType(m.toString(),m.getId()) );
 			}
-			
 			mediaCombo = new JComboBox<>(types);
 		}
 		return mediaCombo;
 	}
-	
-	private static class MediaType {
-		private final String display;
-		private final Integer id;
-		
-		MediaType(String display, Integer id) { this.display = display; this.id = id; }
-		@Override public String toString() { return display; }
-		public Integer getId() { return id; }
-	}
 
-	/** returns the search button */
 	private JButton getSearchButton() {
 		if (searchButton == null) {
 			searchButton = new JButton("Search");
@@ -185,7 +167,6 @@ public class SearchPanel extends BasePanel {
 		return searchButton;
 	}
 
-	/** search method */
 	public void search() {
 		try {
 			Book b = new Book();
@@ -360,8 +341,16 @@ public class SearchPanel extends BasePanel {
 		return null;
 	}
 
-    /** SearchAction is initiated when the user clicks the Search button */
-    private class SearchAction extends AbstractAction implements Runnable {
+	private static final class MediaType {
+		private final String display;
+		private final Integer id;
+
+		MediaType(String display, Integer id) { this.display = display; this.id = id; }
+		@Override public String toString() { return display; }
+		public Integer getId() { return id; }
+	}
+
+    private final class SearchAction extends AbstractAction implements Runnable {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (isEmpty()) {

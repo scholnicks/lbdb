@@ -1,12 +1,14 @@
 package net.scholnick.lbdb.domain;
 
-import net.scholnick.lbdb.util.NullSafe;
-
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import static java.util.stream.Collectors.joining;
 
 
-public final class Book extends BasicObject implements Validatable, Comparable<Book> {
+public final class Book extends BasicObject implements Comparable<Book> {
 	private String title;
 	private BookType type;
 	private Media media;
@@ -26,64 +28,19 @@ public final class Book extends BasicObject implements Validatable, Comparable<B
 		authors = new ArrayList<>();
 	}
 
-//	public boolean isComplete() {
-//		return getPublishedYear() != null && getIsbn() != null && getNumberOfPages() != null;
-//	}
-
-	@Override
-	public String validate() {
-		if (NullSafe.isEmpty(getTitle())) {
-			return "Title is required";
-		}
-
-		if (getType() == null) {
-			return "Type is required";
-		}
-
-		if (authors.isEmpty()) {
-			return "At least one author must be specified";
-		}
-
-		if (!NullSafe.isEmpty(getPublishedYear()) && !getPublishedYear().matches("[0-9]+")) {
-			return "Published year must be in the proper format";
-		}
-
-		return "";
-	}
-
 	public String getAuthorNames() {
-		Collections.sort(getAuthors());
-
-		StringBuilder buf = new StringBuilder(228);
-
-		for (Author a : getAuthors()) {
-			buf.append(a.getName()).append("; ");
-		}
-
-		if (buf.length() > 2) {
-			buf.setLength(buf.length() - 2);
-		}
-
-		return buf.toString();
+		return authors.stream().sorted().map(Author::getName).collect(joining(", "));
 	}
 
 	@Override
 	public int compareTo(Book o) {
 		int cmp = getTitle().compareTo(o.getTitle());
-		if (cmp != 0)
-			return cmp;
-
+		if (cmp != 0) return cmp;
 		return getAuthorNames().compareTo(o.getAuthorNames());
 	}
 
 	public Author getPrimaryAuthor() {
-		for (Author each : getAuthors()) {
-			if (each.isEditor()) {
-				return each;
-			}
-		}
-
-		return getAuthors().get(0);
+		return authors.stream().sorted().filter(Author::isEditor).findFirst().orElse(authors.get(0));
 	}
 
 	public List<Author> getAuthors() {
@@ -99,17 +56,6 @@ public final class Book extends BasicObject implements Validatable, Comparable<B
 			authors.add(a);
 		}
 	}
-
-//	public Set<Author> getEditors() {
-//		Set<Author> editors = new HashSet<Author>();
-//
-//		for (Author each : getAuthors()) {
-//			if (each.isEditor()) {
-//				editors.add(each);
-//			}
-//		}
-//		return editors;
-//	}
 
 	public void setEditors(Set<Author> editors) {
 		for (Author a : editors) {

@@ -6,7 +6,7 @@ import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.List;
 
-class AuthorTableModel extends AbstractTableModel {
+final class AuthorTableModel extends AbstractTableModel {
 	private final List<Author> dataRows;
 
 	AuthorTableModel() {
