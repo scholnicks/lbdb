@@ -56,7 +56,7 @@ public class GoogleServiceImpl implements GoogleService {
             URLEncoder.encode(book.getPrimaryAuthor().lastName(), StandardCharsets.UTF_8)
         );
 
-        log.debug("Searching with GET: " + url);
+        log.info("Searching with GET: " + url);
         try (InputStream is = connectionFactory.generateURLInputStream(url)) {
             parse(is, book);
         }
@@ -80,9 +80,9 @@ public class GoogleServiceImpl implements GoogleService {
                 for (String author: ((List<String>) volumeInfo.get("authors")) ) {
                     for (Author a: book.getAuthors()) {
                         if (canonicalEquals(author,a)) {
-                            log.debug("Found cover photo match for " + book);
+                            log.info("Found cover photo match for " + book);
                             Map<String,String> imageLinks = (Map<String,String>) volumeInfo.get("imageLinks");
-                            log.debug("Image Links: " + imageLinks);
+                            log.info("Image Links: " + imageLinks);
 
                             book.setCoverPhotoPath( downloadImage(imageLinks.get("thumbnail"),book));
                             book.setNumberOfPages(Integer.parseInt(volumeInfo.get("pageCount").toString()));
@@ -94,7 +94,7 @@ public class GoogleServiceImpl implements GoogleService {
                             });
 
                             // if (volumeInfo.get("publishedDate") != null) {
-                            // 	log.debug(getClass(),"Published Date: " + volumeInfo.get("publishedDate"));
+                            // 	log.info(getClass(),"Published Date: " + volumeInfo.get("publishedDate"));
                             // 	String publishedDate = (String) volumeInfo.get("publishedDate");
                             // 	book.setPublishNullSafe.toCanonical(author)edYear(publishedDate.substring(0,publishedDate.indexOf("-")));
                             // }
@@ -128,7 +128,7 @@ public class GoogleServiceImpl implements GoogleService {
         Path imageFilePath = getBookCoverPath(b);
 
         if (Files.exists(imageFilePath) && Files.isReadable(imageFilePath)) {
-            log.debug("Using cached file path " + imageFilePath);
+            log.info("Using cached file path " + imageFilePath);
             return imageFilePath.toAbsolutePath();
         }
         else {
@@ -146,7 +146,7 @@ public class GoogleServiceImpl implements GoogleService {
 
         url = url.replace("&edge=curl","");
 
-        log.debug("Downloading image from " + url);
+        log.info("Downloading image from " + url);
 
         URLConnection uc = new URL(url).openConnection();
         int contentLength = uc.getContentLength();

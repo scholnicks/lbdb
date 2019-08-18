@@ -2,7 +2,9 @@ package net.scholnick.lbdb.gui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public abstract class BaseDialog extends JDialog {
 	private JButton okButton;
@@ -12,6 +14,9 @@ public abstract class BaseDialog extends JDialog {
 	public BaseDialog() {
 		super();
 		setModal(true);
+//		Image iconImage = new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("images/bookcase.gif"))).getImage();
+//		getOwner().setIconImage(iconImage);
+//		setIconImage(iconImage);
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent we) {
 				approved = false;

@@ -14,6 +14,8 @@ import net.scholnick.lbdb.service.BookService;
 import net.scholnick.lbdb.util.CacheManager;
 import net.scholnick.lbdb.util.LabelFactory;
 import net.scholnick.lbdb.util.NullSafe;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,12 +25,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 import static javax.swing.BorderFactory.*;
 import static net.scholnick.lbdb.util.GUIUtilities.showMessageDialog;
 
 @Component
 public class TitleMaintenance extends AbstractUpdateMaintenance {
+	private static final Logger log = LoggerFactory.getLogger(TitleMaintenance.class);
+
 	private JTextField titleField;
 	private JTextField seriesField;
 	private JTextField publishedYearField;
@@ -302,6 +307,8 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 
 	private void downloadCoverPhoto() {
 		try {
+			log.info("Downloading cover photo");
+
 			String existingImageFile = getDownloadedImage();
 			if (existingImageFile != null) {
 				loadImage(existingImageFile);
@@ -325,7 +332,7 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 			}
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			log.error("Unable to download cover",e);
 			getImageLabel().setIcon(null);
 			reload();
 		}
@@ -505,9 +512,12 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 	private void loadAllData() {
 		loadData();
 
+		log.info("Load all data");
+
+
 		new SwingWorker<Object,Boolean>() {
 			@Override protected Boolean doInBackground() {
-				getImageLabel().setIcon( new ImageIcon(ClassLoader.getSystemResource("images/loading.gif")) );
+				getImageLabel().setIcon( new ImageIcon(Objects.requireNonNull(TitleMaintenance.class.getClassLoader().getResource("images/loading.gif"))) );
 				downloadCoverPhoto();
 				return Boolean.TRUE;
 			}

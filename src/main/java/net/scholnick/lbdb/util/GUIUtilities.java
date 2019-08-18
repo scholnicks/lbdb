@@ -9,6 +9,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Objects;
 
 public class GUIUtilities {
 	private final static Logger log = LoggerFactory.getLogger(GUIUtilities.class);
@@ -59,10 +60,11 @@ public class GUIUtilities {
 	}
 
 	public static void showMessageDialog(String message, String title) {
+		ImageIcon BOOKCASE_ICON = new ImageIcon(Objects.requireNonNull(GUIUtilities.class.getClassLoader().getResource("images/bookcase.gif")));
 		JOptionPane.showMessageDialog(null,message,title, JOptionPane.PLAIN_MESSAGE,BOOKCASE_ICON);
 	}
 
-	private static final ImageIcon BOOKCASE_ICON = new ImageIcon(GUIUtilities.class.getResource("/images/bookcase.gif"));
+//	private static final ImageIcon BOOKCASE_ICON = new ImageIcon(Objects.requireNonNull(GUIUtilities.class.getClassLoader().getResource("images/bookcase.gif")));
 
 	public static final Border EMPTY_BORDER = BorderFactory.createEmptyBorder(5, 5, 5, 5);
 
