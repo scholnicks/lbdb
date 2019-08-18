@@ -20,8 +20,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Vector;
+
+import static java.util.stream.Collectors.toList;
 
 @Component
 public class SearchPanel extends BasePanel {
@@ -38,8 +41,6 @@ public class SearchPanel extends BasePanel {
 	private JLabel infoLabel;
 
 	private JTable dataTable;
-
-	private Thread searchThread;
 
 	private final SearchAction searchAction;
 	private final BookService bookService;
@@ -90,7 +91,6 @@ public class SearchPanel extends BasePanel {
 		return infoLabel;
 	}
 
-	/** returns the top search panel */
 	private JPanel getTopPanel() {
 		JPanel topPanel = new JPanel(new BorderLayout());
 		topPanel.add(getCriteriaPanel(), BorderLayout.CENTER);
@@ -125,7 +125,6 @@ public class SearchPanel extends BasePanel {
 		leftPanel.add(getSeriesField(), gbc);
 		cp.add(leftPanel);
 
-		
 		JPanel rightPanel = new JPanel(new GridBagLayout());
 		Insets shiftedInsets = new Insets(0,20,0,0);
 		gbc = GUIUtilities.getDefaultGridBagConstraints();
@@ -149,11 +148,9 @@ public class SearchPanel extends BasePanel {
 
 	private JComboBox<MediaType> getMediaCombo() {
 		if (mediaCombo == null) {
-			Vector<MediaType> types = new Vector<>(Media.values().length);
+			Vector<MediaType> types = new Vector<>(Media.values().length+1);
 			types.add( new MediaType("",-1) );
-			for (Media m : Media.values()) {
-				types.add( new MediaType(m.toString(),m.getId()) );
-			}
+			types.addAll( Arrays.stream(Media.values()).map(m -> new MediaType(m.toString(),m.getId())).collect(toList()) );
 			mediaCombo = new JComboBox<>(types);
 		}
 		return mediaCombo;
@@ -168,30 +165,23 @@ public class SearchPanel extends BasePanel {
 	}
 
 	public void search() {
-		try {
-			Book b = new Book();
-			b.setTitle( getTitleField().getText() );
-			b.setSeries( getSeriesField().getText() );
-			b.setMedia( Media.from( Objects.requireNonNull((MediaType) getMediaCombo().getSelectedItem()).getId()) );
-			
-			if (! NullSafe.isEmpty(getAuthorNameField().getText())) {
-				b.setAuthors(java.util.List.of(Author.of(getAuthorNameField().getText())));
-			}
-			
-			final java.util.List<Book> books = bookService.search(b);
+		Book b = new Book();
+		b.setTitle( getTitleField().getText() );
+		b.setSeries( getSeriesField().getText() );
+		b.setMedia( Media.from( Objects.requireNonNull((MediaType) getMediaCombo().getSelectedItem()).getId()) );
 
-			new SwingWorker<Object,Boolean>() {
-				@Override protected Boolean doInBackground() {
-					fillTable(books);
-					return Boolean.TRUE;
-				}
-			}.execute();
-			
-			SoundPlayer.playAhh();
+		if (! NullSafe.isEmpty(getAuthorNameField().getText())) {
+			b.setAuthors(java.util.List.of(Author.of(getAuthorNameField().getText())));
 		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+
+		new SwingWorker<Object,Boolean>() {
+			@Override protected Boolean doInBackground() {
+				fillTable(bookService.search(b));
+				return Boolean.TRUE;
+			}
+		}.execute();
+
+		SoundPlayer.playAhh();
 	}
 
 	private JButton getClearButton() {
@@ -217,6 +207,7 @@ public class SearchPanel extends BasePanel {
 	private void clearTableData() {
 		getDataTable().clearSelection();
 		((TitleSearchTableModel) getDataTable().getModel()).clear();
+		getInfoLabel().setText("");
 	}
 
 	private void fillTable(java.util.List<Book> data) {
@@ -224,23 +215,15 @@ public class SearchPanel extends BasePanel {
 
 		TitleSearchTableModel model = (TitleSearchTableModel) getDataTable().getModel();
 
-		try {
-			for (Book b : data) {
-				model.addRow(b);
-			}
-
-			getInfoLabel().setText(data.size() + " book" + (data.size() != 1 ? "s" : "")  + " found");
-		}
-		finally {
-			validate();
-			repaint();
-		}
+		data.forEach(model::addRow);
+		getInfoLabel().setText(data.size() + " book" + (data.size() != 1 ? "s" : "")  + " found");
+		validate();
+		repaint();
 	}
 
 	private JTextField getAuthorNameField() {
 		if (authorName == null) {
 			authorName = new TrimmedTextField(20,100);
-			authorName.setToolTipText("First name");
 			authorName.addActionListener(searchAction);
 		}
 		return authorName;
@@ -252,8 +235,9 @@ public class SearchPanel extends BasePanel {
 
 			dataTable.addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent event) {
-					if (getEditBookButton().isEnabled() && event.getClickCount() == 2)
+					if (getEditBookButton().isEnabled() && event.getClickCount() == 2) {
 						editTitle();
+					}
 				}
 			});
 		}
@@ -263,24 +247,15 @@ public class SearchPanel extends BasePanel {
 	private void editTitle() {
 		int row = getDataTable().getSelectedRow();
 
-		if (row < 0) {
-			GUIUtilities.showMessageDialog("Must select a row");
-			return;
-		}
-
 		TitleSearchTableModel model = (TitleSearchTableModel) getDataTable().getModel();
 		Book data = bookService.get(model.getTitleData(row).getId());
 
+		getInfoLabel().setText("");
 		fireTitleSelection(new TitleSelectionEvent(data));
 	}
 
 	private void editAuthor() {
 		int row = getDataTable().getSelectedRow();
-
-		if (row < 0) {
-			GUIUtilities.showMessageDialog("Must select a row");
-			return;
-		}
 
 		TitleSearchTableModel model = (TitleSearchTableModel) getDataTable().getModel();
 		Book data = model.getTitleData(row);
@@ -288,6 +263,7 @@ public class SearchPanel extends BasePanel {
 		Author a = getSelectedAuthor(data);
 
 		if (a != null) {
+			getInfoLabel().setText("");
 			fireAuthorSelection(new AuthorSelectionEvent(a));
 		}
 	}
@@ -351,27 +327,16 @@ public class SearchPanel extends BasePanel {
 	}
 
     private final class SearchAction extends AbstractAction implements Runnable {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            if (isEmpty()) {
-                GUIUtilities.showMessageDialog("No search criteria specified.");
-                return;
-            }
+		private Thread searchThread;
 
+		@Override
+        public void actionPerformed(ActionEvent e) {
             if (searchThread != null) {
                 return;
             }
 
             searchThread = new Thread(this);
             searchThread.start();
-        }
-
-        private boolean isEmpty() {
-            return NullSafe.isEmpty(getTitleField().getText()) &&
-                    NullSafe.isEmpty(getAuthorNameField().getText()) &&
-                    NullSafe.isEmpty(getSeriesField().getText()) &&
-                    getMediaCombo().getSelectedIndex() == 0
-                    ;
         }
 
         @Override

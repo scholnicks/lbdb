@@ -69,7 +69,9 @@ public abstract class BaseDialog extends JDialog {
 		setVisible(false);
 	}
 
-	protected abstract JPanel getInputPanel();
+	protected JPanel getInputPanel() {
+		return null;
+	}
 
 	protected abstract JComponent getInitialFocusComponent();
 

@@ -1,6 +1,7 @@
 package net.scholnick.lbdb.gui;
 
-import net.scholnick.lbdb.util.*;
+import net.scholnick.lbdb.util.LabelFactory;
+import net.scholnick.lbdb.util.NullSafe;
 
 import javax.swing.*;
 
@@ -57,13 +58,7 @@ public abstract class AbstractUpdateMaintenance extends BasePanel {
 		return addedDateLabel;
 	}
 
-    public MessageListener getMessageListener() {
-        return messageListener;
-    }
-
     public void setMessageListener(MessageListener messageListener) {
         this.messageListener = messageListener;
     }
-
-    private static final long serialVersionUID = 7366488641110084605L;
 }

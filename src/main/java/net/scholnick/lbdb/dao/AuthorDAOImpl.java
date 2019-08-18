@@ -86,17 +86,12 @@ public class AuthorDAOImpl implements AuthorDAO {
 	
 	@Override
 	public void update(Author a) {
-		jdbcTemplate.update(UPDATE,
+		jdbcTemplate.update("update author set auth_name=?,auth_website=? where auth_id=?",
 			a.getName(),
 			a.getWebSite(),
 			a.getId()
 		);
 	}
-
-	private static final String UPDATE = 
-		"update author "
-		+ "set auth_last_name=?,auth_first_name=?,auth_website=?,auth_modified_date=datetime(current_timestamp,'localtime') "
-		+ "where auth_id=?";
 
 	private Author mapRow(ResultSet rs, int rowCount) throws SQLException {
 		Author a = new Author();

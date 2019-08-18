@@ -80,7 +80,7 @@ public class AuthorMaintenance extends AbstractUpdateMaintenance {
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.insets = new Insets(5, 5, 0, 0);
 
-		p.add(LabelFactory.createLabel("First Name"), gbc);
+		p.add(LabelFactory.createLabel("Name"), gbc);
 		gbc.gridx++;
 		p.add(getNameField(), gbc);
 

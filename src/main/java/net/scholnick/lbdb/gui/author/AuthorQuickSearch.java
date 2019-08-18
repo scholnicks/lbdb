@@ -44,31 +44,13 @@ public class AuthorQuickSearch extends BaseDialog {
 	@Override
 	protected void buildGUI() {
 		getContentPane().setLayout(new BorderLayout());
-		getContentPane().add(getInputPanel(), BorderLayout.NORTH);
+		getContentPane().add(getNameField(), BorderLayout.NORTH);
 
 		JScrollPane pane = new JScrollPane(getResultsTable());
 		pane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
 		getContentPane().add(pane, BorderLayout.CENTER);
 		getContentPane().add(getButtonPanel(), BorderLayout.SOUTH);
-	}
-
-	@Override
-	protected JPanel getInputPanel() {
-		JPanel p = new JPanel(new GridBagLayout());
-		GridBagConstraints gbc = new GridBagConstraints();
-
-		gbc.gridx = gbc.gridy = 0;
-		gbc.gridheight = 1;
-		gbc.gridwidth = 1;
-		gbc.weightx = 1.00;
-		gbc.weighty = 1.00;
-		gbc.anchor = GridBagConstraints.WEST;
-		gbc.fill = GridBagConstraints.NONE;
-		gbc.insets = new Insets(5, 5, 0, 0);
-
-		p.add(getNameField(), gbc);
-		return p;
 	}
 
 	private JTextField getNameField() {
@@ -98,7 +80,7 @@ public class AuthorQuickSearch extends BaseDialog {
 			resultsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			resultsTable.setCellSelectionEnabled(false);
 			resultsTable.setRowSelectionAllowed(true);
-			resultsTable.getTableHeader().setReorderingAllowed(false);
+			resultsTable.getTableHeader().setUI(null);
 
 			resultsTable.addMouseListener(new MouseAdapter() {
 				@Override public void mouseClicked(MouseEvent event) {
@@ -119,9 +101,7 @@ public class AuthorQuickSearch extends BaseDialog {
 		List<Author> foundAuthors = authorService.search(getNameField().getText());
 
 		if (! foundAuthors.isEmpty()) {
-			for (Author a : foundAuthors) {
-				model.add(a);
-			}
+			foundAuthors.forEach(model::add);
 			repaintScreen();
 		}
 		else {

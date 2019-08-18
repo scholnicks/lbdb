@@ -2,7 +2,10 @@ package net.scholnick.lbdb.gui.title;
 
 
 import net.scholnick.lbdb.coverphoto.GoogleService;
-import net.scholnick.lbdb.domain.*;
+import net.scholnick.lbdb.domain.Author;
+import net.scholnick.lbdb.domain.Book;
+import net.scholnick.lbdb.domain.BookType;
+import net.scholnick.lbdb.domain.Media;
 import net.scholnick.lbdb.gui.AbstractUpdateMaintenance;
 import net.scholnick.lbdb.gui.TrimmedTextField;
 import net.scholnick.lbdb.gui.author.AuthorQuickSearch;
@@ -11,8 +14,6 @@ import net.scholnick.lbdb.service.BookService;
 import net.scholnick.lbdb.util.CacheManager;
 import net.scholnick.lbdb.util.LabelFactory;
 import net.scholnick.lbdb.util.NullSafe;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,8 +29,6 @@ import static net.scholnick.lbdb.util.GUIUtilities.showMessageDialog;
 
 @Component
 public class TitleMaintenance extends AbstractUpdateMaintenance {
-	private final Logger log = LoggerFactory.getLogger(TitleMaintenance.class);
-
 	private JTextField titleField;
 	private JTextField seriesField;
 	private JTextField publishedYearField;
@@ -50,7 +49,6 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 	private GoogleService googleService;
 	private AuthorQuickSearch authorQuickSearch;
 	private MultipleAuthorsDialog multipleAuthorDialog;
-	//private AuthorService authorService;
 
 	public TitleMaintenance() {
 		super();
@@ -87,15 +85,9 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 
 	private void removeTitle() {
 		if (JOptionPane.showConfirmDialog(this, "Delete Book?") == JOptionPane.YES_OPTION) {
-			try {
-				bookService.delete(book);
-				sendMessage(book + " deleted");
-				clear();
-			}
-			catch (Exception e) {
-				log.error("Unable to delete book",e);
-				showMessageDialog("Unable to delete book");
-			}
+			bookService.delete(book);
+			sendMessage(book + " deleted");
+			clear();
 		}
 	}
 
@@ -240,8 +232,8 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 		if (authorsList == null) {
 			authorsList = new JTable(new AuthorTableModel());
 			authorsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			authorsList.getTableHeader().setDefaultRenderer(new HeaderRenderer(authorsList));
 		}
-
 		return authorsList;
 	}
 
@@ -305,7 +297,6 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 			imageLabel.setText(null);
 			imageLabel.setOpaque(false);
 		}
-
 		return imageLabel;
 	}
 
@@ -327,15 +318,14 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 				}
 				
 				bookService.save(getBook());
-				return;
 			}
-
-			log.debug("No cover found for "  + getBook());
-			getImageLabel().setIcon(null);
-			reload();
+			else {
+				getImageLabel().setIcon(null);
+				reload();
+			}
 		}
 		catch (Exception e) {
-			log.error("Unable to retrieve data from external source",e);
+			e.printStackTrace();
 			getImageLabel().setIcon(null);
 			reload();
 		}
@@ -353,7 +343,6 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 		File imageFilePath = new File(CacheManager.getDestinationDirectory(), getBook().getId() + ".jpg");
 		
 		if (imageFilePath.exists() && imageFilePath.canRead()) {
-			log.debug("Using cached file path " + imageFilePath.getCanonicalPath());
 			return imageFilePath.getCanonicalPath();
 		}
 		else {
@@ -364,14 +353,8 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 	private void removeAuthor() {
 		int row = getAuthorsList().getSelectedRow();
 
-		if (row < 0) {
-			showMessageDialog("Select an author to be removed");
-			return;
-		}
-
 		getAuthorTableModel().delete(row);
-		validate();
-		repaint();
+		reload();
 	}
 
 	private JTextField getTitleField() {
@@ -447,11 +430,8 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 
 	private void addMultipleAuthors() {
 		multipleAuthorDialog.setVisible(true);
-
 		if (multipleAuthorDialog.isApproved()) {
-			for (Author a : multipleAuthorDialog.getAuthors()) {
-				getAuthorTableModel().add(a);
-			}
+			multipleAuthorDialog.getAuthors().forEach(a -> getAuthorTableModel().add(a));
 			reload();
 		}
 	}
@@ -473,15 +453,9 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 	}
 
 	protected void ok() {
-		try {
-			Book b = createBookFromFormData();
-			if (databaseUpdate(b)) {
-				setBook(b);
-			}
-		}
-		catch (Exception e) {
-			showMessageDialog("Error saving ");
-			log.error("Unable to save Book",e);
+		Book b = createBookFromFormData();
+		if (databaseUpdate(b)) {
+			setBook(b);
 		}
 	}
 
@@ -502,30 +476,16 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 		}
 
 		b.clearAuthors();
-		for (int i = 0; i < getAuthorTableModel().size(); i++) {
-			b.addAuthor(getAuthorTableModel().get(i));
-		}
-
+		getAuthorTableModel().stream().forEach(book::addAuthor);
 		b.setEditors( getAuthorTableModel().getEditors() );
 
 		return b;
 	}
 
 	private boolean databaseUpdate(Book b) {
-		try {
-			bookService.save(b);
-            sendMessage(b + " has been saved.");
-			return true;
-		}
-		catch (ApplicationException e) {
-			log.error("",e);
-			showMessageDialog("Unable to save the book, " + e.getMessage());
-			return false;
-		}
-		catch (Exception e) {
-			log.error("",e);
-			throw new RuntimeException(e);
-		}
+		bookService.save(b);
+		sendMessage(b + " has been saved.");
+		return true;
 	}
 
 	private Book getBook() {
@@ -595,12 +555,5 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 		this.multipleAuthorDialog = multipleAuthorDialog;
 	}
 
-//	@Autowired
-//	public void setAuthorService(AuthorService authorService) {
-//		this.authorService = authorService;
-//	}
-
 	private static final Dimension AUTHOR_PANEL_SIZE = new Dimension(250, 100);
-
-	private static final long serialVersionUID = -140698298952319686L;
 }

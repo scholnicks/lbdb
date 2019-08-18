@@ -6,6 +6,7 @@ import javax.swing.table.AbstractTableModel;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toSet;
 
@@ -91,6 +92,10 @@ final class AuthorTableModel extends AbstractTableModel {
 
 	int size() {
 		return dataRows.size();
+	}
+
+	public Stream<Author> stream() {
+		return dataRows.stream();
 	}
 
 	public void clear() {

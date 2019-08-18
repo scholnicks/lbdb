@@ -48,33 +48,13 @@ public class MultipleAuthorsDialog extends BaseDialog {
 	protected void buildGUI() {
 		getContentPane().setLayout(new BorderLayout());
 
-		getContentPane().add(getInputPanel(), BorderLayout.NORTH);
+		getContentPane().add(getNameField(), BorderLayout.NORTH);
 
 		JScrollPane pane = new JScrollPane(getResultsTable());
 		pane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
 		getContentPane().add(pane, BorderLayout.CENTER);
 		getContentPane().add(getButtonPanel(), BorderLayout.SOUTH);
-	}
-
-	@Override
-	protected JPanel getInputPanel() {
-		JPanel p = new JPanel(new GridBagLayout());
-		GridBagConstraints gbc = new GridBagConstraints();
-
-		gbc.gridx = gbc.gridy = 0;
-		gbc.gridheight = 1;
-		gbc.gridwidth = 1;
-		gbc.weightx = 1.00;
-		gbc.weighty = 1.00;
-		gbc.anchor = GridBagConstraints.WEST;
-		gbc.fill = GridBagConstraints.NONE;
-		gbc.insets = new Insets(5, 5, 0, 0);
-
-		gbc.gridy++;
-		p.add(getNameField(), gbc);
-
-		return p;
 	}
 
 	private JTextField getNameField() {
@@ -97,6 +77,7 @@ public class MultipleAuthorsDialog extends BaseDialog {
 			resultsTable.setCellSelectionEnabled(false);
 			resultsTable.setRowSelectionAllowed(false);
 			resultsTable.getTableHeader().setReorderingAllowed(false);
+			resultsTable.getTableHeader().setUI(null);
 		}
 		return resultsTable;
 	}

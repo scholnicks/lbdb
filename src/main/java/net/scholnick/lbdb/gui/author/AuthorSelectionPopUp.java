@@ -50,6 +50,7 @@ public final class AuthorSelectionPopUp extends BaseDialog {
 			listingTable.setCellSelectionEnabled(false);
 			listingTable.setRowSelectionAllowed(true);
 			listingTable.getTableHeader().setReorderingAllowed(false);
+			listingTable.getTableHeader().setUI(null);
 
 			listingTable.addMouseListener(new MouseAdapter() {
 				@Override
@@ -70,10 +71,7 @@ public final class AuthorSelectionPopUp extends BaseDialog {
 		AuthorTableModel model = (AuthorTableModel) getListingTable().getModel();
 
 		model.clear();
-
-		for (Author a : authors)
-			model.add(a);
-
+		authors.forEach(model::add);
 		validate();
 		repaint();
 	}
