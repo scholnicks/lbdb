@@ -4,10 +4,8 @@
     <list default="true" id="de26adde-e421-4658-a7cc-846cdeb46a91" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sql/test.db" beforeDir="false" afterPath="$PROJECT_DIR$/sql/test.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/coverphoto/GoogleServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/coverphoto/GoogleServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/BaseDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/BaseDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/dao/AuthorDAOImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/dao/AuthorDAOImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/title/TitleMaintenance.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/title/TitleMaintenance.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/util/GUIUtilities.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/util/GUIUtilities.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -204,5 +202,16 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/title/TitleMaintenance.java</url>
+          <line>485</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

@@ -483,7 +483,7 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 		}
 
 		b.clearAuthors();
-		getAuthorTableModel().stream().forEach(book::addAuthor);
+		getAuthorTableModel().stream().forEach(b::addAuthor);
 		b.setEditors( getAuthorTableModel().getEditors() );
 
 		return b;

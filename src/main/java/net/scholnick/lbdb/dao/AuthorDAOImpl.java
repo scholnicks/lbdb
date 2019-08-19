@@ -39,7 +39,7 @@ public class AuthorDAOImpl implements AuthorDAO {
 	public Long create(Author a) {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update( (connection) -> {
-                PreparedStatement s = connection.prepareStatement("insert into author(auth_name,auth_website) values(?,?,?)");
+                PreparedStatement s = connection.prepareStatement("insert into author(auth_name,auth_website) values(?,?)");
                 s.setString(1,a.getName());
                 s.setString(2,a.getWebSite());
 				return s;
