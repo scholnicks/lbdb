@@ -359,7 +359,6 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 
 	private void removeAuthor() {
 		int row = getAuthorsList().getSelectedRow();
-
 		getAuthorTableModel().delete(row);
 		reload();
 	}
@@ -517,11 +516,20 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 
 		new SwingWorker<Object,Boolean>() {
 			@Override protected Boolean doInBackground() {
-				getImageLabel().setIcon( new ImageIcon(Objects.requireNonNull(TitleMaintenance.class.getClassLoader().getResource("images/loading.gif"))) );
-				downloadCoverPhoto();
+				loadCoverPhoto();
 				return Boolean.TRUE;
 			}
 		}.execute();
+	}
+
+	private void loadCoverPhoto() {
+		try {
+			getImageLabel().setIcon( new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("images/loading.gif"))) );
+			downloadCoverPhoto();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private void loadData() {
