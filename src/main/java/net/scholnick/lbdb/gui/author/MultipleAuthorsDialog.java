@@ -18,15 +18,15 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
-import static javax.swing.JOptionPane.showConfirmDialog;
+import static javax.swing.JOptionPane.*;
 import static net.scholnick.lbdb.util.GUIUtilities.center;
 
 @Component
 @Scope("prototype")
 public class MultipleAuthorsDialog extends BaseDialog {
-	private JTextField    nameField;
-	private JTable        resultsTable;
-	private JTable        selectedTable;
+	private JTextField nameField;
+	private JTable     resultsTable;
+	private JTable     selectedTable;
 
 	private final AuthorService authorService;
 
@@ -129,19 +129,24 @@ public class MultipleAuthorsDialog extends BaseDialog {
 			resultsTable.addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent event) {
 					if (event.getClickCount() == 2) {
-						AuthorTableModel resultesModel = (AuthorTableModel) getResultsTable().getModel();
-
-						AuthorTableModel selectedModel = (AuthorTableModel) getSelectedTable().getModel();
-						selectedModel.add(resultesModel.get(resultsTable.getSelectedRow()));
-						clear();
-						getNameField().requestFocus();
-						repaintScreen();
+                        moveChosenAuthorToSelectedTable();
 					}
 				}
 			});
 		}
 		return resultsTable;
 	}
+
+	private void moveChosenAuthorToSelectedTable() {
+        AuthorTableModel resultesModel = (AuthorTableModel) getResultsTable().getModel();
+
+        ((AuthorTableModel) getSelectedTable().getModel()).add(resultesModel.get(getResultsTable().getSelectedRow()));
+
+        clear();
+        getNameField().requestFocus();
+        repaintScreen();
+    }
+
 
 	private JTable getSelectedTable() {
 		if (selectedTable == null) {
@@ -173,10 +178,12 @@ public class MultipleAuthorsDialog extends BaseDialog {
 
 			String fullName = getNameField().getText();
 
-			String message = "Author ( " + fullName + " ) not found.  Add?";
-			int choice = showConfirmDialog(this, message, "Add Author?", JOptionPane.YES_NO_OPTION);
-			if (choice == JOptionPane.YES_OPTION) {
-				model.add(Author.of(fullName));
+			int choice = showConfirmDialog(this, "Author ( " + fullName + " ) not found.  Add?", "Add Author?", YES_NO_OPTION);
+			if (choice == YES_OPTION) {
+                ((AuthorTableModel) getSelectedTable().getModel()).add(Author.of(fullName));
+                clear();
+                getNameField().requestFocus();
+                repaintScreen();
 			}
 		}
 	}
