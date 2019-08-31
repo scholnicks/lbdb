@@ -6,9 +6,6 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Objects;
 
 public class GUIUtilities {
@@ -28,25 +25,6 @@ public class GUIUtilities {
 		gbc.insets = EMPTY_INSETS;
 
 		return gbc;
-	}
-
-	public static void openWebSite(String url) {
-		if (NullSafe.isEmpty(url)) {
-			showMessageDialog("No url specified");
-			return;
-		}
-
-		try {
-			new URL(url); // check the correctness of the URL
-			Runtime.getRuntime().exec("open " + url);
-		}
-		catch (MalformedURLException me) {
-			showMessageDialog("URL not specified correctly.  Must start with http or https");
-		}
-		catch (IOException ex) {
-			log.error("",ex);
-			showMessageDialog("Cannot open " + url);
-		}
 	}
 
 	public static void center(Window w) {

@@ -6,7 +6,6 @@ import net.scholnick.lbdb.gui.TrimmedTextField;
 import net.scholnick.lbdb.service.AuthorService;
 import net.scholnick.lbdb.util.LabelFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
@@ -22,7 +21,6 @@ import static javax.swing.JOptionPane.*;
 import static net.scholnick.lbdb.util.GUIUtilities.center;
 
 @Component
-@Scope("prototype")
 public class MultipleAuthorsDialog extends BaseDialog {
 	private JTextField nameField;
 	private JTable     resultsTable;
@@ -54,6 +52,7 @@ public class MultipleAuthorsDialog extends BaseDialog {
 	private void clear() {
 		getNameField().setText("");
 		((AuthorTableModel) getResultsTable().getModel()).clear();
+		((AuthorTableModel) getSelectedTable().getModel()).clear();
 	}
 	
 	@Override

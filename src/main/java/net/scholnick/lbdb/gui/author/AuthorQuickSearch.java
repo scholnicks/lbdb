@@ -6,7 +6,6 @@ import net.scholnick.lbdb.gui.TrimmedTextField;
 import net.scholnick.lbdb.service.AuthorService;
 import net.scholnick.lbdb.util.GUIUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
@@ -20,7 +19,6 @@ import java.util.List;
 import static javax.swing.JOptionPane.showConfirmDialog;
 
 @Component
-@Scope("prototype")
 public class AuthorQuickSearch extends BaseDialog {
 	private JTextField nameField;
 	private JTable resultsTable;
@@ -33,7 +31,7 @@ public class AuthorQuickSearch extends BaseDialog {
 		buildGUI();
 		getOKButton().setName("Done");
 	}
-	
+
 	public void initialize() {
 		getNameField().setText("");
 		((AuthorTableModel) getResultsTable().getModel()).clear();

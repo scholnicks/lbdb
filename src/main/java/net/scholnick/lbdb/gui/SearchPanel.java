@@ -164,7 +164,7 @@ public class SearchPanel extends BasePanel {
 		return searchButton;
 	}
 
-	public void search() {
+	private void search() {
 		Book b = new Book();
 		b.setTitle( getTitleField().getText() );
 		b.setSeries( getSeriesField().getText() );

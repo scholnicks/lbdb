@@ -14,9 +14,6 @@ public abstract class BaseDialog extends JDialog {
 	public BaseDialog() {
 		super();
 		setModal(true);
-//		Image iconImage = new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("images/bookcase.gif"))).getImage();
-//		getOwner().setIconImage(iconImage);
-//		setIconImage(iconImage);
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent we) {
 				approved = false;
@@ -80,12 +77,13 @@ public abstract class BaseDialog extends JDialog {
 
 	protected abstract JComponent getInitialFocusComponent();
 
+	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
 		getInitialFocusComponent().requestFocus();
 	}
 
-	public void repaintScreen() {
+	protected final void repaintScreen() {
 		validate();
 		repaint();
 	}

@@ -1,7 +1,9 @@
 package net.scholnick.lbdb.util;
 
-import javax.swing.text.*;
-import java.awt.Toolkit;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultStyledDocument;
+import java.awt.*;
 
 public final class LimitedStyledDocument extends DefaultStyledDocument {
 	private final int maxCharacters;
@@ -20,9 +22,5 @@ public final class LimitedStyledDocument extends DefaultStyledDocument {
 			super.insertString(offs, str, a);
 		else
 			Toolkit.getDefaultToolkit().beep();
-	}
-
-	public int getMaxCharacters() {
-		return maxCharacters;
 	}
 }

@@ -13,12 +13,8 @@ import java.util.List;
 public final class AuthorSelectionPopUp extends BaseDialog {
 	private JTable listingTable;
 
-	private AuthorSelectionPopUp() {
-		super();
-	}
-
 	public AuthorSelectionPopUp(List<Author> authors) {
-		this();
+		super();
 		setTitle("Author Selection");
 		setModal(true);
 		setSize(300, 300);

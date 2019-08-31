@@ -146,7 +146,6 @@ public final class BooksDB extends JFrame {
 		return editMenu;
 	}
 
-	/** returns the title menu */
 	private JMenu getTitleMenu() {
 		JMenu fileMenu = new JMenu("Title");
 

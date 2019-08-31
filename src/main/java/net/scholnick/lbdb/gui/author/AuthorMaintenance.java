@@ -5,16 +5,15 @@ import net.scholnick.lbdb.domain.Author;
 import net.scholnick.lbdb.gui.AbstractUpdateMaintenance;
 import net.scholnick.lbdb.gui.TrimmedTextField;
 import net.scholnick.lbdb.service.AuthorService;
-import net.scholnick.lbdb.util.GUIUtilities;
 import net.scholnick.lbdb.util.LabelFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
+import static javax.swing.JOptionPane.YES_OPTION;
+import static javax.swing.JOptionPane.showConfirmDialog;
 import static net.scholnick.lbdb.util.GUIUtilities.showMessageDialog;
 
 @Component
@@ -54,7 +53,7 @@ public class AuthorMaintenance extends AbstractUpdateMaintenance {
 	}
 
 	private void removeAuthor() {
-		if (JOptionPane.showConfirmDialog(this, "Delete Author?") == JOptionPane.YES_OPTION) {
+		if (showConfirmDialog(this, "Delete Author?") == YES_OPTION) {
 			authorService.delete(getAuthor());
 			showMessageDialog(author + " deleted");
 			clear();
@@ -89,8 +88,6 @@ public class AuthorMaintenance extends AbstractUpdateMaintenance {
 		p.add(LabelFactory.createLabel("Website"), gbc);
 		gbc.gridx++;
 		p.add(getWebSiteField(), gbc);
-		gbc.gridx++;
-		p.add(getOpenWebSiteIcon(), gbc);
 
 		gbc.gridy++;
 		gbc.gridx = 0;
@@ -111,20 +108,6 @@ public class AuthorMaintenance extends AbstractUpdateMaintenance {
 		return webSiteField;
 	}
 
-	private JLabel getOpenWebSiteIcon() {
-		JLabel openSiteLabel = new JLabel(new ImageIcon(getClass().getResource("/images/WebComponent24.gif")));
-		openSiteLabel.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				openWebSite();
-			}
-		});
-		return openSiteLabel;
-	}
-
-	private void openWebSite() {
-		GUIUtilities.openWebSite(getWebSiteField().getText());
-	}
-
 	public Author getAuthor() {
 		return author;
 	}
@@ -141,8 +124,7 @@ public class AuthorMaintenance extends AbstractUpdateMaintenance {
 		getNameField().setText(author.getName());
 		getWebSiteField().setText(author.getWebSite());
 		getAddedDateLabel().setText(author.getAddedTimestamp());
-		validate();
-		repaint();
+		reload();
 	}
 
 	protected void ok() {

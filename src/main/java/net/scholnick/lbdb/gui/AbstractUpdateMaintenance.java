@@ -1,7 +1,6 @@
 package net.scholnick.lbdb.gui;
 
 import net.scholnick.lbdb.util.LabelFactory;
-import net.scholnick.lbdb.util.NullSafe;
 
 import javax.swing.*;
 
@@ -20,8 +19,8 @@ public abstract class AbstractUpdateMaintenance extends BasePanel {
 	}
 
 	protected final void sendMessage(String text) {
-	    if (messageListener != null && ! NullSafe.isEmpty(text)) {
-	        messageListener.send(text);
+	    if (messageListener != null) {
+	        messageListener.send(text == null ? "" : text.trim());
         }
     }
 
@@ -34,7 +33,7 @@ public abstract class AbstractUpdateMaintenance extends BasePanel {
 	protected final JButton getClearButton() {
 		if (clearButton == null) {
 			clearButton = new JButton("Clear");
-			clearButton.addActionListener(e -> clear());
+			clearButton.addActionListener(e -> { clear(); sendMessage(""); });
 		}
 		return clearButton;
 	}
