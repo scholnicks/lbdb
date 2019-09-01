@@ -47,6 +47,7 @@ public final class BooksDB extends JFrame {
 		this.authorService     = authorService;
 
 		this.titleMaintenance.setMessageListener(text -> getNotificationLabel().setText(text));
+		this.authorMaintenance.setMessageListener(text -> getNotificationLabel().setText(text));
 	}
 
 	void init() {

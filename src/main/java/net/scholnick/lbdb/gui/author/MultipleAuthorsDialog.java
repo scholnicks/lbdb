@@ -141,8 +141,9 @@ public class MultipleAuthorsDialog extends BaseDialog {
 
         ((AuthorTableModel) getSelectedTable().getModel()).add(resultesModel.get(getResultsTable().getSelectedRow()));
 
-        clear();
-        getNameField().requestFocus();
+		((AuthorTableModel) getResultsTable().getModel()).clear();
+		getNameField().setText("");
+		getNameField().requestFocus();
         repaintScreen();
     }
 
@@ -180,7 +181,8 @@ public class MultipleAuthorsDialog extends BaseDialog {
 			int choice = showConfirmDialog(this, "Author ( " + fullName + " ) not found.  Add?", "Add Author?", YES_NO_OPTION);
 			if (choice == YES_OPTION) {
                 ((AuthorTableModel) getSelectedTable().getModel()).add(Author.of(fullName));
-                clear();
+				((AuthorTableModel) getResultsTable().getModel()).clear();
+				getNameField().setText("");
                 getNameField().requestFocus();
                 repaintScreen();
 			}

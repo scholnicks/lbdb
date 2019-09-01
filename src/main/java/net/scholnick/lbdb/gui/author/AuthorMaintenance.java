@@ -28,6 +28,7 @@ public class AuthorMaintenance extends AbstractUpdateMaintenance {
 
 	@Autowired
 	public AuthorMaintenance(AuthorService authorService) {
+		super();
 		this.authorService = authorService;
 		buildGUI();
 	}
@@ -99,7 +100,7 @@ public class AuthorMaintenance extends AbstractUpdateMaintenance {
 	}
 
 	private JTextField getNameField() {
-		if (nameField == null) nameField = new TrimmedTextField(10,100);
+		if (nameField == null) nameField = new TrimmedTextField(30,255);
 		return nameField;
 	}
 
@@ -128,6 +129,9 @@ public class AuthorMaintenance extends AbstractUpdateMaintenance {
 	}
 
 	protected void ok() {
-		authorService.save(getAuthor(),false);
+		author.setName(getNameField().getText());
+		author.setWebSite(getWebSiteField().getText());
+		authorService.save(author,false);
+		sendMessage(author.getName() + " has been saved");
 	}
 }
