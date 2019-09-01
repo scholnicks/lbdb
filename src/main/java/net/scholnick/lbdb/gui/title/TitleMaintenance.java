@@ -1,6 +1,5 @@
 package net.scholnick.lbdb.gui.title;
 
-
 import net.scholnick.lbdb.coverphoto.GoogleService;
 import net.scholnick.lbdb.domain.Author;
 import net.scholnick.lbdb.domain.Book;
@@ -50,10 +49,12 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 
 	private Book book;
 
-	private BookService bookService;
-	private GoogleService googleService;
-	private AuthorQuickSearch authorQuickSearch;
+	private BookService           bookService;
+	private GoogleService         googleService;
+	private AuthorQuickSearch     authorQuickSearch;
 	private MultipleAuthorsDialog multipleAuthorDialog;
+
+	private static final Dimension AUTHOR_PANEL_SIZE = new Dimension(542, 100);
 
 	public TitleMaintenance() {
 		super();
@@ -63,7 +64,6 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 	@Override
 	protected void buildGUI() {
 		setLayout(new BorderLayout());
-
 		add(getImagePanel(), BorderLayout.WEST);
 		add(getInputPanel(), BorderLayout.CENTER);
 		add(getButtonPanel(), BorderLayout.SOUTH);
@@ -75,7 +75,6 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 		p.add(getSaveButton());
 		p.add(getDeleteButton());
 		p.add(getClearButton());
-
 		return p;
 	}
 
@@ -84,7 +83,6 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 			deleteButton = new JButton("Delete");
 			deleteButton.addActionListener(e -> removeTitle());
 		}
-
 		return deleteButton;
 	}
 
@@ -103,86 +101,110 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 		gbc.gridx = gbc.gridy = 0;
 		gbc.gridheight = 1;
 		gbc.gridwidth = 1;
-		gbc.weightx = 1.00;
-		gbc.weighty = .50;
+		gbc.weighty = 1.00;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.NONE;
 
 		Insets indentInsets = new Insets(0, 0, 0, 0);
 
+		double labelWeight = .10;
+		double inputWeight = .90;
+
+		gbc.weightx = labelWeight;
 		p.add(LabelFactory.createLabel("Title"), gbc);
+		gbc.weightx = inputWeight;
 		gbc.gridx++;
 		gbc.insets = indentInsets;
 		p.add(getTitleField(), gbc);
 
 		gbc.gridy++;
 		gbc.gridx = 0;
-		p.add(LabelFactory.createLabel("Authors"), gbc);
+		gbc.weightx = labelWeight;
+		p.add(LabelFactory.createLabel("Series"), gbc);
 		gbc.gridx++;
 		gbc.insets = indentInsets;
+		gbc.weightx = inputWeight;
+		p.add(getSeriesField(), gbc);
+
+		gbc.gridy++;
+		gbc.weightx = labelWeight;
+		gbc.gridx = 0;
+		p.add(LabelFactory.createLabel("Authors"), gbc);
+		gbc.gridx++;
+		gbc.weightx = inputWeight;
+		gbc.insets = new Insets(0,5,0,0);
 		p.add(getAuthorPanel(), gbc);
 
 		gbc.gridy++;
 		gbc.gridx = 0;
+		gbc.weightx = labelWeight;
 		p.add(LabelFactory.createLabel("Type"), gbc);
 		gbc.gridx++;
 		gbc.insets = indentInsets;
+		gbc.weightx = inputWeight;
 		p.add(getTypeCombo(), gbc);
 
 		gbc.gridy++;
 		gbc.gridx = 0;
+		gbc.weightx = labelWeight;
 		p.add(LabelFactory.createLabel("Media"), gbc);
 		gbc.gridx++;
 		gbc.insets = indentInsets;
+		gbc.weightx = inputWeight;
 		p.add(getMediaCombo(), gbc);
 
 		gbc.gridy++;
 		gbc.gridx = 0;
+		gbc.weightx = labelWeight;
 		p.add(LabelFactory.createLabel("Year Published"), gbc);
 		gbc.gridx++;
 		gbc.insets = indentInsets;
+		gbc.weightx = inputWeight;
 		p.add(getPublishedYearField(), gbc);
 
 		gbc.gridy++;
 		gbc.gridx = 0;
+		gbc.weightx = labelWeight;
 		p.add(LabelFactory.createLabel("ISBN"), gbc);
 		gbc.gridx++;
 		gbc.insets = indentInsets;
+		gbc.weightx = inputWeight;
 		p.add(getISBNField(), gbc);
 
 		gbc.gridy++;
 		gbc.gridx = 0;
+		gbc.weightx = labelWeight;
 		p.add(LabelFactory.createLabel("Number of Pages"), gbc);
 		gbc.gridx++;
 		gbc.insets = indentInsets;
+		gbc.weightx = inputWeight;
 		p.add(getNumberOfPagesField(), gbc);
 
 		gbc.gridy++;
 		gbc.gridx = 0;
+		gbc.weightx = labelWeight;
 		p.add(LabelFactory.createLabel("Anthology"), gbc);
 		gbc.gridx++;
 		gbc.insets = indentInsets;
+		gbc.weightx = inputWeight;
 		p.add(getAnthologyCheckBox(), gbc);
 
 		gbc.gridy++;
 		gbc.gridx = 0;
-		p.add(LabelFactory.createLabel("Series"), gbc);
-		gbc.gridx++;
-		gbc.insets = indentInsets;
-		p.add(getSeriesField(), gbc);
-
-		gbc.gridy++;
-		gbc.gridx = 0;
+		gbc.weightx = labelWeight;
 		p.add(LabelFactory.createLabel("Comments"), gbc);
 		gbc.gridx++;
-		gbc.insets = indentInsets;
+		gbc.insets = new Insets(0,5,0,0);
+		gbc.weightx = inputWeight;
 		p.add(new JScrollPane(getCommentsArea()), gbc);
 
 		gbc.gridy++;
 		gbc.gridx = 0;
+		gbc.weightx = labelWeight;
 		p.add(LabelFactory.createLabel("Added Date"), gbc);
 		gbc.gridx++;
 		gbc.insets = indentInsets;
+		gbc.weightx = inputWeight;
 		p.add(getAddedDateLabel(), gbc);
 
 		p.setBorder(createCompoundBorder(createEtchedBorder(), createEmptyBorder(5, 5, 5, 5)));
@@ -364,17 +386,17 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 	}
 
 	private JTextField getTitleField() {
-		if (titleField == null) titleField = new TrimmedTextField(30,255);
+		if (titleField == null) titleField = new TrimmedTextField(45,255);
 		return titleField;
 	}
 
 	private JTextField getSeriesField() {
-		if (seriesField == null) seriesField = new TrimmedTextField(20,255);
+		if (seriesField == null) seriesField = new TrimmedTextField(45,255);
 		return seriesField;
 	}
 
 	private JTextField getPublishedYearField() {
-		if (publishedYearField == null) publishedYearField = new TrimmedTextField(5,4);
+		if (publishedYearField == null) publishedYearField = new TrimmedTextField(10,4);
 		return publishedYearField;
 	}
 
@@ -385,7 +407,7 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 	}
 
 	private JTextField getISBNField() {
-		if (isbnField == null) isbnField = new TrimmedTextField(15,20);
+		if (isbnField == null) isbnField = new TrimmedTextField(30,20);
 		return isbnField;
 	}
 
@@ -401,7 +423,7 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 
 	private JTextArea getCommentsArea() {
 		if (commentsArea == null) {
-			commentsArea = new JTextArea(5,30);
+			commentsArea = new JTextArea(5,44);
 			commentsArea.setLineWrap(true);
 		}
 		return commentsArea;
@@ -528,7 +550,7 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 			downloadCoverPhoto();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			log.error("Unable to load the covder photo", e);
 		}
 	}
 	
@@ -572,6 +594,4 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 	public void setMultipleAuthorDialog(MultipleAuthorsDialog multipleAuthorDialog) {
 		this.multipleAuthorDialog = multipleAuthorDialog;
 	}
-
-	private static final Dimension AUTHOR_PANEL_SIZE = new Dimension(250, 100);
 }
