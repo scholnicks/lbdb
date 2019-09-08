@@ -79,6 +79,7 @@ public class AuthorQuickSearch extends BaseDialog {
 			resultsTable.setCellSelectionEnabled(false);
 			resultsTable.setRowSelectionAllowed(true);
 			resultsTable.getTableHeader().setUI(null);
+			GUIUtilities.setCellsAlignment(resultsTable,SwingConstants.CENTER);
 
 			resultsTable.addMouseListener(new MouseAdapter() {
 				@Override public void mouseClicked(MouseEvent event) {

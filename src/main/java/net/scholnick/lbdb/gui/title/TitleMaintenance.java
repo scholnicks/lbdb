@@ -11,6 +11,7 @@ import net.scholnick.lbdb.gui.author.AuthorQuickSearch;
 import net.scholnick.lbdb.gui.author.MultipleAuthorsDialog;
 import net.scholnick.lbdb.service.BookService;
 import net.scholnick.lbdb.util.CacheManager;
+import net.scholnick.lbdb.util.GUIUtilities;
 import net.scholnick.lbdb.util.LabelFactory;
 import net.scholnick.lbdb.util.NullSafe;
 import org.slf4j.Logger;
@@ -260,6 +261,7 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 			authorsList = new JTable(new AuthorTableModel());
 			authorsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			authorsList.getTableHeader().setDefaultRenderer(new HeaderRenderer(authorsList));
+			GUIUtilities.setCellsAlignment(authorsList,SwingConstants.CENTER);
 		}
 		return authorsList;
 	}

@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.util.Objects;
 
@@ -33,6 +35,15 @@ public class GUIUtilities {
 		w.setLocation((screenSize.width - d.width) / 2, (screenSize.height - d.height) / 2);
 	}
 
+	public static void setCellsAlignment(JTable table, int alignment) {
+		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+		rightRenderer.setHorizontalAlignment(alignment);
+
+		TableModel tableModel = table.getModel();
+		for (int columnIndex = 0; columnIndex < tableModel.getColumnCount(); columnIndex++) {
+			table.getColumnModel().getColumn(columnIndex).setCellRenderer(rightRenderer);
+		}
+	}
 	public static void showMessageDialog(String message) {
 		showMessageDialog(message,null);
 	}

@@ -4,6 +4,7 @@ import net.scholnick.lbdb.domain.Author;
 import net.scholnick.lbdb.gui.BaseDialog;
 import net.scholnick.lbdb.gui.TrimmedTextField;
 import net.scholnick.lbdb.service.AuthorService;
+import net.scholnick.lbdb.util.GUIUtilities;
 import net.scholnick.lbdb.util.LabelFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -124,6 +125,7 @@ public class MultipleAuthorsDialog extends BaseDialog {
 			resultsTable.setRowSelectionAllowed(true);
 			resultsTable.getTableHeader().setReorderingAllowed(false);
 			resultsTable.getTableHeader().setUI(null);
+			GUIUtilities.setCellsAlignment(resultsTable,SwingConstants.CENTER);
 
 			resultsTable.addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent event) {
@@ -147,7 +149,6 @@ public class MultipleAuthorsDialog extends BaseDialog {
         repaintScreen();
     }
 
-
 	private JTable getSelectedTable() {
 		if (selectedTable == null) {
 			selectedTable = new JTable(new AuthorTableModel());
@@ -156,6 +157,7 @@ public class MultipleAuthorsDialog extends BaseDialog {
 			selectedTable.setRowSelectionAllowed(false);
 			selectedTable.getTableHeader().setReorderingAllowed(false);
 			selectedTable.getTableHeader().setUI(null);
+			GUIUtilities.setCellsAlignment(selectedTable,SwingConstants.CENTER);
 		}
 		return selectedTable;
 	}
