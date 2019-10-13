@@ -2,11 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="de26adde-e421-4658-a7cc-846cdeb46a91" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/author/AuthorQuickSearch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/author/AuthorQuickSearch.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/author/MultipleAuthorsDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/author/MultipleAuthorsDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/title/TitleMaintenance.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/title/TitleMaintenance.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/util/GUIUtilities.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/util/GUIUtilities.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sql/test.db" beforeDir="false" afterPath="$PROJECT_DIR$/sql/test.db" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -44,7 +43,7 @@
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="lbdb" type="f1a62948:ProjectNode" />
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
-                <item name="help" type="c8890929:TasksNode$1" />
+                <item name="build" type="c8890929:TasksNode$1" />
               </path>
             </expand>
             <select />
@@ -75,9 +74,10 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/coverphoto" />
     <property name="project.structure.last.edited" value="Modules" />
-    <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.0" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.project.gradle" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="settings.editor.selected.configurable" value="AndroidSdkUpdater" />
   </component>
   <component name="RecentsManager">
     <key name="MoveInnerDialog.RECENTS_KEY">
@@ -168,9 +168,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.lbdb [build]" />
         <item itemvalue="Gradle.lbdb [dependencies]" />
         <item itemvalue="Application.BooksApp" />
-        <item itemvalue="Gradle.lbdb [build]" />
         <item itemvalue="Application.SwingApp" />
       </list>
     </recent_temporary>
