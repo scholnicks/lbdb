@@ -1,6 +1,6 @@
 #!/bin/bash
 
-gradle clean build || exit -1
+./gradlew clean build || exit -1
 
 app_directory=build/lbdb.app
 
@@ -15,6 +15,6 @@ cp build/libs/laurel-book-database-*.jar $app_directory/Contents/Resources
 
 cp -a $app_directory /Applications
 
-gradle clean
+./gradlew clean
 
 exit 0

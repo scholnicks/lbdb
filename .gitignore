@@ -2,3 +2,5 @@ build
 .gradle
 *.app
 sql/test.db
+bin
+.vscode
