@@ -2,12 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="de26adde-e421-4658-a7cc-846cdeb46a91" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/lbdb.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/deploy.sh" beforeDir="false" afterPath="$PROJECT_DIR$/deploy.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/coverphoto/GoogleServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/coverphoto/GoogleServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,18 +65,17 @@
   <component name="ProjectId" id="1OboJO1UUkjqtFXhMRKspwY7ob4" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/coverphoto" />
-    <property name="project.structure.last.edited" value="SDKs" />
+    <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.General" />
   </component>
   <component name="RecentsManager">
     <key name="MoveInnerDialog.RECENTS_KEY">
@@ -163,18 +161,6 @@
       </list>
     </recent_temporary>
   </component>
-  <component name="ServiceViewManager">
-    <option name="viewStates">
-      <list>
-        <serviceView>
-          <treeState>
-            <expand />
-            <select />
-          </treeState>
-        </serviceView>
-      </list>
-    </option>
-  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -196,44 +182,46 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="COLUMN_ORDER" />
-            </State>
+            <State />
           </value>
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1358" height="152" key="GridCell.Tab.0.bottom" timestamp="1579978643851">
-      <screen x="0" y="23" width="1440" height="797" />
+    <state x="635" y="258" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1586613532651">
+      <screen x="0" y="23" width="2048" height="1049" />
+    </state>
+    <state x="635" y="258" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/2048.23.1440.877/0.23.2048.1049@0.23.2048.1049" timestamp="1586613532651" />
+    <state width="1358" height="162" key="GridCell.Tab.0.bottom" timestamp="1586613948704">
+      <screen x="0" y="23" width="2048" height="1049" />
     </state>
     <state width="1358" height="152" key="GridCell.Tab.0.bottom/0.23.1440.797@0.23.1440.797" timestamp="1579978643851" />
-    <state width="1358" height="152" key="GridCell.Tab.0.center" timestamp="1579978643850">
-      <screen x="0" y="23" width="1440" height="797" />
+    <state width="1358" height="162" key="GridCell.Tab.0.bottom/2048.23.1440.877/0.23.2048.1049@0.23.2048.1049" timestamp="1586613948704" />
+    <state width="1358" height="162" key="GridCell.Tab.0.center" timestamp="1586613948702">
+      <screen x="0" y="23" width="2048" height="1049" />
     </state>
     <state width="1358" height="152" key="GridCell.Tab.0.center/0.23.1440.797@0.23.1440.797" timestamp="1579978643850" />
-    <state width="1358" height="152" key="GridCell.Tab.0.left" timestamp="1579978643849">
-      <screen x="0" y="23" width="1440" height="797" />
+    <state width="1358" height="162" key="GridCell.Tab.0.center/2048.23.1440.877/0.23.2048.1049@0.23.2048.1049" timestamp="1586613948702" />
+    <state width="1358" height="162" key="GridCell.Tab.0.left" timestamp="1586613948702">
+      <screen x="0" y="23" width="2048" height="1049" />
     </state>
     <state width="1358" height="152" key="GridCell.Tab.0.left/0.23.1440.797@0.23.1440.797" timestamp="1579978643849" />
-    <state width="1358" height="152" key="GridCell.Tab.0.right" timestamp="1579978643850">
-      <screen x="0" y="23" width="1440" height="797" />
+    <state width="1358" height="162" key="GridCell.Tab.0.left/2048.23.1440.877/0.23.2048.1049@0.23.2048.1049" timestamp="1586613948702" />
+    <state width="1358" height="162" key="GridCell.Tab.0.right" timestamp="1586613948703">
+      <screen x="0" y="23" width="2048" height="1049" />
     </state>
     <state width="1358" height="152" key="GridCell.Tab.0.right/0.23.1440.797@0.23.1440.797" timestamp="1579978643850" />
-    <state x="258" y="85" key="Maven.ArtifactSearchDialog" timestamp="1577052470791">
-      <screen x="0" y="23" width="1440" height="797" />
-    </state>
-    <state x="258" y="85" key="Maven.ArtifactSearchDialog/0.23.1440.797@0.23.1440.797" timestamp="1577052470791" />
-    <state x="441" y="167" key="SettingsEditor" timestamp="1584108052059">
+    <state width="1358" height="162" key="GridCell.Tab.0.right/2048.23.1440.877/0.23.2048.1049@0.23.2048.1049" timestamp="1586613948703" />
+    <state x="441" y="167" key="SettingsEditor" timestamp="1586613880180">
       <screen x="0" y="23" width="2048" height="1049" />
     </state>
     <state x="221" y="23" key="SettingsEditor/0.23.1440.797@0.23.1440.797" timestamp="1579978541235" />
-    <state x="441" y="167" key="SettingsEditor/2048.23.1440.877/0.23.2048.1049@0.23.2048.1049" timestamp="1584108052059" />
+    <state x="441" y="167" key="SettingsEditor/2048.23.1440.877/0.23.2048.1049@0.23.2048.1049" timestamp="1586613880180" />
     <state width="712" height="586" key="SwitcherDM" timestamp="1584107922841">
       <screen x="0" y="23" width="2048" height="1049" />
     </state>
-    <state width="500" height="445" key="SwitcherDM/0.23.1440.797@0.23.1440.797" timestamp="1575470360200" />
     <state width="712" height="586" key="SwitcherDM/2048.23.1440.877/0.23.2048.1049@0.23.2048.1049" timestamp="1584107922841" />
     <state x="689" y="268" width="670" height="676" key="search.everywhere.popup" timestamp="1584107934948">
       <screen x="0" y="23" width="2048" height="1049" />
