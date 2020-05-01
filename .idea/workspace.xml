@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="de26adde-e421-4658-a7cc-846cdeb46a91" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-    </list>
+    <list default="true" id="de26adde-e421-4658-a7cc-846cdeb46a91" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -198,6 +193,14 @@
       <option name="presentableId" value="Default" />
       <updated>1564255584480</updated>
     </task>
+    <task id="LOCAL-00001" summary="upgraded Jackson and sqlite libraries">
+      <created>1588350410538</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1588350410538</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -215,31 +218,39 @@
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="upgraded Jackson and sqlite libraries" />
+    <option name="LAST_COMMIT_MESSAGE" value="upgraded Jackson and sqlite libraries" />
+  </component>
   <component name="WindowStateProjectService">
     <state x="635" y="258" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1588349783409">
       <screen x="0" y="23" width="2048" height="1049" />
     </state>
     <state x="635" y="258" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/2048.23.1440.877/0.23.2048.1049@0.23.2048.1049" timestamp="1588349783409" />
-    <state width="1358" height="162" key="GridCell.Tab.0.bottom" timestamp="1588350194178">
+    <state x="524" y="89" key="CommitChangelistDialog2" timestamp="1588350410307">
+      <screen x="0" y="23" width="2048" height="1049" />
+    </state>
+    <state x="524" y="89" key="CommitChangelistDialog2/2048.23.1440.877/0.23.2048.1049@0.23.2048.1049" timestamp="1588350410307" />
+    <state width="1358" height="162" key="GridCell.Tab.0.bottom" timestamp="1588350414681">
       <screen x="0" y="23" width="2048" height="1049" />
     </state>
     <state width="1358" height="152" key="GridCell.Tab.0.bottom/0.23.1440.797@0.23.1440.797" timestamp="1579978643851" />
-    <state width="1358" height="162" key="GridCell.Tab.0.bottom/2048.23.1440.877/0.23.2048.1049@0.23.2048.1049" timestamp="1588350194178" />
-    <state width="1358" height="162" key="GridCell.Tab.0.center" timestamp="1588350194177">
+    <state width="1358" height="162" key="GridCell.Tab.0.bottom/2048.23.1440.877/0.23.2048.1049@0.23.2048.1049" timestamp="1588350414681" />
+    <state width="1358" height="162" key="GridCell.Tab.0.center" timestamp="1588350414680">
       <screen x="0" y="23" width="2048" height="1049" />
     </state>
     <state width="1358" height="152" key="GridCell.Tab.0.center/0.23.1440.797@0.23.1440.797" timestamp="1579978643850" />
-    <state width="1358" height="162" key="GridCell.Tab.0.center/2048.23.1440.877/0.23.2048.1049@0.23.2048.1049" timestamp="1588350194177" />
-    <state width="1358" height="162" key="GridCell.Tab.0.left" timestamp="1588350194177">
+    <state width="1358" height="162" key="GridCell.Tab.0.center/2048.23.1440.877/0.23.2048.1049@0.23.2048.1049" timestamp="1588350414680" />
+    <state width="1358" height="162" key="GridCell.Tab.0.left" timestamp="1588350414679">
       <screen x="0" y="23" width="2048" height="1049" />
     </state>
     <state width="1358" height="152" key="GridCell.Tab.0.left/0.23.1440.797@0.23.1440.797" timestamp="1579978643849" />
-    <state width="1358" height="162" key="GridCell.Tab.0.left/2048.23.1440.877/0.23.2048.1049@0.23.2048.1049" timestamp="1588350194177" />
-    <state width="1358" height="162" key="GridCell.Tab.0.right" timestamp="1588350194178">
+    <state width="1358" height="162" key="GridCell.Tab.0.left/2048.23.1440.877/0.23.2048.1049@0.23.2048.1049" timestamp="1588350414679" />
+    <state width="1358" height="162" key="GridCell.Tab.0.right" timestamp="1588350414680">
       <screen x="0" y="23" width="2048" height="1049" />
     </state>
     <state width="1358" height="152" key="GridCell.Tab.0.right/0.23.1440.797@0.23.1440.797" timestamp="1579978643850" />
-    <state width="1358" height="162" key="GridCell.Tab.0.right/2048.23.1440.877/0.23.2048.1049@0.23.2048.1049" timestamp="1588350194178" />
+    <state width="1358" height="162" key="GridCell.Tab.0.right/2048.23.1440.877/0.23.2048.1049@0.23.2048.1049" timestamp="1588350414680" />
     <state x="441" y="167" key="SettingsEditor" timestamp="1588350129699">
       <screen x="0" y="23" width="2048" height="1049" />
     </state>
