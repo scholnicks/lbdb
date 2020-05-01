@@ -29,3 +29,8 @@ dependencies {
 
     testImplementation group: 'junit', name: 'junit', version: '4.12'
 }
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << '-Xlint:unchecked'
+    options.deprecation = true
+}
