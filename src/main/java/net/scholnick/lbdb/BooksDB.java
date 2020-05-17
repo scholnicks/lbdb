@@ -84,14 +84,16 @@ public final class BooksDB extends JFrame {
     }
 
     private void loadInfoInBackground() {
-        new SwingWorker<Object, Boolean>() {
-            @Override
-            protected Boolean doInBackground() {
+        new SwingWorker<Object,Boolean>() {
+            @Override protected Boolean doInBackground() {
                 setIconImage(new ImageIcon(getClass().getResource("/images/bookcase.gif")).getImage());
                 updateTitle();
                 return Boolean.TRUE;
             }
         }.execute();
+
+        // load the author cache is a separate short lived thread
+        new Thread(authorService::loadCache).start();
     }
 
     private JTabbedPane getTabbedPane() {

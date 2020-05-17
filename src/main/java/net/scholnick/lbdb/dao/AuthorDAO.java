@@ -23,6 +23,10 @@ public class AuthorDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public List<Author> all() {
+        return jdbcTemplate.query("select * from author",this::mapRow);
+    }
+
     public List<Author> search(String criteria) {
         if (NullSafe.isEmpty(criteria)) return Collections.emptyList();
 

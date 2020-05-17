@@ -102,9 +102,8 @@ public class MultipleAuthorsDialog extends BaseDialog {
             nameField = new TrimmedTextField(20, 100);
             nameField.addActionListener(e -> search(false));
             nameField.addKeyListener(new KeyAdapter() {
-                @Override
-                public void keyReleased(KeyEvent e) {
-                    if (nameField.getText() != null && nameField.getText().length() > 3) {
+                @Override public void keyReleased(KeyEvent e) {
+                    if (nameField.getText() != null && nameField.getText().length() > 1) {
                         search(true);
                     }
                 }
@@ -129,7 +128,7 @@ public class MultipleAuthorsDialog extends BaseDialog {
             GUIUtilities.setCellsAlignment(resultsTable, SwingConstants.CENTER);
 
             resultsTable.addMouseListener(new MouseAdapter() {
-                public void mouseClicked(MouseEvent event) {
+                @Override public void mouseClicked(MouseEvent event) {
                     if (event.getClickCount() == 2) {
                         moveChosenAuthorToSelectedTable();
                     }
@@ -140,9 +139,9 @@ public class MultipleAuthorsDialog extends BaseDialog {
     }
 
     private void moveChosenAuthorToSelectedTable() {
-        AuthorTableModel resultesModel = (AuthorTableModel) getResultsTable().getModel();
+        AuthorTableModel resultsModel = (AuthorTableModel) getResultsTable().getModel();
 
-        ((AuthorTableModel) getSelectedTable().getModel()).add(resultesModel.get(getResultsTable().getSelectedRow()));
+        ((AuthorTableModel) getSelectedTable().getModel()).add(resultsModel.get(getResultsTable().getSelectedRow()));
 
         ((AuthorTableModel) getResultsTable().getModel()).clear();
         getNameField().setText("");

@@ -56,9 +56,8 @@ public class AuthorQuickSearch extends BaseDialog {
             nameField = new TrimmedTextField(20, 100);
             nameField.addActionListener(e -> search(false));
             nameField.addKeyListener(new KeyAdapter() {
-                @Override
-                public void keyPressed(KeyEvent e) {
-                    if (nameField.getText() != null && nameField.getText().length() > 3) {
+                @Override public void keyReleased(KeyEvent e) {
+                    if (nameField.getText() != null && nameField.getText().length() > 1) {
                         search(true);
                     }
                 }
@@ -83,8 +82,7 @@ public class AuthorQuickSearch extends BaseDialog {
             GUIUtilities.setCellsAlignment(resultsTable, SwingConstants.CENTER);
 
             resultsTable.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent event) {
+                @Override public void mouseClicked(MouseEvent event) {
                     if (event.getClickCount() == 1) getOKButton().setEnabled(true);
                     else if (event.getClickCount() == 2) ok();
                 }
