@@ -23,176 +23,177 @@ import static net.scholnick.lbdb.util.GUIUtilities.center;
 
 @Component
 public class MultipleAuthorsDialog extends BaseDialog {
-	private JTextField nameField;
-	private JTable     resultsTable;
-	private JTable     selectedTable;
+    private JTextField nameField;
+    private JTable resultsTable;
+    private JTable selectedTable;
 
-	private final AuthorService authorService;
+    private final AuthorService authorService;
 
-	private static final Dimension TABLE_DIMENSION = new Dimension(260,120);
+    private static final Dimension TABLE_DIMENSION = new Dimension(260, 120);
 
-	@Autowired
-	public MultipleAuthorsDialog(AuthorService authorService) {
-		super();
-		this.authorService = authorService;
+    @Autowired
+    public MultipleAuthorsDialog(AuthorService authorService) {
+        super();
+        this.authorService = authorService;
 
-		setTitle("Add Multiple Authors");
-		setModal(true);
-		setSize(300, 400);
-		center(this);
-		buildGUI();
-		getOKButton().setName("Done");
-	}
+        setTitle("Add Multiple Authors");
+        setModal(true);
+        setSize(300, 400);
+        center(this);
+        buildGUI();
+        getOKButton().setName("Done");
+    }
 
-	@Override
-	public void setVisible(boolean b) {
-		if (b) clear();
-		super.setVisible(b);
-	}
-	
-	private void clear() {
-		getNameField().setText("");
-		((AuthorTableModel) getResultsTable().getModel()).clear();
-		((AuthorTableModel) getSelectedTable().getModel()).clear();
-	}
-	
-	@Override
-	protected void buildGUI() {
-		getContentPane().setLayout(new BorderLayout());
-		getContentPane().add(getNameField(), BorderLayout.NORTH);
-		getContentPane().add(getCenterPanels(), BorderLayout.CENTER);
-		getContentPane().add(getButtonPanel(), BorderLayout.SOUTH);
-	}
+    @Override
+    public void setVisible(boolean b) {
+        if (b) clear();
+        super.setVisible(b);
+    }
 
-	private JPanel getCenterPanels() {
-		JPanel panel = new JPanel(new GridBagLayout());
-		GridBagConstraints gbc = new GridBagConstraints();
+    private void clear() {
+        getNameField().setText("");
+        ((AuthorTableModel) getResultsTable().getModel()).clear();
+        ((AuthorTableModel) getSelectedTable().getModel()).clear();
+    }
 
-		gbc.gridx = gbc.gridy = 0;
-		gbc.anchor = GridBagConstraints.NORTHWEST;
-		gbc.fill = GridBagConstraints.NONE;
-		gbc.insets = new Insets(5, 5, 0, 0);
+    @Override
+    protected void buildGUI() {
+        getContentPane().setLayout(new BorderLayout());
+        getContentPane().add(getNameField(), BorderLayout.NORTH);
+        getContentPane().add(getCenterPanels(), BorderLayout.CENTER);
+        getContentPane().add(getButtonPanel(), BorderLayout.SOUTH);
+    }
 
-		gbc.insets = new Insets(5, 100, 0, 0);
-		panel.add(LabelFactory.createLabel("Results"), gbc);
+    private JPanel getCenterPanels() {
+        JPanel panel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
 
-		gbc.gridy++;
-		gbc.insets = new Insets(5, 5, 0, 0);
-		JScrollPane pane = new JScrollPane(getResultsTable());
-		pane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		pane.setMinimumSize(TABLE_DIMENSION);
-		panel.add(pane, gbc);
+        gbc.gridx = gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.NORTHWEST;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.insets = new Insets(5, 5, 0, 0);
 
-		gbc.gridy++;
-		gbc.insets = new Insets(5, 100, 0, 0);
-		panel.add(LabelFactory.createLabel("Selected"), gbc);
+        gbc.insets = new Insets(5, 100, 0, 0);
+        panel.add(LabelFactory.createLabel("Results"), gbc);
 
-		gbc.gridy++;
-		gbc.insets = new Insets(5, 5, 0, 0);
-		JScrollPane selectedPane = new JScrollPane(getSelectedTable());
-		selectedPane.setMinimumSize(TABLE_DIMENSION);
-		selectedPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		panel.add(selectedPane, gbc);
+        gbc.gridy++;
+        gbc.insets = new Insets(5, 5, 0, 0);
+        JScrollPane pane = new JScrollPane(getResultsTable());
+        pane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        pane.setMinimumSize(TABLE_DIMENSION);
+        panel.add(pane, gbc);
 
-		return panel;
-	}
+        gbc.gridy++;
+        gbc.insets = new Insets(5, 100, 0, 0);
+        panel.add(LabelFactory.createLabel("Selected"), gbc);
 
-	private JTextField getNameField() {
-		if (nameField == null) {
-			nameField = new TrimmedTextField(20,100);
-			nameField.addActionListener(e -> search(false));
-			nameField.addKeyListener(new KeyAdapter() {
-				@Override public void keyReleased(KeyEvent e) {
-					if (nameField.getText() != null && nameField.getText().length() > 3) {
-						search(true);
-					}
-				}
-			});
-		}
-		return nameField;
-	}
+        gbc.gridy++;
+        gbc.insets = new Insets(5, 5, 0, 0);
+        JScrollPane selectedPane = new JScrollPane(getSelectedTable());
+        selectedPane.setMinimumSize(TABLE_DIMENSION);
+        selectedPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        panel.add(selectedPane, gbc);
 
-	@Override
-	protected JComponent getInitialFocusComponent() {
-		return getNameField();
-	}
+        return panel;
+    }
 
-	private JTable getResultsTable() {
-		if (resultsTable == null) {
-			resultsTable = new JTable(new AuthorTableModel());
-			resultsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			resultsTable.setCellSelectionEnabled(false);
-			resultsTable.setRowSelectionAllowed(true);
-			resultsTable.getTableHeader().setReorderingAllowed(false);
-			resultsTable.getTableHeader().setUI(null);
-			GUIUtilities.setCellsAlignment(resultsTable,SwingConstants.CENTER);
+    private JTextField getNameField() {
+        if (nameField == null) {
+            nameField = new TrimmedTextField(20, 100);
+            nameField.addActionListener(e -> search(false));
+            nameField.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyReleased(KeyEvent e) {
+                    if (nameField.getText() != null && nameField.getText().length() > 3) {
+                        search(true);
+                    }
+                }
+            });
+        }
+        return nameField;
+    }
 
-			resultsTable.addMouseListener(new MouseAdapter() {
-				public void mouseClicked(MouseEvent event) {
-					if (event.getClickCount() == 2) {
+    @Override
+    protected JComponent getInitialFocusComponent() {
+        return getNameField();
+    }
+
+    private JTable getResultsTable() {
+        if (resultsTable == null) {
+            resultsTable = new JTable(new AuthorTableModel());
+            resultsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            resultsTable.setCellSelectionEnabled(false);
+            resultsTable.setRowSelectionAllowed(true);
+            resultsTable.getTableHeader().setReorderingAllowed(false);
+            resultsTable.getTableHeader().setUI(null);
+            GUIUtilities.setCellsAlignment(resultsTable, SwingConstants.CENTER);
+
+            resultsTable.addMouseListener(new MouseAdapter() {
+                public void mouseClicked(MouseEvent event) {
+                    if (event.getClickCount() == 2) {
                         moveChosenAuthorToSelectedTable();
-					}
-				}
-			});
-		}
-		return resultsTable;
-	}
+                    }
+                }
+            });
+        }
+        return resultsTable;
+    }
 
-	private void moveChosenAuthorToSelectedTable() {
+    private void moveChosenAuthorToSelectedTable() {
         AuthorTableModel resultesModel = (AuthorTableModel) getResultsTable().getModel();
 
         ((AuthorTableModel) getSelectedTable().getModel()).add(resultesModel.get(getResultsTable().getSelectedRow()));
 
-		((AuthorTableModel) getResultsTable().getModel()).clear();
-		getNameField().setText("");
-		getNameField().requestFocus();
+        ((AuthorTableModel) getResultsTable().getModel()).clear();
+        getNameField().setText("");
+        getNameField().requestFocus();
         repaintScreen();
     }
 
-	private JTable getSelectedTable() {
-		if (selectedTable == null) {
-			selectedTable = new JTable(new AuthorTableModel());
-			selectedTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			selectedTable.setCellSelectionEnabled(false);
-			selectedTable.setRowSelectionAllowed(false);
-			selectedTable.getTableHeader().setReorderingAllowed(false);
-			selectedTable.getTableHeader().setUI(null);
-			GUIUtilities.setCellsAlignment(selectedTable,SwingConstants.CENTER);
-		}
-		return selectedTable;
-	}
+    private JTable getSelectedTable() {
+        if (selectedTable == null) {
+            selectedTable = new JTable(new AuthorTableModel());
+            selectedTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            selectedTable.setCellSelectionEnabled(false);
+            selectedTable.setRowSelectionAllowed(false);
+            selectedTable.getTableHeader().setReorderingAllowed(false);
+            selectedTable.getTableHeader().setUI(null);
+            GUIUtilities.setCellsAlignment(selectedTable, SwingConstants.CENTER);
+        }
+        return selectedTable;
+    }
 
-	private void search(boolean existingOnly) {
-		AuthorTableModel model = (AuthorTableModel) getResultsTable().getModel();
-		model.clear();
+    private void search(boolean existingOnly) {
+        AuthorTableModel model = (AuthorTableModel) getResultsTable().getModel();
+        model.clear();
 
-		List<Author> foundAuthors = authorService.search(getNameField().getText());
+        List<Author> foundAuthors = authorService.search(getNameField().getText());
 
-		if (! foundAuthors.isEmpty()) {
-			foundAuthors.forEach(model::add);
-			repaintScreen();
-		}
-		else {
-			if (existingOnly) {
-				repaintScreen();
-				return;
-			}
+        if (!foundAuthors.isEmpty()) {
+            foundAuthors.forEach(model::add);
+            repaintScreen();
+        }
+        else {
+            if (existingOnly) {
+                repaintScreen();
+                return;
+            }
 
-			String fullName = getNameField().getText();
+            String fullName = getNameField().getText();
 
-			int choice = showConfirmDialog(this, "Author ( " + fullName + " ) not found.  Add?", "Add Author?", YES_NO_OPTION);
-			if (choice == YES_OPTION) {
+            int choice = showConfirmDialog(this, "Author ( " + fullName + " ) not found.  Add?", "Add Author?", YES_NO_OPTION);
+            if (choice == YES_OPTION) {
                 ((AuthorTableModel) getSelectedTable().getModel()).add(Author.of(fullName));
-				((AuthorTableModel) getResultsTable().getModel()).clear();
-				getNameField().setText("");
+                ((AuthorTableModel) getResultsTable().getModel()).clear();
+                getNameField().setText("");
                 getNameField().requestFocus();
                 repaintScreen();
-			}
-		}
-	}
+            }
+        }
+    }
 
-	public java.util.List<Author> getAuthors() {
-		java.util.List<Author> data = ((AuthorTableModel) getSelectedTable().getModel()).getAllAuthors();
-		return data.stream().distinct().sorted().collect(toList());
-	}
+    public java.util.List<Author> getAuthors() {
+        java.util.List<Author> data = ((AuthorTableModel) getSelectedTable().getModel()).getAllAuthors();
+        return data.stream().distinct().sorted().collect(toList());
+    }
 }

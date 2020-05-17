@@ -22,7 +22,7 @@ public class BooksApp {
         }
 
         ApplicationContext context = new SpringApplicationBuilder(BooksApp.class).headless(false).run(args);
-        EventQueue.invokeLater( () -> context.getBean(BooksDB.class).init() );
+        EventQueue.invokeLater(() -> context.getBean(BooksDB.class).init());
     }
 
     @Bean

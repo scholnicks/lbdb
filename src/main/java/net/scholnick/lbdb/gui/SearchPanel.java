@@ -28,308 +28,319 @@ import static java.util.stream.Collectors.toList;
 
 @Component
 public class SearchPanel extends BasePanel {
-	private JButton searchButton;
-	private JButton clearButton;
-	private JButton editBookButton;
-	private JButton editAuthorButton;
+    private JButton searchButton;
+    private JButton clearButton;
+    private JButton editBookButton;
+    private JButton editAuthorButton;
 
-	private JTextField authorName;
-	private JTextField title;
-	private JTextField series;
-	private JComboBox<MediaType> mediaCombo;
-	
-	private JLabel infoLabel;
+    private JTextField authorName;
+    private JTextField title;
+    private JTextField series;
+    private JComboBox<MediaType> mediaCombo;
 
-	private JTable dataTable;
+    private JLabel infoLabel;
 
-	private final SearchAction searchAction;
-	private final BookService bookService;
+    private JTable dataTable;
 
-	@Autowired
-	public SearchPanel(BookService bookService) {
-		super();
-		this.bookService = bookService;
-		this.searchAction = new SearchAction();
-		setLayout(new BorderLayout(1, 1));
-		makePanels();
-	}
+    private final SearchAction searchAction;
+    private final BookService bookService;
 
-	@Override
-	public void paintComponent(Graphics g) {
-		getTitleField().requestFocus();
-		super.paintComponent(g);
-	}
+    @Autowired
+    public SearchPanel(BookService bookService) {
+        super();
+        this.bookService = bookService;
+        this.searchAction = new SearchAction();
+        setLayout(new BorderLayout(1, 1));
+        makePanels();
+    }
 
-	private void makePanels() {
-		JPanel middle = new JPanel(new BorderLayout());
-		middle.add(getTopPanel(), BorderLayout.NORTH);
-		middle.add(new JScrollPane(getDataTable()), BorderLayout.CENTER);
+    @Override
+    public void paintComponent(Graphics g) {
+        getTitleField().requestFocus();
+        super.paintComponent(g);
+    }
 
-		add(middle, BorderLayout.CENTER);
-		add(getBottomPanel(), BorderLayout.SOUTH);
-	}
+    private void makePanels() {
+        JPanel middle = new JPanel(new BorderLayout());
+        middle.add(getTopPanel(), BorderLayout.NORTH);
+        middle.add(new JScrollPane(getDataTable()), BorderLayout.CENTER);
 
-	private JPanel getBottomPanel() {
-		JPanel p = new JPanel(new BorderLayout(1, 1));
-		p.add(getButtonPanel(), BorderLayout.CENTER);
-		p.add(getInfoLabel(), BorderLayout.SOUTH);
-		return p;
-	}
+        add(middle, BorderLayout.CENTER);
+        add(getBottomPanel(), BorderLayout.SOUTH);
+    }
 
-	protected JPanel getButtonPanel() {
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.add(getEditBookButton());
-		buttonPanel.add(getEditAuthorButton());
-		return buttonPanel;
-	}
+    private JPanel getBottomPanel() {
+        JPanel p = new JPanel(new BorderLayout(1, 1));
+        p.add(getButtonPanel(), BorderLayout.CENTER);
+        p.add(getInfoLabel(), BorderLayout.SOUTH);
+        return p;
+    }
 
-	private JLabel getInfoLabel() {
-		if (infoLabel == null) {
-			infoLabel = LabelFactory.createLabel(" ");	// dont use "", swing will hide the component
-			infoLabel.setVisible(true);
-		}
-		return infoLabel;
-	}
+    protected JPanel getButtonPanel() {
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(getEditBookButton());
+        buttonPanel.add(getEditAuthorButton());
+        return buttonPanel;
+    }
 
-	private JPanel getTopPanel() {
-		JPanel topPanel = new JPanel(new BorderLayout());
-		topPanel.add(getCriteriaPanel(), BorderLayout.CENTER);
-		topPanel.add(getSearchButtonPanel(), BorderLayout.SOUTH);
-		return topPanel;
-	}
+    private JLabel getInfoLabel() {
+        if (infoLabel == null) {
+            infoLabel = LabelFactory.createLabel(" ");    // dont use "", swing will hide the component
+            infoLabel.setVisible(true);
+        }
+        return infoLabel;
+    }
 
-	private JPanel getSearchButtonPanel() {
-		JPanel p = new JPanel();
-		p.add(getSearchButton());
-		p.add(getClearButton());
-		return p;
-	}
+    private JPanel getTopPanel() {
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(getCriteriaPanel(), BorderLayout.CENTER);
+        topPanel.add(getSearchButtonPanel(), BorderLayout.SOUTH);
+        return topPanel;
+    }
 
-	private JPanel getCriteriaPanel() {
-		JPanel cp = new JPanel(new GridLayout(1,2));
-		
-		JPanel leftPanel = new JPanel(new GridBagLayout());
-		leftPanel.setBorder( GUIUtilities.EMPTY_BORDER );
-		
-		GridBagConstraints gbc = GUIUtilities.getDefaultGridBagConstraints();
+    private JPanel getSearchButtonPanel() {
+        JPanel p = new JPanel();
+        p.add(getSearchButton());
+        p.add(getClearButton());
+        return p;
+    }
 
-		leftPanel.add(LabelFactory.createLabel("Title"), gbc);
-		gbc.gridx++;
-		leftPanel.add(getTitleField(), gbc);
-		cp.add(leftPanel);
-		
-		gbc.gridy++;
-		gbc.gridx = 0;
-		leftPanel.add(LabelFactory.createLabel("Series"), gbc);
-		gbc.gridx++;
-		leftPanel.add(getSeriesField(), gbc);
-		cp.add(leftPanel);
+    private JPanel getCriteriaPanel() {
+        JPanel cp = new JPanel(new GridLayout(1, 2));
 
-		JPanel rightPanel = new JPanel(new GridBagLayout());
-		Insets shiftedInsets = new Insets(0,20,0,0);
-		gbc = GUIUtilities.getDefaultGridBagConstraints();
-		rightPanel.add(LabelFactory.createLabel("Author Name"), gbc);
-		gbc.gridx++;
-		gbc.insets = shiftedInsets;
-		rightPanel.add(getAuthorNameField(), gbc);
+        JPanel leftPanel = new JPanel(new GridBagLayout());
+        leftPanel.setBorder(GUIUtilities.EMPTY_BORDER);
 
-		gbc.gridy++;
-		gbc.gridx = 0;
-		rightPanel.add(LabelFactory.createLabel("Media"), gbc);
-		gbc.gridx++;
-		rightPanel.add(getMediaCombo(), gbc);
+        GridBagConstraints gbc = GUIUtilities.getDefaultGridBagConstraints();
 
-		JPanel extra = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		extra.add(rightPanel);
-		cp.add(extra);
-		
-		return cp;
-	}
+        leftPanel.add(LabelFactory.createLabel("Title"), gbc);
+        gbc.gridx++;
+        leftPanel.add(getTitleField(), gbc);
+        cp.add(leftPanel);
 
-	private JComboBox<MediaType> getMediaCombo() {
-		if (mediaCombo == null) {
-			Vector<MediaType> types = new Vector<>(Media.values().length+1);
-			types.add( new MediaType("",-1) );
-			types.addAll( Arrays.stream(Media.values()).map(m -> new MediaType(m.toString(),m.getId())).collect(toList()) );
-			mediaCombo = new JComboBox<>(types);
-		}
-		return mediaCombo;
-	}
+        gbc.gridy++;
+        gbc.gridx = 0;
+        leftPanel.add(LabelFactory.createLabel("Series"), gbc);
+        gbc.gridx++;
+        leftPanel.add(getSeriesField(), gbc);
+        cp.add(leftPanel);
 
-	private JButton getSearchButton() {
-		if (searchButton == null) {
-			searchButton = new JButton("Search");
-			searchButton.addActionListener(searchAction);
-		}
-		return searchButton;
-	}
+        JPanel rightPanel = new JPanel(new GridBagLayout());
+        Insets shiftedInsets = new Insets(0, 20, 0, 0);
+        gbc = GUIUtilities.getDefaultGridBagConstraints();
+        rightPanel.add(LabelFactory.createLabel("Author Name"), gbc);
+        gbc.gridx++;
+        gbc.insets = shiftedInsets;
+        rightPanel.add(getAuthorNameField(), gbc);
 
-	private void search() {
-		Book b = new Book();
-		b.setTitle( getTitleField().getText() );
-		b.setSeries( getSeriesField().getText() );
-		b.setMedia( Media.from( Objects.requireNonNull((MediaType) getMediaCombo().getSelectedItem()).getId()) );
+        gbc.gridy++;
+        gbc.gridx = 0;
+        rightPanel.add(LabelFactory.createLabel("Media"), gbc);
+        gbc.gridx++;
+        rightPanel.add(getMediaCombo(), gbc);
 
-		if (! NullSafe.isEmpty(getAuthorNameField().getText())) {
-			b.setAuthors(java.util.List.of(Author.of(getAuthorNameField().getText())));
-		}
+        JPanel extra = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        extra.add(rightPanel);
+        cp.add(extra);
 
-		new SwingWorker<Object,Boolean>() {
-			@Override protected Boolean doInBackground() {
-				fillTable(bookService.search(b));
-				return Boolean.TRUE;
-			}
-		}.execute();
+        return cp;
+    }
 
-		SoundPlayer.playAhh();
-	}
+    private JComboBox<MediaType> getMediaCombo() {
+        if (mediaCombo == null) {
+            Vector<MediaType> types = new Vector<>(Media.values().length + 1);
+            types.add(new MediaType("", -1));
+            types.addAll(Arrays.stream(Media.values()).map(m -> new MediaType(m.toString(), m.getId())).collect(toList()));
+            mediaCombo = new JComboBox<>(types);
+        }
+        return mediaCombo;
+    }
 
-	private JButton getClearButton() {
-		if (clearButton == null) {
-			clearButton = new JButton("Clear");
-			clearButton.addActionListener(l -> clear());
-		}
-		return clearButton;
-	}
+    private JButton getSearchButton() {
+        if (searchButton == null) {
+            searchButton = new JButton("Search");
+            searchButton.addActionListener(searchAction);
+        }
+        return searchButton;
+    }
 
-	private void clear() {
-		getTitleField().setText("");
-		getAuthorNameField().setText("");
-		getSeriesField().setText("");
-		getMediaCombo().setSelectedIndex(0);
-		getInfoLabel().setText(" ");
+    private void search() {
+        Book b = new Book();
+        b.setTitle(getTitleField().getText());
+        b.setSeries(getSeriesField().getText());
+        b.setMedia(Media.from(Objects.requireNonNull((MediaType) getMediaCombo().getSelectedItem()).getId()));
 
-		clearTableData();
-		getTitleField().requestFocus();
-		repaint();
-	}
+        if (!NullSafe.isEmpty(getAuthorNameField().getText())) {
+            b.setAuthors(java.util.List.of(Author.of(getAuthorNameField().getText())));
+        }
 
-	private void clearTableData() {
-		getDataTable().clearSelection();
-		((TitleSearchTableModel) getDataTable().getModel()).clear();
-		getInfoLabel().setText("");
-	}
+        new SwingWorker<Object, Boolean>() {
+            @Override
+            protected Boolean doInBackground() {
+                fillTable(bookService.search(b));
+                return Boolean.TRUE;
+            }
+        }.execute();
 
-	private void fillTable(java.util.List<Book> data) {
-		clearTableData();
+        SoundPlayer.playAhh();
+    }
 
-		TitleSearchTableModel model = (TitleSearchTableModel) getDataTable().getModel();
+    private JButton getClearButton() {
+        if (clearButton == null) {
+            clearButton = new JButton("Clear");
+            clearButton.addActionListener(l -> clear());
+        }
+        return clearButton;
+    }
 
-		data.forEach(model::addRow);
-		getInfoLabel().setText(data.size() + " book" + (data.size() != 1 ? "s" : "")  + " found");
-		validate();
-		repaint();
-	}
+    private void clear() {
+        getTitleField().setText("");
+        getAuthorNameField().setText("");
+        getSeriesField().setText("");
+        getMediaCombo().setSelectedIndex(0);
+        getInfoLabel().setText(" ");
 
-	private JTextField getAuthorNameField() {
-		if (authorName == null) {
-			authorName = new TrimmedTextField(20,100);
-			authorName.addActionListener(searchAction);
-		}
-		return authorName;
-	}
+        clearTableData();
+        getTitleField().requestFocus();
+        repaint();
+    }
 
-	private JTable getDataTable() {
-		if (dataTable == null) {
-			dataTable = new TitleSearchTable();
+    private void clearTableData() {
+        getDataTable().clearSelection();
+        ((TitleSearchTableModel) getDataTable().getModel()).clear();
+        getInfoLabel().setText("");
+    }
 
-			dataTable.addMouseListener(new MouseAdapter() {
-				public void mouseClicked(MouseEvent event) {
-					if (getEditBookButton().isEnabled() && event.getClickCount() == 2) {
-						editTitle();
-					}
-				}
-			});
-		}
-		return dataTable;
-	}
+    private void fillTable(java.util.List<Book> data) {
+        clearTableData();
 
-	private void editTitle() {
-		int row = getDataTable().getSelectedRow();
+        TitleSearchTableModel model = (TitleSearchTableModel) getDataTable().getModel();
 
-		TitleSearchTableModel model = (TitleSearchTableModel) getDataTable().getModel();
-		Book data = bookService.get(model.getTitleData(row).getId());
+        data.forEach(model::addRow);
+        getInfoLabel().setText(data.size() + " book" + (data.size() != 1 ? "s" : "") + " found");
+        validate();
+        repaint();
+    }
 
-		getInfoLabel().setText("");
-		fireTitleSelection(new TitleSelectionEvent(data));
-	}
+    private JTextField getAuthorNameField() {
+        if (authorName == null) {
+            authorName = new TrimmedTextField(20, 100);
+            authorName.addActionListener(searchAction);
+        }
+        return authorName;
+    }
 
-	private void editAuthor() {
-		int row = getDataTable().getSelectedRow();
+    private JTable getDataTable() {
+        if (dataTable == null) {
+            dataTable = new TitleSearchTable();
 
-		TitleSearchTableModel model = (TitleSearchTableModel) getDataTable().getModel();
-		Book data = model.getTitleData(row);
+            dataTable.addMouseListener(new MouseAdapter() {
+                public void mouseClicked(MouseEvent event) {
+                    if (getEditBookButton().isEnabled() && event.getClickCount() == 2) {
+                        editTitle();
+                    }
+                }
+            });
+        }
+        return dataTable;
+    }
 
-		Author a = getSelectedAuthor(data);
+    private void editTitle() {
+        int row = getDataTable().getSelectedRow();
 
-		if (a != null) {
-			getInfoLabel().setText("");
-			fireAuthorSelection(new AuthorSelectionEvent(a));
-		}
-	}
+        TitleSearchTableModel model = (TitleSearchTableModel) getDataTable().getModel();
+        Book data = bookService.get(model.getTitleData(row).getId());
 
-	private Author getSelectedAuthor(Book b) {
-		java.util.List<Author> authors = b.getAuthors();
+        getInfoLabel().setText("");
+        fireTitleSelection(new TitleSelectionEvent(data));
+    }
 
-		if (authors.size() == 1) {
-			return authors.get(0);
-		}
+    private void editAuthor() {
+        int row = getDataTable().getSelectedRow();
 
-		AuthorSelectionPopUp selection = new AuthorSelectionPopUp(b.getAuthors());
-		selection.setVisible(true);
-		return selection.isApproved() ? selection.getSelectedAuthor() : null;
-	}
+        TitleSearchTableModel model = (TitleSearchTableModel) getDataTable().getModel();
+        Book data = model.getTitleData(row);
 
-	private JButton getEditBookButton() {
-		if (editBookButton == null) {
-			editBookButton = new JButton("Edit Book");
-			editBookButton.addActionListener(l -> editTitle());
-		}
-		return editBookButton;
-	}
+        Author a = getSelectedAuthor(data);
 
-	private JButton getEditAuthorButton() {
-		if (editAuthorButton == null) {
-			editAuthorButton = new JButton("Edit Author");
-			editAuthorButton.addActionListener(l -> editAuthor());
-		}
-		return editAuthorButton;
-	}
+        if (a != null) {
+            getInfoLabel().setText("");
+            fireAuthorSelection(new AuthorSelectionEvent(a));
+        }
+    }
 
-	private JTextField getTitleField() {
-		if (title == null) {
-			title = new TrimmedTextField(20,100);
-			title.addActionListener(searchAction);
-		}
-		return title;
-	}
+    private Author getSelectedAuthor(Book b) {
+        java.util.List<Author> authors = b.getAuthors();
 
-	private JTextField getSeriesField() {
-		if (series == null) {
-			series = new TrimmedTextField(20,100);
-			series.addActionListener(searchAction);
-		}
-		return series;
-	}
+        if (authors.size() == 1) {
+            return authors.get(0);
+        }
 
-	@Override
-	protected JPanel getInputPanel() {
-		return null;
-	}
+        AuthorSelectionPopUp selection = new AuthorSelectionPopUp(b.getAuthors());
+        selection.setVisible(true);
+        return selection.isApproved() ? selection.getSelectedAuthor() : null;
+    }
 
-	private static final class MediaType {
-		private final String display;
-		private final Integer id;
+    private JButton getEditBookButton() {
+        if (editBookButton == null) {
+            editBookButton = new JButton("Edit Book");
+            editBookButton.addActionListener(l -> editTitle());
+        }
+        return editBookButton;
+    }
 
-		MediaType(String display, Integer id) { this.display = display; this.id = id; }
-		@Override public String toString() { return display; }
-		public Integer getId() { return id; }
-	}
+    private JButton getEditAuthorButton() {
+        if (editAuthorButton == null) {
+            editAuthorButton = new JButton("Edit Author");
+            editAuthorButton.addActionListener(l -> editAuthor());
+        }
+        return editAuthorButton;
+    }
+
+    private JTextField getTitleField() {
+        if (title == null) {
+            title = new TrimmedTextField(20, 100);
+            title.addActionListener(searchAction);
+        }
+        return title;
+    }
+
+    private JTextField getSeriesField() {
+        if (series == null) {
+            series = new TrimmedTextField(20, 100);
+            series.addActionListener(searchAction);
+        }
+        return series;
+    }
+
+    @Override
+    protected JPanel getInputPanel() {
+        return null;
+    }
+
+    private static final class MediaType {
+        private final String display;
+        private final Integer id;
+
+        MediaType(String display, Integer id) {
+            this.display = display;
+            this.id = id;
+        }
+
+        @Override
+        public String toString() {
+            return display;
+        }
+
+        public Integer getId() {
+            return id;
+        }
+    }
 
     private final class SearchAction extends AbstractAction implements Runnable {
-		private Thread searchThread;
+        private Thread searchThread;
 
-		@Override
+        @Override
         public void actionPerformed(ActionEvent e) {
             if (searchThread != null) {
                 return;

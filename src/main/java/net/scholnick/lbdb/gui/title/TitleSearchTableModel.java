@@ -5,144 +5,124 @@ import net.scholnick.lbdb.domain.Media;
 import net.scholnick.lbdb.util.NullSafe;
 
 import javax.swing.table.AbstractTableModel;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
 public final class TitleSearchTableModel extends AbstractTableModel {
-	private final List<Book> dataRows;
-	private int              sortedColumn;
-	private Direction[]      sortingDirections;
+    private final List<Book> dataRows;
+    private int sortedColumn;
+    private Direction[] sortingDirections;
 
-	TitleSearchTableModel() {
-		dataRows = new ArrayList<>();
-		setSortingDefaults();
-	}
+    TitleSearchTableModel() {
+        dataRows = new ArrayList<>();
+        setSortingDefaults();
+    }
 
-	private void setSortingDefaults() {
-		sortedColumn = 0;
-		sortingDirections = new Direction[columnNames.length];
-		Arrays.fill(sortingDirections, Direction.ASCENDING);
-	}
+    private void setSortingDefaults() {
+        sortedColumn = 0;
+        sortingDirections = new Direction[columnNames.length];
+        Arrays.fill(sortingDirections, Direction.ASCENDING);
+    }
 
-	@Override
-	public int getRowCount() {
-		return dataRows.size();
-	}
+    @Override
+    public int getRowCount() {
+        return dataRows.size();
+    }
 
-	@Override
-	public int getColumnCount() {
-		return columnNames.length;
-	}
+    @Override
+    public int getColumnCount() {
+        return columnNames.length;
+    }
 
-	@Override
-	public String getColumnName(int c) {
-		return columnNames[c];
-	}
+    @Override
+    public String getColumnName(int c) {
+        return columnNames[c];
+    }
 
-	@Override
-	public Class<?> getColumnClass(int c) {
-		switch (c) {
-			case 2:
-				return Media.class;
-			case 4:
-				return Boolean.class;
-			default:
-				return String.class;
-		}
-	}
+    @Override
+    public Class<?> getColumnClass(int c) {
+        return switch (c) {
+            case 2 -> Media.class;
+            case 4 -> Boolean.class;
+            default -> String.class;
+        };
+    }
 
-	@Override
-	public Object getValueAt(int row, int col) {
-		Book data = getTitleData(row);
+    @Override
+    public Object getValueAt(int row, int col) {
+        Book data = getTitleData(row);
 
-		switch (col) {
-			case 0:
-				return data.getTitle();
-			case 1:
-				return data.getAuthorNames();
-			case 2:
-				return data.getMedia();
-			case 3:
-				return data.getSeries();
-			case 4:
-				return data.isAnthology() ? "Yes" : "No";
-		}
+        return switch (col) {
+            case 0 -> data.getTitle();
+            case 1 -> data.getAuthorNames();
+            case 2 -> data.getMedia();
+            case 3 -> data.getSeries();
+            case 4 -> data.isAnthology() ? "Yes" : "No";
+            default -> null;
+        };
 
-		return null;
-	}
+    }
 
-	public Book getTitleData(int row) {
-		return dataRows.get(row);
-	}
+    public Book getTitleData(int row) {
+        return dataRows.get(row);
+    }
 
-	public void clear() {
-		dataRows.clear();
-		setSortingDefaults();
-		fireTableDataChanged();
-	}
+    public void clear() {
+        dataRows.clear();
+        setSortingDefaults();
+        fireTableDataChanged();
+    }
 
-	public void addRow(Book data) {
-		dataRows.add(data);
-		fireTableDataChanged();
-	}
+    public void addRow(Book data) {
+        dataRows.add(data);
+        fireTableDataChanged();
+    }
 
-	void sort(int column) {
-		if (column == sortedColumn) {
-			sortingDirections[column] = sortingDirections[column] == Direction.ASCENDING ? Direction.DESCENDING : Direction.ASCENDING;
-		}
+    void sort(int column) {
+        if (column == sortedColumn) {
+            sortingDirections[column] = sortingDirections[column] == Direction.ASCENDING ? Direction.DESCENDING : Direction.ASCENDING;
+        }
 
-		sortedColumn = column;
-		dataRows.sort(new DataSorter(column));
-		fireTableDataChanged();
-	}
+        sortedColumn = column;
+        dataRows.sort(new DataSorter(column));
+        fireTableDataChanged();
+    }
 
-	private static final String[] columnNames = { "Title", "Authors", "Media", "Series", "Anthology" };
+    private static final String[] columnNames = {"Title", "Authors", "Media", "Series", "Anthology"};
 
-	private enum Direction {
-		ASCENDING, DESCENDING
-	}
+    private enum Direction {
+        ASCENDING, DESCENDING
+    }
 
-	private final class DataSorter implements Comparator<Book> {
-		private final int column;
+    private final class DataSorter implements Comparator<Book> {
+        private final int column;
 
-		DataSorter(int column) {
-			this.column = column;
-		}
+        DataSorter(int column) {
+            this.column = column;
+        }
 
-		@Override
-		public int compare(Book o1, Book o2) {
-			int cmp = 0;
+        @Override
+        public int compare(Book o1, Book o2) {
+            int cmp = switch (column) {
+                case 0 -> o1.compareTo(o2);
+                case 1 -> o1.getAuthorNames().compareTo(o2.getAuthorNames());
+                case 2 -> NullSafe.compare(o1.getMedia(), o2.getMedia());
+                case 3 -> NullSafe.compare(o1.getSeries(), o2.getSeries());
+                case 4 -> NullSafe.compare(o1.isAnthology(), o2.isAnthology());
+                default -> 0;
+            };
 
-			switch (column) {
-				case 0:
-					cmp = o1.compareTo(o2);
-					break;
+            if (sortingDirections[column] == Direction.DESCENDING) {
+                cmp *= -1;
+            }
 
-				case 1:
-					cmp = o1.getAuthorNames().compareTo(o2.getAuthorNames());
-					break;
+            if (cmp == 0) {
+                cmp = o1.compareTo(o2);
+            }
 
-				case 2:
-					cmp = NullSafe.compare(o1.getMedia(), o2.getMedia());
-					break;
-
-				case 3:
-					cmp = NullSafe.compare(o1.getSeries(), o2.getSeries());
-					break;
-
-				case 4:
-					cmp = NullSafe.compare(o1.isAnthology(), o2.isAnthology());
-					break;
-			}
-
-			if (sortingDirections[column] == Direction.DESCENDING) {
-				cmp *= -1;
-			}
-
-			if (cmp == 0) {
-				cmp = o1.compareTo(o2);
-			}
-
-			return cmp;
-		}
-	}
+            return cmp;
+        }
+    }
 }
