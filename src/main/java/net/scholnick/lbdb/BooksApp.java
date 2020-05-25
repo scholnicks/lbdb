@@ -1,6 +1,7 @@
 package net.scholnick.lbdb;
 
-import org.apache.commons.dbcp2.BasicDataSource;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
@@ -10,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import javax.sql.DataSource;
 import javax.swing.*;
 import java.awt.*;
+import java.util.Properties;
 
 @SpringBootApplication
 public class BooksApp {
@@ -30,20 +32,19 @@ public class BooksApp {
         return new JdbcTemplate(dataSource);
     }
 
-    @Bean
+    @Bean(destroyMethod="close")
     public DataSource dataSource() {
-        BasicDataSource dataSource  = new BasicDataSource();
-        dataSource.setDriverClassName("org.sqlite.JDBC");
+        // https://www.baeldung.com/hikaricp
+        // https://stackoverflow.com/questions/26490967/how-do-i-configure-hikaricp-in-my-spring-boot-app-in-my-application-properties-f
+        // implementation group: 'com.zaxxer', name: 'HikariCP', version: '3.4.5'
 
-        String url = DEV_DB_LOCATION;
-        if ("production".equalsIgnoreCase(System.getProperty("lbdb.database.type","dev"))) {
-            url = PROD_DB_LOCATION;
-        }
+        Properties properties = new Properties();
+        properties.put("driverClassName","org.sqlite.JDBC");
+        properties.put("jdbcUrl","production".equalsIgnoreCase(System.getProperty("lbdb.database.type","dev")) ? PROD_DB_LOCATION : DEV_DB_LOCATION);
 
-        dataSource.setUrl("jdbc:sqlite:" + url);
-        return dataSource;
+        return new HikariDataSource(new HikariConfig(properties));
     }
 
-    private static final String DEV_DB_LOCATION  = "/Users/steve/development/java/lbdb/sql/test.db";
-    private static final String PROD_DB_LOCATION = "/Users/steve/Documents/lbdb.db";
+    private static final String DEV_DB_LOCATION  = "jdbc:sqlite:/Users/steve/development/java/lbdb/sql/test.db";
+    private static final String PROD_DB_LOCATION = "jdbc:sqlite:/Users/steve/Documents/lbdb.db";
 }

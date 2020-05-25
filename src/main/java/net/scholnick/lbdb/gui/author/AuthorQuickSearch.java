@@ -10,12 +10,10 @@ import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.List;
 
+import static javax.swing.BorderFactory.createEmptyBorder;
 import static javax.swing.JOptionPane.showConfirmDialog;
 
 @Component
@@ -45,7 +43,7 @@ public class AuthorQuickSearch extends BaseDialog {
         getContentPane().add(getNameField(), BorderLayout.NORTH);
 
         JScrollPane pane = new JScrollPane(getResultsTable());
-        pane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        pane.setBorder(createEmptyBorder(5, 5, 5, 5));
 
         getContentPane().add(pane, BorderLayout.CENTER);
         getContentPane().add(getButtonPanel(), BorderLayout.SOUTH);
@@ -85,6 +83,14 @@ public class AuthorQuickSearch extends BaseDialog {
                 @Override public void mouseClicked(MouseEvent event) {
                     if (event.getClickCount() == 1) getOKButton().setEnabled(true);
                     else if (event.getClickCount() == 2) ok();
+                }
+            });
+
+            KeyStroke enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
+            resultsTable.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(enter, "enter");
+            resultsTable.getActionMap().put("enter", new AbstractAction() {
+                @Override public void actionPerformed(ActionEvent e) {
+                    ok();
                 }
             });
         }

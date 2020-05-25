@@ -33,7 +33,7 @@ public final class BooksDB extends JFrame {
 
     private static final Dimension WINDOW_SIZE = new Dimension(900, 600);
 
-    private static final String VERSION = "Version 4.5.0";
+    private static final String VERSION = "Version 4.6.0";
 
     private JLabel notificationLabel;
 
@@ -92,7 +92,7 @@ public final class BooksDB extends JFrame {
             }
         }.execute();
 
-        // load the author cache is a separate short lived thread
+        // load the author cache in a separate short lived thread
         new Thread(authorService::loadCache).start();
     }
 
