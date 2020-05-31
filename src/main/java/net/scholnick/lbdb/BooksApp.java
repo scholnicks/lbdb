@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 import javax.swing.*;
@@ -27,10 +26,10 @@ public class BooksApp {
         EventQueue.invokeLater(() -> context.getBean(BooksDB.class).init());
     }
 
-    @Bean
-    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
-        return new JdbcTemplate(dataSource);
-    }
+//    @Bean
+//    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
+//        return new JdbcTemplate(dataSource);
+//    }
 
     @Bean(destroyMethod="close")
     public DataSource dataSource() {
@@ -39,7 +38,8 @@ public class BooksApp {
         // implementation group: 'com.zaxxer', name: 'HikariCP', version: '3.4.5'
 
         Properties properties = new Properties();
-        properties.put("driverClassName","org.sqlite.JDBC");
+        properties.put("autoCommit","false");
+//        properties.put("driverClassName","org.sqlite.JDBC");
         properties.put("jdbcUrl","production".equalsIgnoreCase(System.getProperty("lbdb.database.type","dev")) ? PROD_DB_LOCATION : DEV_DB_LOCATION);
 
         return new HikariDataSource(new HikariConfig(properties));

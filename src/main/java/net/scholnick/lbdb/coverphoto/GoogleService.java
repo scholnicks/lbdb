@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.scholnick.lbdb.domain.Author;
 import net.scholnick.lbdb.domain.Book;
-import net.scholnick.lbdb.util.NullSafe;
+import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,6 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import static net.scholnick.lbdb.util.CacheManager.getDestinationDirectory;
 
@@ -75,10 +74,10 @@ public class GoogleService {
         for (Object record: items) {
             Map<Object,Object> volumeInfo = (Map<Object,Object>) ((Map<Object,Object>) record).get("volumeInfo");
 
-            if (canonicalEquals((String) volumeInfo.get("title"),book.getTitle())) {
+            if (isClose((String) volumeInfo.get("title"),book.getTitle())) {
                 for (String author: ((List<String>) volumeInfo.get("authors")) ) {
                     for (Author a: book.getAuthors()) {
-                        if (canonicalEquals(author,a)) {
+                        if (isClose(author,a.getName())) {
                             log.info("Found cover photo match for " + book);
                             Map<String,String> imageLinks = (Map<String,String>) volumeInfo.get("imageLinks");
                             log.info("Image Links: " + imageLinks);
@@ -106,17 +105,13 @@ public class GoogleService {
         }
     }
 
-    private boolean canonicalEquals(String s, Author a) {
-        return NullSafe.equals(toCanonical(s), toCanonical(a.getName()));
-    }
-
-    private boolean canonicalEquals(String s1, String s2) {
+    private boolean isClose(String s1, String s2) {
         if (s1 == null || s2 == null) return false;
-        return Objects.equals(toCanonical(s1), toCanonical(s2));
-    }
 
-    private String toCanonical(String s) {
-        return s == null ? null : s.replaceAll("\\s*","").trim().toLowerCase();
+        return LevenshteinDistance.getDefaultInstance().apply(
+            s1.replaceAll("\\s*","").trim().toLowerCase(),
+            s2.replaceAll("\\s*","").trim().toLowerCase()
+        ) < 2;
     }
 
     private Path getBookCoverPath(Book b) throws IOException {
