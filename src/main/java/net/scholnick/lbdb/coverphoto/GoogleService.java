@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static net.scholnick.lbdb.util.CacheManager.getDestinationDirectory;
+import static net.scholnick.lbdb.util.FileUtils.getDestinationDirectory;
 
 @Service
 public class GoogleService {
@@ -55,7 +55,7 @@ public class GoogleService {
         );
 
         log.info("Searching with GET: " + url);
-        try (InputStream is = connectionFactory.generateURLInputStream(url)) {
+        try (var is = connectionFactory.generateURLInputStream(url)) {
             parse(is, book);
         }
     }
@@ -150,7 +150,7 @@ public class GoogleService {
         }
 
         imageFilePath = getBookCoverPath(b);
-        try (InputStream in=uc.getInputStream()) {
+        try (var in=uc.getInputStream()) {
             Files.copy(in, imageFilePath);
             return imageFilePath.toAbsolutePath().toAbsolutePath();
         }

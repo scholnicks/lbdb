@@ -10,7 +10,7 @@ import net.scholnick.lbdb.gui.TrimmedTextField;
 import net.scholnick.lbdb.gui.author.AuthorQuickSearch;
 import net.scholnick.lbdb.gui.author.MultipleAuthorsDialog;
 import net.scholnick.lbdb.service.BookService;
-import net.scholnick.lbdb.util.CacheManager;
+import net.scholnick.lbdb.util.FileUtils;
 import net.scholnick.lbdb.util.GUIUtilities;
 import net.scholnick.lbdb.util.LabelFactory;
 import net.scholnick.lbdb.util.NullSafe;
@@ -371,7 +371,7 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
     }
 
     private String getDownloadedImage() throws IOException {
-        File imageFilePath = new File(CacheManager.getDestinationDirectory(), getBook().getId() + ".jpg");
+        File imageFilePath = new File(FileUtils.getDestinationDirectory(), getBook().getId() + ".jpg");
 
         if (imageFilePath.exists() && imageFilePath.canRead()) {
             return imageFilePath.getCanonicalPath();
