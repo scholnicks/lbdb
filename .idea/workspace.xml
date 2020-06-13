@@ -3,10 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="de26adde-e421-4658-a7cc-846cdeb46a91" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/coverphoto/GoogleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/coverphoto/GoogleService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/title/TitleMaintenance.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/title/TitleMaintenance.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/util/CacheManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/util/FileUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/macos/lbdb.sh" beforeDir="false" afterPath="$PROJECT_DIR$/macos/lbdb.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -246,29 +244,29 @@
       <screen x="0" y="23" width="2048" height="1049" />
     </state>
     <state x="524" y="89" key="CommitChangelistDialog2/2048.23.1440.877/0.23.2048.1049@0.23.2048.1049" timestamp="1588350410307" />
-    <state width="1506" height="168" key="GridCell.Tab.0.bottom" timestamp="1590948202510">
+    <state width="1624" height="185" key="GridCell.Tab.0.bottom" timestamp="1592067195505">
       <screen x="0" y="23" width="2048" height="1049" />
     </state>
     <state width="1506" height="168" key="GridCell.Tab.0.bottom/-1920.-80.1920.1057/2048.154.1440.877/0.23.2048.1049@0.23.2048.1049" timestamp="1590948202510" />
-    <state width="1506" height="161" key="GridCell.Tab.0.bottom/2048.154.1440.877/-1920.-80.1920.1057/0.23.2048.1049@0.23.2048.1049" timestamp="1590414537639" />
+    <state width="1624" height="185" key="GridCell.Tab.0.bottom/2048.154.1440.877/-1920.-80.1920.1057/0.23.2048.1049@0.23.2048.1049" timestamp="1592067195505" />
     <state width="1358" height="162" key="GridCell.Tab.0.bottom/2048.23.1440.877/0.23.2048.1049@0.23.2048.1049" timestamp="1588350414681" />
-    <state width="1506" height="168" key="GridCell.Tab.0.center" timestamp="1590948202507">
+    <state width="1624" height="185" key="GridCell.Tab.0.center" timestamp="1592067195503">
       <screen x="0" y="23" width="2048" height="1049" />
     </state>
     <state width="1506" height="168" key="GridCell.Tab.0.center/-1920.-80.1920.1057/2048.154.1440.877/0.23.2048.1049@0.23.2048.1049" timestamp="1590948202507" />
-    <state width="1506" height="161" key="GridCell.Tab.0.center/2048.154.1440.877/-1920.-80.1920.1057/0.23.2048.1049@0.23.2048.1049" timestamp="1590414537637" />
+    <state width="1624" height="185" key="GridCell.Tab.0.center/2048.154.1440.877/-1920.-80.1920.1057/0.23.2048.1049@0.23.2048.1049" timestamp="1592067195503" />
     <state width="1358" height="162" key="GridCell.Tab.0.center/2048.23.1440.877/0.23.2048.1049@0.23.2048.1049" timestamp="1588350414680" />
-    <state width="1506" height="168" key="GridCell.Tab.0.left" timestamp="1590948202506">
+    <state width="1624" height="185" key="GridCell.Tab.0.left" timestamp="1592067195501">
       <screen x="0" y="23" width="2048" height="1049" />
     </state>
     <state width="1506" height="168" key="GridCell.Tab.0.left/-1920.-80.1920.1057/2048.154.1440.877/0.23.2048.1049@0.23.2048.1049" timestamp="1590948202506" />
-    <state width="1506" height="161" key="GridCell.Tab.0.left/2048.154.1440.877/-1920.-80.1920.1057/0.23.2048.1049@0.23.2048.1049" timestamp="1590414537637" />
+    <state width="1624" height="185" key="GridCell.Tab.0.left/2048.154.1440.877/-1920.-80.1920.1057/0.23.2048.1049@0.23.2048.1049" timestamp="1592067195501" />
     <state width="1358" height="162" key="GridCell.Tab.0.left/2048.23.1440.877/0.23.2048.1049@0.23.2048.1049" timestamp="1588350414679" />
-    <state width="1506" height="168" key="GridCell.Tab.0.right" timestamp="1590948202508">
+    <state width="1624" height="185" key="GridCell.Tab.0.right" timestamp="1592067195504">
       <screen x="0" y="23" width="2048" height="1049" />
     </state>
     <state width="1506" height="168" key="GridCell.Tab.0.right/-1920.-80.1920.1057/2048.154.1440.877/0.23.2048.1049@0.23.2048.1049" timestamp="1590948202508" />
-    <state width="1506" height="161" key="GridCell.Tab.0.right/2048.154.1440.877/-1920.-80.1920.1057/0.23.2048.1049@0.23.2048.1049" timestamp="1590414537638" />
+    <state width="1624" height="185" key="GridCell.Tab.0.right/2048.154.1440.877/-1920.-80.1920.1057/0.23.2048.1049@0.23.2048.1049" timestamp="1592067195504" />
     <state width="1358" height="162" key="GridCell.Tab.0.right/2048.23.1440.877/0.23.2048.1049@0.23.2048.1049" timestamp="1588350414680" />
     <state x="509" y="171" key="Maven.ArtifactSearchDialog" timestamp="1590411615322">
       <screen x="0" y="23" width="2048" height="1049" />
