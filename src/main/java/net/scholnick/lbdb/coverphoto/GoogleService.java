@@ -49,10 +49,8 @@ public class GoogleService {
             book.setCoverPhotoPath(existingPhoto);
         }
 
-        String url = String.format(SEARCH_URL,
-            URLEncoder.encode(book.getTitle(), StandardCharsets.UTF_8),
-            URLEncoder.encode(book.getPrimaryAuthor().lastName(), StandardCharsets.UTF_8)
-        );
+        String SEARCH_URL = "https://www.googleapis.com/books/v1/volumes?q=\"%s\"&printType=books";
+        String url = String.format(SEARCH_URL, URLEncoder.encode(book.getTitle(), StandardCharsets.UTF_8));
 
         log.info("Searching with GET: " + url);
         try (var is = connectionFactory.generateURLInputStream(url)) {
@@ -81,6 +79,8 @@ public class GoogleService {
                             log.info("Found cover photo match for " + book);
                             Map<String,String> imageLinks = (Map<String,String>) volumeInfo.get("imageLinks");
                             log.info("Image Links: " + imageLinks);
+
+                            if (imageLinks == null) continue;
 
                             book.setCoverPhotoPath( downloadImage(imageLinks.get("thumbnail"),book));
                             book.setNumberOfPages(Integer.parseInt(volumeInfo.get("pageCount").toString()));
@@ -156,5 +156,5 @@ public class GoogleService {
         }
     }
 
-    private static final String SEARCH_URL = "https://www.googleapis.com/books/v1/volumes?q=\"%s\"+inauthor:%s&printType=books";
+//    private static final String SEARCH_URL = "https://www.googleapis.com/books/v1/volumes?q=\"%s\"+inauthor:%s&printType=books";
 }
