@@ -78,7 +78,7 @@ public class BookService {
 
     @Transactional
     public Book save(Book b) {
-        return b.isNew() ? create(b) : update(b);
+        return b.getId() == null ? create(b) : update(b);
     }
 
     private Book create(Book b) {

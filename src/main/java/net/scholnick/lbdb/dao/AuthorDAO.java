@@ -40,12 +40,12 @@ public class AuthorDAO {
     public Long create(Author a) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update((connection) -> {
-                    PreparedStatement s = connection.prepareStatement("insert into author(auth_name,auth_website) values(?,?)");
-                    s.setString(1, a.getName());
-                    s.setString(2, a.getWebSite());
-                    return s;
-                },
-                keyHolder
+                PreparedStatement s = connection.prepareStatement("insert into author(auth_name,auth_website) values(?,?)");
+                s.setString(1, a.getName());
+                s.setString(2, a.getWebSite());
+                return s;
+            },
+            keyHolder
         );
 
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
@@ -66,9 +66,9 @@ public class AuthorDAO {
 
     public Set<Long> getEditors(Book b) {
         return new HashSet<>(jdbcTemplate.queryForList(
-                "select auth_id from author_book_xref where book_id=? and abx_editor='y'",
-                new Long[]{b.getId()},
-                Long.class
+            "select auth_id from author_book_xref where book_id=? and abx_editor='y'",
+            new Long[]{b.getId()},
+            Long.class
         ));
     }
 
@@ -82,9 +82,9 @@ public class AuthorDAO {
 
     public void update(Author a) {
         jdbcTemplate.update("update author set auth_name=?,auth_website=? where auth_id=?",
-                a.getName(),
-                a.getWebSite(),
-                a.getId()
+            a.getName(),
+            a.getWebSite(),
+            a.getId()
         );
     }
 

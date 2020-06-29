@@ -1,28 +1,22 @@
 package net.scholnick.lbdb.coverphoto;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import net.scholnick.lbdb.domain.Author;
 import net.scholnick.lbdb.domain.Book;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static net.scholnick.lbdb.util.FileUtils.getDestinationDirectory;
 
@@ -30,16 +24,13 @@ import static net.scholnick.lbdb.util.FileUtils.getDestinationDirectory;
 public class GoogleService {
     private static final Logger log = LoggerFactory.getLogger(GoogleService.class);
 
-    private static final ObjectMapper mapper = new ObjectMapper(new JsonFactory());
-    private static final TypeReference<HashMap<String,Object>> typeReference = new TypeReference<>(){};
-
-    private final HttpURLConnectionFactory connectionFactory;
+    private final RestTemplate restTemplate;
 
     private static final String ISBN_TYPE = "ISBN_13";
 
     @Autowired
-    public GoogleService(HttpURLConnectionFactory connectionFactory) {
-        this.connectionFactory = connectionFactory;
+    public GoogleService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
     }
 
     public void setCoverPhoto(Book book) throws IOException {
@@ -49,59 +40,39 @@ public class GoogleService {
             book.setCoverPhotoPath(existingPhoto);
         }
 
-        String SEARCH_URL = "https://www.googleapis.com/books/v1/volumes?q=\"%s\"&printType=books";
-        String url = String.format(SEARCH_URL, URLEncoder.encode(book.getTitle(), StandardCharsets.UTF_8));
+        String urlFormat = "https://www.googleapis.com/books/v1/volumes?q=\"%s\"&printType=books";
+        String url = String.format(urlFormat, URLEncoder.encode(book.getTitle(), StandardCharsets.UTF_8));
 
-        log.info("Searching with GET: " + url);
-        try (var is = connectionFactory.generateURLInputStream(url)) {
-            parse(is, book);
-        }
+        BookResults results = restTemplate.getForObject(url,BookResults.class);
+        if (results != null) findImage(results,book);
     }
 
-    @SuppressWarnings("unchecked")
-    private void parse(InputStream is, Book book) throws IOException {
-        book.setCoverPhotoPath(null);  // clear
+    private void findImage(BookResults results, Book book) throws IOException {
+        for (BookData data: results.getItems()) {
+            VolumeInfo info = data.getVolumeInfo();
 
-        Map<String,Object> o = mapper.readValue(is, typeReference);
+            // make sure we have the data that we need
+            if (! isClose(info.getTitle(),book.getTitle()))                     continue;
+            if (info.getAuthors() == null)                                      continue;
+            if (info.getImageLinks() == null || info.getImageLinks().isEmpty()) continue;
 
-        List<Object> items = (List<Object>) o.get("items");
-        if (items == null) {
-            return;
-        }
-
-        for (Object record: items) {
-            Map<Object,Object> volumeInfo = (Map<Object,Object>) ((Map<Object,Object>) record).get("volumeInfo");
-
-            if (isClose((String) volumeInfo.get("title"),book.getTitle())) {
-                for (String author: ((List<String>) volumeInfo.get("authors")) ) {
-                    for (Author a: book.getAuthors()) {
-                        if (isClose(author,a.getName())) {
-                            log.info("Found cover photo match for " + book);
-                            Map<String,String> imageLinks = (Map<String,String>) volumeInfo.get("imageLinks");
-                            log.info("Image Links: " + imageLinks);
-
-                            if (imageLinks == null) continue;
-
-                            book.setCoverPhotoPath( downloadImage(imageLinks.get("thumbnail"),book));
-                            book.setNumberOfPages(Integer.parseInt(volumeInfo.get("pageCount").toString()));
-
-                            ((List<Map<String,String>>) volumeInfo.get("industryIdentifiers")).forEach(identitier -> {
-                                if (ISBN_TYPE.equals(identitier.get("type"))) {
-                                    book.setIsbn(identitier.get("identifier"));
-                                }
-                            });
-
-                            // if (volumeInfo.get("publishedDate") != null) {
-                            // 	log.info(getClass(),"Published Date: " + volumeInfo.get("publishedDate"));
-                            // 	String publishedDate = (String) volumeInfo.get("publishedDate");
-                            // 	book.setPublishNullSafe.toCanonical(author)edYear(publishedDate.substring(0,publishedDate.indexOf("-")));
-                            // }
-
-                            return;
-                        }
+            for (Author a: book.getAuthors()) {
+                for (String n: info.getAuthors()) {
+                    if (isClose(a.getName(),n)) {
+                        loadData(info,book);
                     }
                 }
             }
+        }
+    }
+
+    private void loadData(VolumeInfo info, Book book) throws IOException {
+        book.setCoverPhotoPath( downloadImage(info.getImageLinks().get("thumbnail"), book) );
+        book.setNumberOfPages(info.getPageCount());
+
+        if (info.getIndustryIdentifiers() != null) {
+            info.getIndustryIdentifiers().stream().filter(i -> ISBN_TYPE.equals(i.getType())).findFirst()
+                .ifPresent(isbn13 -> book.setIsbn(isbn13.getIdentifier()));
         }
     }
 
@@ -139,22 +110,10 @@ public class GoogleService {
         }
 
         url = url.replace("&edge=curl","");
-
         log.info("Downloading image from " + url);
 
-        URLConnection uc = new URL(url).openConnection();
-        int contentLength = uc.getContentLength();
-
-        if (contentLength < 50) {
-            return null;
-        }
-
-        imageFilePath = getBookCoverPath(b);
-        try (var in=uc.getInputStream()) {
-            Files.copy(in, imageFilePath);
-            return imageFilePath.toAbsolutePath().toAbsolutePath();
-        }
+        Path bookCoverPath = getBookCoverPath(b);
+        FileUtils.copyURLToFile(new URL(url),bookCoverPath.toFile());
+        return bookCoverPath;
     }
-
-//    private static final String SEARCH_URL = "https://www.googleapis.com/books/v1/volumes?q=\"%s\"+inauthor:%s&printType=books";
 }

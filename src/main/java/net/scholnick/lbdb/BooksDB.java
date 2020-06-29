@@ -33,7 +33,7 @@ public final class BooksDB extends JFrame {
 
     private static final Dimension WINDOW_SIZE = new Dimension(900, 600);
 
-    private static final String VERSION = "Version 4.6.1";
+    private static final String VERSION = "Version 4.7.0";
 
     private JLabel notificationLabel;
 

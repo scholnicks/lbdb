@@ -68,7 +68,7 @@ public class AuthorService {
     @Transactional
     public Author save(Author a, boolean createOnly) {
         log.debug("Saving author information " + a);
-        return a.isNew() ? create(a) : createOnly ? a : update(a);
+        return a.getId() == null ? create(a) : createOnly ? a : update(a);
     }
 
     private Author create(Author a) {

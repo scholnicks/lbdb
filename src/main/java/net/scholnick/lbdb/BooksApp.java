@@ -4,8 +4,10 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
 
 import javax.sql.DataSource;
 import javax.swing.*;
@@ -24,6 +26,11 @@ public class BooksApp {
 
         ApplicationContext context = new SpringApplicationBuilder(BooksApp.class).headless(false).run(args);
         EventQueue.invokeLater(() -> context.getBean(BooksDB.class).init());
+    }
+
+    @Bean
+    public RestTemplate restTemplate(RestTemplateBuilder builder) {
+        return builder.build();
     }
 
 //    @Bean
