@@ -3,7 +3,6 @@ package net.scholnick.lbdb.service;
 
 import net.scholnick.lbdb.dao.AuthorDAO;
 import net.scholnick.lbdb.dao.BookDAO;
-import net.scholnick.lbdb.domain.ApplicationException;
 import net.scholnick.lbdb.domain.Author;
 import net.scholnick.lbdb.domain.Book;
 import net.scholnick.lbdb.util.NullSafe;
@@ -84,7 +83,7 @@ public class BookService {
     private Book create(Book b) {
         if (!search(b).isEmpty()) {
             log.info("Entry already present. Not creating duplicate for " + b);
-            throw new ApplicationException("Existing entry found");
+            throw new RuntimeException("Existing entry found");
         }
 
         log.info("Creating new book " + b);

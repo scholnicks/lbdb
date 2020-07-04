@@ -1,48 +1,36 @@
 package net.scholnick.lbdb.domain;
 
+import java.util.Arrays;
 
 public enum Media implements Comparable<Media> {
-    BOOK {
-        public Integer getId() {
-            return 1;
-        }
+    BOOK(1,"Book"),
+    KINDLE(2,"Kindle"),
+    NOOK(3,"Nook")
+    ;
 
-        public String toString() {
-            return "Book";
-        }
-    },
-    KINDLE {
-        public Integer getId() {
-            return 2;
-        }
+    private final int    id;
+    private final String description;
 
-        public String toString() {
-            return "Kindle";
-        }
-    },
-    NOOK {
-        public Integer getId() {
-            return 3;
-        }
+    Media(int id, String description) {
+        this.id = id;
+        this.description = description;
+    }
 
-        public String toString() {
-            return "Nook";
-        }
-    };
+    public int getId() {
+        return id;
+    }
 
-    public abstract Integer getId();
+    public String getDescription() {
+        return description;
+    }
+
+    @Override
+    public String toString() {
+        return getDescription();
+    }
 
     public static Media from(Integer id) {
-        if (id == null) {
-            return null;
-        }
-
-        for (Media m : Media.values()) {
-            if (m.getId().equals(id)) {
-                return m;
-            }
-        }
-
-        return null;
+        if (id == null) return null;
+        return Arrays.stream(values()).filter(m -> m.id == id).findFirst().orElse(null);
     }
 }

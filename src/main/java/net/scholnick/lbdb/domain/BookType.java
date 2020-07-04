@@ -1,46 +1,36 @@
 package net.scholnick.lbdb.domain;
 
+import java.util.Arrays;
 
 public enum BookType implements Comparable<BookType> {
-    FICTION {
-        public Integer getId() {
-            return 1;
-        }
+    FICTION(1,"Fiction"),
+    NON_FICTION(2,"Non-Fiction"),
+    TECHNICAL(3,"Technical")
+    ;
 
-        public String toString() {
-            return "Fiction";
-        }
-    },
-    NON_FICTION {
-        public Integer getId() {
-            return 2;
-        }
+    private final int    id;
+    private final String description;
 
-        public String toString() {
-            return "Non-Fiction";
-        }
-    },
-    TECHNICAL {
-        public Integer getId() {
-            return 3;
-        }
+    BookType(int id, String description) {
+        this.id = id;
+        this.description = description;
+    }
 
-        public String toString() {
-            return "Technical";
-        }
-    };
+    public int getId() {
+        return id;
+    }
 
-    public abstract Integer getId();
+    public String getDescription() {
+        return description;
+    }
+
+    @Override
+    public String toString() {
+        return getDescription();
+    }
 
     public static BookType from(Integer id) {
         if (id == null) return null;
-
-        for (BookType t : BookType.values()) {
-            if (t.getId().equals(id)) {
-                return t;
-            }
-        }
-
-        return null;
+        return Arrays.stream(values()).filter(m -> m.id == id).findFirst().orElse(null);
     }
 }

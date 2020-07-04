@@ -1,7 +1,5 @@
 package net.scholnick.lbdb.gui;
 
-import net.scholnick.lbdb.domain.ApplicationException;
-
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -23,7 +21,7 @@ final class SoundPlayer {
             clip.start();
         }
         catch (Throwable t) {
-            throw new ApplicationException("Unable to play audio", t);
+            throw new RuntimeException("Unable to play audio", t);
         }
     }
 

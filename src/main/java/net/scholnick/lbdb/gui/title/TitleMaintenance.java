@@ -514,7 +514,7 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 
     private boolean databaseUpdate(Book b) {
         bookService.save(b);
-        sendMessage(b + " has been saved.");
+        sendMessage(b.getTitle() + " has been saved.");
         return true;
     }
 

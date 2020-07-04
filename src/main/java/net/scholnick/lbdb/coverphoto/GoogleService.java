@@ -24,9 +24,10 @@ import static net.scholnick.lbdb.util.FileUtils.getDestinationDirectory;
 public class GoogleService {
     private static final Logger log = LoggerFactory.getLogger(GoogleService.class);
 
-    private final RestTemplate restTemplate;
+    private static final String BOOK_SEARCH = "https://www.googleapis.com/books/v1/volumes?q=\"%s\"&printType=books";
+    private static final String ISBN_SEARCH = "https://www.googleapis.com/books/v1/volumes?q=isbn:";
 
-    private static final String ISBN_TYPE = "ISBN_13";
+    private final RestTemplate restTemplate;
 
     @Autowired
     public GoogleService(RestTemplate restTemplate) {
@@ -40,8 +41,8 @@ public class GoogleService {
             book.setCoverPhotoPath(existingPhoto);
         }
 
-        String urlFormat = "https://www.googleapis.com/books/v1/volumes?q=\"%s\"&printType=books";
-        String url = String.format(urlFormat, URLEncoder.encode(book.getTitle(), StandardCharsets.UTF_8));
+        String url = book.getIsbn() != null ? ISBN_SEARCH + book.getIsbn() :
+            String.format(BOOK_SEARCH, URLEncoder.encode(book.getTitle(), StandardCharsets.UTF_8));
 
         BookResults results = restTemplate.getForObject(url,BookResults.class);
         if (results != null) findImage(results,book);
@@ -50,11 +51,16 @@ public class GoogleService {
     private void findImage(BookResults results, Book book) throws IOException {
         for (BookData data: results.getItems()) {
             VolumeInfo info = data.getVolumeInfo();
+            if (info.getImageLinks() == null || info.getImageLinks().isEmpty()) continue;
+
+            if (book.getIsbn() != null) {
+                loadData(info,book);
+                return;
+            }
 
             // make sure we have the data that we need
-            if (! isClose(info.getTitle(),book.getTitle()))                     continue;
-            if (info.getAuthors() == null)                                      continue;
-            if (info.getImageLinks() == null || info.getImageLinks().isEmpty()) continue;
+            if (! isClose(info.getTitle(),book.getTitle())) continue;
+            if (info.getAuthors() == null)                  continue;
 
             for (Author a: book.getAuthors()) {
                 for (String n: info.getAuthors()) {
@@ -67,11 +73,12 @@ public class GoogleService {
     }
 
     private void loadData(VolumeInfo info, Book book) throws IOException {
+        book.setCoverPhotoPath(null);
         book.setCoverPhotoPath( downloadImage(info.getImageLinks().get("thumbnail"), book) );
         book.setNumberOfPages(info.getPageCount());
 
-        if (info.getIndustryIdentifiers() != null) {
-            info.getIndustryIdentifiers().stream().filter(i -> ISBN_TYPE.equals(i.getType())).findFirst()
+        if (book.getIsbn() == null && info.getIndustryIdentifiers() != null) {
+            info.getIndustryIdentifiers().stream().filter(i -> "ISBN_13".equals(i.getType())).findFirst()
                 .ifPresent(isbn13 -> book.setIsbn(isbn13.getIdentifier()));
         }
     }

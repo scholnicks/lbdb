@@ -1,15 +1,11 @@
 package net.scholnick.lbdb.coverphoto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@ToString
-@EqualsAndHashCode
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class IndustryIdentifier {
     private String type;
