@@ -1,6 +1,6 @@
 package net.scholnick.lbdb.gui.title;
 
-import net.scholnick.lbdb.coverphoto.GoogleService;
+import net.scholnick.lbdb.coverphoto.CoverPhotoService;
 import net.scholnick.lbdb.domain.Author;
 import net.scholnick.lbdb.domain.Book;
 import net.scholnick.lbdb.domain.BookType;
@@ -51,7 +51,7 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
     private Book book;
 
     private BookService bookService;
-    private GoogleService googleService;
+    private CoverPhotoService coverPhotoService;
     private AuthorQuickSearch authorQuickSearch;
     private MultipleAuthorsDialog multipleAuthorDialog;
 
@@ -339,7 +339,7 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
                 return;
             }
 
-            googleService.setCoverPhoto(getBook());
+            coverPhotoService.setCoverPhoto(getBook());
             if (getBook().getCoverPhotoPath() != null) {
                 loadImage(getBook().getCoverPhotoPath().toAbsolutePath().toString());
                 getISBNField().setText(getBook().getIsbn());
@@ -496,10 +496,13 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
         b.setSeries(getSeriesField().getText());
         b.setComments(getCommentsArea().getText());
         b.setAnthology(getAnthologyCheckBox().isSelected());
-        b.setIsbn(getISBNField().getText());
         b.setPublishedYear(getPublishedYearField().getText());
         b.setType((BookType) getTypeCombo().getSelectedItem());
         b.setMedia((Media) getMediaCombo().getSelectedItem());
+
+        if (! NullSafe.isEmpty(getISBNField().getText())) {
+            b.setIsbn(getISBNField().getText().replace("-",""));
+        }
 
         if (!NullSafe.isEmpty(getNumberOfPagesField().getText())) {
             b.setNumberOfPages(Integer.parseInt(getNumberOfPagesField().getText()));
@@ -584,8 +587,8 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
     }
 
     @Autowired
-    public void setGoogleService(GoogleService googleService) {
-        this.googleService = googleService;
+    public void setCoverPhotoService(CoverPhotoService coverPhotoService) {
+        this.coverPhotoService = coverPhotoService;
     }
 
     @Autowired

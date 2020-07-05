@@ -2,14 +2,14 @@ package net.scholnick.lbdb.coverphoto;
 
 import net.scholnick.lbdb.domain.Author;
 import net.scholnick.lbdb.domain.Book;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.text.similarity.LevenshteinDistance;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -17,23 +17,34 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Objects;
 
 import static net.scholnick.lbdb.util.FileUtils.getDestinationDirectory;
+import static net.scholnick.lbdb.util.NullSafe.isClose;
 
 @Service
-public class GoogleService {
+public class GoogleService implements CoverPhotoService {
     private static final Logger log = LoggerFactory.getLogger(GoogleService.class);
 
     private static final String BOOK_SEARCH = "https://www.googleapis.com/books/v1/volumes?q=\"%s\"&printType=books";
     private static final String ISBN_SEARCH = "https://www.googleapis.com/books/v1/volumes?q=isbn:";
 
     private final RestTemplate restTemplate;
+    private final byte[] invalidCoverImage;
 
     @Autowired
     public GoogleService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
+        try {
+            invalidCoverImage = IOUtils.toByteArray(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("images/invalid-book-cover.jpg")));
+        }
+        catch (IOException e) {
+            throw new RuntimeException("Unable to load invalid cover image",e);
+        }
     }
 
+    @Override
     public void setCoverPhoto(Book book) throws IOException {
         Path existingPhoto = getDownloadedCoverPhoto(book);
 
@@ -83,15 +94,6 @@ public class GoogleService {
         }
     }
 
-    private boolean isClose(String s1, String s2) {
-        if (s1 == null || s2 == null) return false;
-
-        return LevenshteinDistance.getDefaultInstance().apply(
-            s1.replaceAll("\\s*","").trim().toLowerCase(),
-            s2.replaceAll("\\s*","").trim().toLowerCase()
-        ) < 2;
-    }
-
     private Path getBookCoverPath(Book b) throws IOException {
         return FileSystems.getDefault().getPath(getDestinationDirectory().getAbsolutePath(), b.getId() + ".jpg");
     }
@@ -119,8 +121,19 @@ public class GoogleService {
         url = url.replace("&edge=curl","");
         log.info("Downloading image from " + url);
 
+        byte []downloaded = IOUtils.toByteArray(new URL(url));
+
+        if (Arrays.equals(invalidCoverImage,downloaded)) {
+            log.debug("Invalid cover image");
+            return null;
+        }
+
         Path bookCoverPath = getBookCoverPath(b);
-        FileUtils.copyURLToFile(new URL(url),bookCoverPath.toFile());
+
+        try (var os = new FileOutputStream(bookCoverPath.toFile())) {
+            IOUtils.write(downloaded,os);
+        }
+
         return bookCoverPath;
     }
 }

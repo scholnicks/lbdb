@@ -1,5 +1,7 @@
 package net.scholnick.lbdb.util;
 
+import org.apache.commons.text.similarity.LevenshteinDistance;
+
 public final class NullSafe {
     private NullSafe() {}
 
@@ -19,8 +21,12 @@ public final class NullSafe {
         return o1.compareTo(o2);
     }
 
-    public static boolean equals(Object o1, Object o2) {
-        if (o1 == null) return false;
-        return o1.equals(o2);
+    public static boolean isClose(String s1, String s2) {
+        if (s1 == null || s2 == null) return false;
+
+        return LevenshteinDistance.getDefaultInstance().apply(
+            s1.replaceAll("\\s*","").trim().toLowerCase(),
+            s2.replaceAll("\\s*","").trim().toLowerCase()
+        ) < 2;
     }
 }
