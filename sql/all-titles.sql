@@ -9,7 +9,7 @@ join
 join
    Author_Book_Xref x on x.book_id=b.book_id
 join
-   Author a  on a.auth_id=x.auth_id
+   Author a on a.auth_id=x.auth_id
 group by
    b.book_title, m.med_desc
 order by
