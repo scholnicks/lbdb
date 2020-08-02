@@ -2,7 +2,6 @@ package net.scholnick.lbdb;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import net.scholnick.lbdb.service.ExportService;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -18,6 +17,11 @@ import java.util.Properties;
 @SpringBootApplication
 public class BooksApp {
     public static void main(String[] args) {
+        ApplicationContext context = new SpringApplicationBuilder(BooksApp.class).headless(false).run(args);
+        startGUI(context);
+    }
+
+    private static void startGUI(ApplicationContext context) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         }
@@ -25,9 +29,7 @@ public class BooksApp {
             System.exit(-1);
         }
 
-        ApplicationContext context = new SpringApplicationBuilder(BooksApp.class).headless(false).run(args);
         EventQueue.invokeLater(() -> context.getBean(BooksDB.class).init());
-        context.getBean(ExportService.class).export();
     }
 
     @Bean

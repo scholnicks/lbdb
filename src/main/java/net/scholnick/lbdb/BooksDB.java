@@ -7,6 +7,7 @@ import net.scholnick.lbdb.gui.author.AuthorMaintenance;
 import net.scholnick.lbdb.gui.title.TitleMaintenance;
 import net.scholnick.lbdb.service.AuthorService;
 import net.scholnick.lbdb.service.BookService;
+import net.scholnick.lbdb.service.ExportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,10 +31,11 @@ public final class BooksDB extends JFrame {
     private final AuthorMaintenance authorMaintenance;
     private final BookService bookService;
     private final AuthorService authorService;
+    private ExportService exportService;
 
     private static final Dimension WINDOW_SIZE = new Dimension(900, 600);
 
-    private static final String VERSION = "Version 4.8.1";
+    private static final String VERSION = "Version 5.0.0";
 
     private JLabel notificationLabel;
 
@@ -171,6 +173,12 @@ public final class BooksDB extends JFrame {
         addAuthorItem.addActionListener(l -> titleMaintenance.performQuickSearch());
         fileMenu.add(addAuthorItem);
 
+        JMenuItem exportItem = new JMenuItem("Export");
+        exportItem.setText("Export");
+        exportItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.META_DOWN_MASK));
+        exportItem.addActionListener(l -> exportService.export());
+        fileMenu.add(exportItem);
+
         return fileMenu;
     }
 
@@ -222,5 +230,10 @@ public final class BooksDB extends JFrame {
     @Override
     public Dimension getMaximumSize() {
         return WINDOW_SIZE;
+    }
+
+    @Autowired
+    public void setExportService(ExportService exportService) {
+        this.exportService = exportService;
     }
 }
