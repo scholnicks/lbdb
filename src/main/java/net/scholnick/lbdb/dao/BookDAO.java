@@ -1,10 +1,6 @@
 package net.scholnick.lbdb.dao;
 
-
-import net.scholnick.lbdb.domain.Author;
-import net.scholnick.lbdb.domain.Book;
-import net.scholnick.lbdb.domain.BookType;
-import net.scholnick.lbdb.domain.Media;
+import net.scholnick.lbdb.domain.*;
 import net.scholnick.lbdb.util.NullSafe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,8 +92,8 @@ public class BookDAO {
         + "  book_modified_date=datetime(current_timestamp,'localtime') " +
         "where book_id=?";
 
-    public int delete(Book b) {
-        return jdbcTemplate.update("delete from book where book_id=?", b.getId());
+    public void delete(Book b) {
+        jdbcTemplate.update("delete from book where book_id=?", b.getId());
     }
 
     public void removeJoinRecords(Book b) {
@@ -106,6 +102,12 @@ public class BookDAO {
 
     public Long count() {
         return jdbcTemplate.queryForObject("select count(book_id) from book", Long.class);
+    }
+
+    public List<TitleReportData> titleData() {
+        return jdbcTemplate.query(TITLES_EXPORT_SQL,(r,c) ->
+            new TitleReportData(r.getString(1),r.getString(2),r.getString(3))
+        );
     }
 
     public List<Book> search(Book b) {
@@ -176,4 +178,22 @@ public class BookDAO {
 
         return b;
     }
+
+    private static final String TITLES_EXPORT_SQL = "select\n" +
+            "   b.book_title as \"Title\", \n" +
+            "   m.med_desc as \"Media\",\n" +
+            "   group_concat(a.auth_name) as \"Authors\"\n" +
+            "from\n" +
+            "   Book b\n" +
+            "join\n" +
+            "   Media_Type m on m.med_id=b.med_id\n" +
+            "join\n" +
+            "   Author_Book_Xref x on x.book_id=b.book_id\n" +
+            "join\n" +
+            "   Author a on a.auth_id=x.auth_id\n" +
+            "group by\n" +
+            "   b.book_title, m.med_desc\n" +
+            "order by\n" +
+            "   1"
+        ;
 }

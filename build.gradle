@@ -32,6 +32,9 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.1'
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.11.1'
 
+    implementation 'org.apache.poi:poi:4.1.2'
+    implementation 'org.apache.poi:poi-ooxml:4.1.2'
+
     implementation group: 'commons-io', name: 'commons-io', version: '2.7'
 
     testImplementation group: 'junit', name: 'junit', version: '4.12'

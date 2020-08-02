@@ -88,6 +88,10 @@ public class AuthorDAO {
         );
     }
 
+    public List<String> allNames() {
+        return jdbcTemplate.queryForList("select a.auth_name as \"Name\" from Author a order by 1",String.class);
+    }
+
     private Author mapRow(ResultSet rs, int rowCount) throws SQLException {
         Author a = new Author();
         a.setId(rs.getLong("auth_id"));

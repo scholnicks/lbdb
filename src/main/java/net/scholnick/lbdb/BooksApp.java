@@ -2,6 +2,7 @@ package net.scholnick.lbdb;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import net.scholnick.lbdb.service.ExportService;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -26,6 +27,7 @@ public class BooksApp {
 
         ApplicationContext context = new SpringApplicationBuilder(BooksApp.class).headless(false).run(args);
         EventQueue.invokeLater(() -> context.getBean(BooksDB.class).init());
+        context.getBean(ExportService.class).export();
     }
 
     @Bean
