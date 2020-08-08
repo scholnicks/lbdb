@@ -16,6 +16,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
+import static net.scholnick.lbdb.util.GUIUtilities.showMessageDialog;
+
 
 @Service
 public class BookService {
@@ -81,8 +83,10 @@ public class BookService {
     }
 
     private Book create(Book b) {
-        if (!search(b).isEmpty()) {
+        List<Book> searchResults = search(b);
+        if (searchResults != null && searchResults.contains(b)) {
             log.info("Entry already present. Not creating duplicate for " + b);
+            showMessageDialog(b.getTitle() + " already exists. Not creating duplicate");
             throw new RuntimeException("Existing entry found");
         }
 
