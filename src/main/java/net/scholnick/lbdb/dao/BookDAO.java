@@ -35,20 +35,20 @@ public class BookDAO {
     public Long create(final Book b) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update((connection) -> {
-                    PreparedStatement s = connection.prepareStatement(ADD);
-                    int i = 1;
-                    s.setString(i++, b.getTitle());
-                    s.setInt(i++, b.getType().getId());
-                    s.setInt(i++, b.getMedia().getId());
-                    s.setString(i++, b.isAnthology() ? "y" : "n");
-                    s.setString(i++, b.getSeries());
-                    s.setString(i++, b.getPublishedYear());
-                    s.setString(i++, b.getIsbn());
-                    s.setInt(i++, b.getNumberOfPages() == null ? 0 : b.getNumberOfPages());
-                    s.setString(i, b.getComments());
-                    return s;
-                },
-                keyHolder
+                PreparedStatement s = connection.prepareStatement(ADD);
+                int i = 1;
+                s.setString(i++, b.getTitle());
+                s.setInt(i++, b.getType().getId());
+                s.setInt(i++, b.getMedia().getId());
+                s.setString(i++, b.isAnthology() ? "y" : "n");
+                s.setString(i++, b.getSeries());
+                s.setString(i++, b.getPublishedYear());
+                s.setString(i++, b.getIsbn());
+                s.setInt(i++, b.getNumberOfPages() == null ? 0 : b.getNumberOfPages());
+                s.setString(i, b.getComments());
+                return s;
+            },
+            keyHolder
         );
 
         return Objects.requireNonNull(keyHolder.getKey()).longValue();

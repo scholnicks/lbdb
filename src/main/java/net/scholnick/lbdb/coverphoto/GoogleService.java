@@ -84,6 +84,8 @@ public class GoogleService implements CoverPhotoService {
     }
 
     private void loadData(VolumeInfo info, Book book) throws IOException {
+        log.debug("Volume info: {}",info);
+
         book.setCoverPhotoPath(null);
         book.setCoverPhotoPath( downloadImage(info.getImageLinks().get("thumbnail"), book) );
         book.setNumberOfPages(info.getPageCount());
@@ -91,6 +93,15 @@ public class GoogleService implements CoverPhotoService {
         if (book.getIsbn() == null && info.getIndustryIdentifiers() != null) {
             info.getIndustryIdentifiers().stream().filter(i -> "ISBN_13".equals(i.getType())).findFirst()
                 .ifPresent(isbn13 -> book.setIsbn(isbn13.getIdentifier()));
+        }
+
+        try {
+            if (info.getPublishedDate() != null && info.getPublishedDate().contains("-")) {
+                book.setPublishedYear(info.getPublishedDate().substring(0,info.getPublishedDate().indexOf("-")));
+            }
+        }
+        catch (Exception e) {
+            log.error("Unable to parse: {}",info.getPublishedDate(),e);
         }
     }
 

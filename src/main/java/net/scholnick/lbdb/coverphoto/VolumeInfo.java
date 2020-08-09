@@ -11,9 +11,10 @@ import java.util.Set;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown=true)
 public final class VolumeInfo {
-    private String title;
-    private Set<String> authors;
-    private int pageCount;
-    private Map<String,String> imageLinks;
+    private String                  title;
+    private Set<String>             authors;
+    private int                     pageCount;
+    private Map<String,String>      imageLinks;
     private Set<IndustryIdentifier> industryIdentifiers;
+    private String                  publishedDate;
 }
