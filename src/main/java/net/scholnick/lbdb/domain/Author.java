@@ -2,12 +2,10 @@ package net.scholnick.lbdb.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
 @Data
-@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown=true)
 public final class Author implements Comparable<Author> {
     private Long id;

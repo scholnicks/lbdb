@@ -1,9 +1,8 @@
 package net.scholnick.lbdb.gui.title;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
-import java.awt.*;
+import javax.swing.table.*;
+import java.awt.Component;
 
 final class HeaderRenderer implements TableCellRenderer {
     private final DefaultTableCellRenderer renderer;

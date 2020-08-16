@@ -1,14 +1,10 @@
 package net.scholnick.lbdb.gui.title;
 
-import net.scholnick.lbdb.domain.Book;
-import net.scholnick.lbdb.domain.Media;
+import net.scholnick.lbdb.domain.*;
 import net.scholnick.lbdb.util.NullSafe;
 
 import javax.swing.table.AbstractTableModel;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public final class TitleSearchTableModel extends AbstractTableModel {
     private final List<Book> dataRows;

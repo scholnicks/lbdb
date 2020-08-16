@@ -1,19 +1,11 @@
 package net.scholnick.lbdb.gui.title;
 
 import net.scholnick.lbdb.coverphoto.CoverPhotoService;
-import net.scholnick.lbdb.domain.Author;
-import net.scholnick.lbdb.domain.Book;
-import net.scholnick.lbdb.domain.BookType;
-import net.scholnick.lbdb.domain.Media;
-import net.scholnick.lbdb.gui.AbstractUpdateMaintenance;
-import net.scholnick.lbdb.gui.TrimmedTextField;
-import net.scholnick.lbdb.gui.author.AuthorQuickSearch;
-import net.scholnick.lbdb.gui.author.MultipleAuthorsDialog;
+import net.scholnick.lbdb.domain.*;
+import net.scholnick.lbdb.gui.*;
+import net.scholnick.lbdb.gui.author.*;
 import net.scholnick.lbdb.service.BookService;
-import net.scholnick.lbdb.util.FileUtils;
-import net.scholnick.lbdb.util.GUIUtilities;
-import net.scholnick.lbdb.util.LabelFactory;
-import net.scholnick.lbdb.util.NullSafe;
+import net.scholnick.lbdb.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

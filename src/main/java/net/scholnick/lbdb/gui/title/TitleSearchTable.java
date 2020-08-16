@@ -4,8 +4,7 @@ import net.scholnick.lbdb.gui.SearchTableCellRenderer;
 
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 
 public final class TitleSearchTable extends JTable {
     public TitleSearchTable() {

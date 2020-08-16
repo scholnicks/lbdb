@@ -1,6 +1,5 @@
 package net.scholnick.lbdb.gui.author;
 
-
 import net.scholnick.lbdb.domain.Author;
 import net.scholnick.lbdb.gui.AbstractUpdateMaintenance;
 import net.scholnick.lbdb.gui.TrimmedTextField;
