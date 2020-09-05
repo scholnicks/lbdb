@@ -1,24 +1,17 @@
 package net.scholnick.lbdb.coverphoto;
 
-import net.scholnick.lbdb.domain.Author;
-import net.scholnick.lbdb.domain.Book;
+import net.scholnick.lbdb.domain.*;
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLEncoder;
+import java.net.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Objects;
+import java.nio.file.*;
+import java.util.*;
 
 import static net.scholnick.lbdb.util.FileUtils.getDestinationDirectory;
 import static net.scholnick.lbdb.util.NullSafe.isClose;
@@ -40,7 +33,7 @@ public class GoogleService implements CoverPhotoService {
             invalidCoverImage = IOUtils.toByteArray(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("images/invalid-book-cover.jpg")));
         }
         catch (IOException e) {
-            throw new RuntimeException("Unable to load invalid cover image",e);
+            throw new RuntimeException("Unable to load invalid cover image data",e);
         }
     }
 
@@ -140,11 +133,7 @@ public class GoogleService implements CoverPhotoService {
         }
 
         Path bookCoverPath = getBookCoverPath(b);
-
-        try (var os = new FileOutputStream(bookCoverPath.toFile())) {
-            IOUtils.write(downloaded,os);
-        }
-
+        Files.write(bookCoverPath,downloaded);
         return bookCoverPath;
     }
 }
