@@ -54,5 +54,5 @@ public class BooksApp {
     }
 
     private static final String DEV_DB_LOCATION  = "jdbc:sqlite:/Users/steve/development/java/lbdb/sql/test.db";
-    private static final String PROD_DB_LOCATION = "jdbc:sqlite:/Users/steve/Documents/lbdb.db";
+    private static final String PROD_DB_LOCATION = "jdbc:sqlite:/Users/steve/data/lbdb.db";
 }
