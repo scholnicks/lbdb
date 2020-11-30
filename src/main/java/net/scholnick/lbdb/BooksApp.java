@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
 import javax.sql.DataSource;
-import javax.swing.UIManager;
+import javax.swing.*;
 import java.awt.EventQueue;
 import java.util.*;
 
@@ -24,17 +24,13 @@ public class BooksApp {
             System.exit(0);
         }
 
-        startGUI(context);
-    }
-
-    private static void startGUI(ApplicationContext context) {
+        // start the GUI
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         }
-        catch (Exception e) {
+        catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
             System.exit(-1);
         }
-
         EventQueue.invokeLater(() -> context.getBean(BooksDB.class).init());
     }
 
@@ -48,11 +44,11 @@ public class BooksApp {
         Properties properties = new Properties();
         properties.put("autoCommit","false");
 //        properties.put("driverClassName","org.sqlite.JDBC");
-        properties.put("jdbcUrl","production".equalsIgnoreCase(System.getProperty("lbdb.database.type","dev")) ? PROD_DB_LOCATION : DEV_DB_LOCATION);
+        properties.put("jdbcUrl","production".equalsIgnoreCase(System.getProperty("lbdb.database.type","dev")) ? PROD_DB : DEV_DB);
 
         return new HikariDataSource(new HikariConfig(properties));
     }
 
-    private static final String DEV_DB_LOCATION  = "jdbc:sqlite:/Users/steve/development/java/lbdb/sql/test.db";
-    private static final String PROD_DB_LOCATION = "jdbc:sqlite:/Users/steve/data/lbdb.db";
+    private static final String DEV_DB  = "jdbc:sqlite:/Users/steve/development/java/lbdb/sql/test.db";
+    private static final String PROD_DB = "jdbc:sqlite:/Users/steve/data/lbdb.db";
 }

@@ -19,14 +19,14 @@ import java.util.stream.IntStream;
 
 @Service
 public class ExportService {
-    private final BookDAO bookDAO;
+    private final BookDAO   bookDAO;
     private final AuthorDAO authorDAO;
 
     private static final List<String> HEADER_ROW = List.of("Title","Media","Authors");
 
     @Autowired
     public ExportService(BookDAO bookDAO, AuthorDAO authorDAO) {
-        this.bookDAO = bookDAO;
+        this.bookDAO   = bookDAO;
         this.authorDAO = authorDAO;
     }
 
@@ -42,7 +42,7 @@ public class ExportService {
 
     private String getOutputDirectory() {
         return "production".equalsIgnoreCase(System.getProperty("lbdb.database.type","dev")) ?
-            "/Users/steve/Box Sync/Books Database/" :
+            "/Users/steve/OneDrive/Books Database/" :
             "/Users/steve/Desktop/"
         ;
     }
