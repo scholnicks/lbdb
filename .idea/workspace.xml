@@ -6,8 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="de26adde-e421-4658-a7cc-846cdeb46a91" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/BooksApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/BooksApp.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/service/ExportService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/service/ExportService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -155,7 +153,9 @@
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
-      <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
     <configuration name="lbdb [dependencies]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
@@ -174,7 +174,9 @@
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
-      <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
     <configuration name="lbdb [test]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
@@ -193,7 +195,9 @@
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
-      <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
     <list>
@@ -251,51 +255,5 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="upgraded Jackson and sqlite libraries" />
     <option name="LAST_COMMIT_MESSAGE" value="upgraded Jackson and sqlite libraries" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="282" y="122" width="844" height="568" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1606317224301">
-      <screen x="0" y="25" width="1440" height="790" />
-    </state>
-    <state x="401" y="152" width="1071" height="700" key="#com.intellij.execution.impl.EditConfigurationsDialog/-1920.-80.1920.1057/2048.154.1440.877/0.23.2048.1049@0.23.2048.1049" timestamp="1600442602861" />
-    <state x="282" y="122" width="844" height="568" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.25.1440.790@0.25.1440.790" timestamp="1606317224301" />
-    <state x="446" y="202" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1606316900029">
-      <screen x="0" y="25" width="1440" height="790" />
-    </state>
-    <state x="446" y="202" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.25.1440.790@0.25.1440.790" timestamp="1606316900029" />
-    <state x="635" y="258" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/2048.154.1440.877/-1920.-80.1920.1057/0.23.2048.1049@0.23.2048.1049" timestamp="1598713435604" />
-    <state width="1584" height="159" key="GridCell.Tab.0.bottom" timestamp="1606750901736">
-      <screen x="0" y="25" width="2048" height="1042" />
-    </state>
-    <state width="1584" height="159" key="GridCell.Tab.0.bottom/-1920.-78.1920.1055/2048.156.1440.875/0.25.2048.1042@0.25.2048.1042" timestamp="1606750901736" />
-    <state width="1391" height="161" key="GridCell.Tab.0.bottom/-1920.-80.1920.1057/2048.154.1440.877/0.23.2048.1049@0.23.2048.1049" timestamp="1600442635912" />
-    <state width="1391" height="161" key="GridCell.Tab.0.bottom/0.23.2048.1049@0.23.2048.1049" timestamp="1600459835211" />
-    <state width="1584" height="159" key="GridCell.Tab.0.center" timestamp="1606750901708">
-      <screen x="0" y="25" width="2048" height="1042" />
-    </state>
-    <state width="1584" height="159" key="GridCell.Tab.0.center/-1920.-78.1920.1055/2048.156.1440.875/0.25.2048.1042@0.25.2048.1042" timestamp="1606750901708" />
-    <state width="1391" height="161" key="GridCell.Tab.0.center/-1920.-80.1920.1057/2048.154.1440.877/0.23.2048.1049@0.23.2048.1049" timestamp="1600442635910" />
-    <state width="1391" height="161" key="GridCell.Tab.0.center/0.23.2048.1049@0.23.2048.1049" timestamp="1600459835209" />
-    <state width="1584" height="159" key="GridCell.Tab.0.left" timestamp="1606750901685">
-      <screen x="0" y="25" width="2048" height="1042" />
-    </state>
-    <state width="1584" height="159" key="GridCell.Tab.0.left/-1920.-78.1920.1055/2048.156.1440.875/0.25.2048.1042@0.25.2048.1042" timestamp="1606750901685" />
-    <state width="1391" height="161" key="GridCell.Tab.0.left/-1920.-80.1920.1057/2048.154.1440.877/0.23.2048.1049@0.23.2048.1049" timestamp="1600442635909" />
-    <state width="1391" height="161" key="GridCell.Tab.0.left/0.23.2048.1049@0.23.2048.1049" timestamp="1600459835208" />
-    <state width="1584" height="159" key="GridCell.Tab.0.right" timestamp="1606750901720">
-      <screen x="0" y="25" width="2048" height="1042" />
-    </state>
-    <state width="1584" height="159" key="GridCell.Tab.0.right/-1920.-78.1920.1055/2048.156.1440.875/0.25.2048.1042@0.25.2048.1042" timestamp="1606750901720" />
-    <state width="1391" height="161" key="GridCell.Tab.0.right/-1920.-80.1920.1057/2048.154.1440.877/0.23.2048.1049@0.23.2048.1049" timestamp="1600442635911" />
-    <state width="1391" height="161" key="GridCell.Tab.0.right/0.23.2048.1049@0.23.2048.1049" timestamp="1600459835210" />
-    <state x="441" y="167" key="SettingsEditor" timestamp="1600442590869">
-      <screen x="0" y="23" width="2048" height="1049" />
-    </state>
-    <state x="441" y="167" key="SettingsEditor/-1920.-80.1920.1057/2048.154.1440.877/0.23.2048.1049@0.23.2048.1049" timestamp="1600442590869" />
-    <state x="441" y="167" key="SettingsEditor/2048.154.1440.877/-1920.-80.1920.1057/0.23.2048.1049@0.23.2048.1049" timestamp="1600437252945" />
-    <state x="689" y="268" width="670" height="672" key="search.everywhere.popup" timestamp="1606750674863">
-      <screen x="0" y="25" width="2048" height="1042" />
-    </state>
-    <state x="689" y="268" width="670" height="672" key="search.everywhere.popup/-1920.-78.1920.1055/2048.156.1440.875/0.25.2048.1042@0.25.2048.1042" timestamp="1606750674863" />
-    <state x="689" y="268" width="670" height="676" key="search.everywhere.popup/2048.154.1440.877/-1920.-80.1920.1057/0.23.2048.1049@0.23.2048.1049" timestamp="1600458814373" />
   </component>
 </project>
