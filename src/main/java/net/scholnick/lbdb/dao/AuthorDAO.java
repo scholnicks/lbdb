@@ -1,17 +1,13 @@
 package net.scholnick.lbdb.dao;
 
-import net.scholnick.lbdb.domain.Author;
-import net.scholnick.lbdb.domain.Book;
+import net.scholnick.lbdb.domain.*;
 import net.scholnick.lbdb.util.NullSafe;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.support.*;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
 
 @Repository
@@ -67,7 +63,8 @@ public class AuthorDAO {
     public Set<Long> getEditors(Book b) {
         return new HashSet<>(jdbcTemplate.queryForList(
             "select auth_id from author_book_xref where book_id=? and abx_editor='y'",
-            new Long[]{b.getId()},
+            new Long[] {b.getId()},
+            new int[] {Types.INTEGER},
             Long.class
         ));
     }
