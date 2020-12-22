@@ -42,7 +42,7 @@ public class ExportService {
 
     private String getOutputDirectory() {
         return "production".equalsIgnoreCase(System.getProperty("lbdb.database.type","dev")) ?
-            "/Users/steve/OneDrive/" :
+            "/Users/steve/OneDrive/share/" :
             "/Users/steve/Desktop/"
         ;
     }
