@@ -1,20 +1,13 @@
 package net.scholnick.lbdb.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableModel;
+import javax.swing.table.*;
 import java.awt.*;
 import java.util.Objects;
 
 public class GUIUtilities {
-    private final static Logger log = LoggerFactory.getLogger(GUIUtilities.class);
-
-    private GUIUtilities() {
-    }
+    private GUIUtilities() {}
 
     public static GridBagConstraints getDefaultGridBagConstraints() {
         GridBagConstraints gbc = new GridBagConstraints();

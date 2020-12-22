@@ -1,14 +1,13 @@
 package net.scholnick.lbdb.util;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.*;
+import java.nio.file.*;
 import java.util.Arrays;
 
 import static java.util.Objects.requireNonNull;
 
 public final class FileUtils {
+    @Deprecated
     public static void clear() {
         try {
             Arrays.stream(requireNonNull(getDestinationDirectory().listFiles())).forEach(File::delete);
@@ -20,8 +19,15 @@ public final class FileUtils {
 
     public static File getDestinationDirectory() throws IOException {
         Path path = Paths.get(System.getProperty("user.home"), "Public/Images");
-        if (! path.toFile().exists()) path.toFile().mkdir();
-        return path.toFile();
+
+        File imagesFile = path.toFile();
+        if (! imagesFile.exists()) {
+            if (! imagesFile.mkdir()) {
+                throw new IOException("Cannot create directory " + imagesFile);
+            }
+        }
+
+        return imagesFile;
     }
 
     private FileUtils() {}
