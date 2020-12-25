@@ -20,6 +20,11 @@ public final class Author implements Comparable<Author> {
         return a;
     }
 
+    @Override
+    public String toString() {
+        return getName();
+    }
+
     public String lastName() {
         int lastSpace = name.lastIndexOf(' ');
         if (lastSpace == -1) return name;

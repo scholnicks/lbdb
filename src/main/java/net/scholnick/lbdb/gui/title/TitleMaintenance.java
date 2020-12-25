@@ -1,23 +1,23 @@
 package net.scholnick.lbdb.gui.title;
 
+import jiconfont.icons.font_awesome.FontAwesome;
+import jiconfont.swing.IconFontSwing;
 import net.scholnick.lbdb.coverphoto.CoverPhotoService;
 import net.scholnick.lbdb.domain.*;
 import net.scholnick.lbdb.gui.*;
 import net.scholnick.lbdb.gui.author.*;
-import net.scholnick.lbdb.service.BookService;
+import net.scholnick.lbdb.service.*;
 import net.scholnick.lbdb.util.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.File;
-import java.io.IOException;
+import java.awt.event.*;
+import java.io.*;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static javax.swing.BorderFactory.*;
 import static net.scholnick.lbdb.util.GUIUtilities.showMessageDialog;
@@ -37,12 +37,15 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
     private JButton deleteButton;
     private JTable authorsList;
 
+    private JTextField authorsSelect;
+
     private JComboBox<BookType> typeCombo;
     private JComboBox<Media> mediaCombo;
 
     private Book book;
 
     private BookService bookService;
+    private AuthorService         authorService;
     private CoverPhotoService coverPhotoService;
     private AuthorQuickSearch authorQuickSearch;
     private MultipleAuthorsDialog multipleAuthorDialog;
@@ -69,6 +72,12 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
         p.add(getDeleteButton());
         p.add(getClearButton());
         return p;
+    }
+
+    public JTextField getAuthorsSelect() {
+        if (authorsSelect == null) {
+            authorsSelect = new SelectTextField<>(45, () -> authorService.search(authorsSelect.getText()).stream().limit(20).collect(Collectors.toList()));        }
+        return authorsSelect;
     }
 
     private JButton getDeleteButton() {
@@ -125,8 +134,8 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
         p.add(LabelFactory.createLabel("Authors"), gbc);
         gbc.gridx++;
         gbc.weightx = inputWeight;
-        gbc.insets = new Insets(0, 5, 0, 0);
-        p.add(getAuthorPanel(), gbc);
+//        gbc.insets = new Insets(0, 5, 0, 0);
+        p.add(getAuthorsSelect(), gbc);
 
         gbc.gridy++;
         gbc.gridx = 0;
@@ -263,9 +272,10 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
     }
 
     private JLabel getAddAuthorsLabel() {
-        JLabel addAuthorLabel = new JLabel("+");
-        addAuthorLabel.setFont(new Font("Helvetica", Font.BOLD, 24));
-        addAuthorLabel.setForeground(Color.green);
+        IconFontSwing.register(FontAwesome.getIconFont());
+        Icon icon = IconFontSwing.buildIcon(FontAwesome.PLUS_CIRCLE, 24, Color.GREEN);
+
+        JLabel addAuthorLabel = new JLabel(icon);
         addAuthorLabel.setAlignmentX(SwingConstants.LEFT);
         addAuthorLabel.setHorizontalAlignment(SwingConstants.LEFT);
         addAuthorLabel.setToolTipText("Add");
@@ -548,7 +558,7 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
             downloadCoverPhoto();
         }
         catch (Exception e) {
-            log.error("Unable to load the covder photo", e);
+            log.error("Unable to load the cover photo", e);
         }
     }
 
@@ -591,5 +601,10 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
     @Autowired
     public void setMultipleAuthorDialog(MultipleAuthorsDialog multipleAuthorDialog) {
         this.multipleAuthorDialog = multipleAuthorDialog;
+    }
+
+    @Autowired
+    public void setAuthorService(AuthorService authorService) {
+        this.authorService = authorService;
     }
 }

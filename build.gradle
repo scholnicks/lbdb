@@ -27,6 +27,9 @@ dependencies {
 
     implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.34.0'
 
+    implementation 'com.github.jiconfont:jiconfont-swing:1.0.1'
+    implementation 'com.github.jiconfont:jiconfont-font_awesome:4.7.0.1'
+
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '3.4.5'
     implementation group: 'org.apache.commons', name: 'commons-text', version: '1.9'
     implementation 'com.fasterxml.jackson.core:jackson-core:2.12.0'
