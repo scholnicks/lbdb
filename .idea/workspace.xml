@@ -6,15 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="de26adde-e421-4658-a7cc-846cdeb46a91" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/BooksDB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/BooksDB.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/SelectTextField.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/SelectTextField.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/author/AuthorQuickSearch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/author/AuthorQuickSearch.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/author/MultipleAuthorsDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/author/MultipleAuthorsDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/title/AuthorPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/title/AuthorPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/title/AuthorTableModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/title/AuthorTableModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/title/HeaderRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/title/HeaderRenderer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/title/TitleMaintenance.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/title/TitleMaintenance.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/util/LabelFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/util/LabelFactory.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

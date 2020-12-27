@@ -17,6 +17,7 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.Objects;
 
+import static java.util.stream.Collectors.toList;
 import static javax.swing.BorderFactory.*;
 
 @Component
@@ -95,14 +96,45 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         reload();
     }
 
+    private JLabel searchLabel() {
+        IconFontSwing.register(FontAwesome.getIconFont());
+        JLabel label = new JLabel(IconFontSwing.buildIcon(FontAwesome.SEARCH, 24, Color.GREEN));
+        label.addMouseListener(new MouseAdapter() {
+            @Override public void mouseClicked(MouseEvent e) {
+                popUpMenu(searchForAuthors());
+            }
+        });
+        return label;
+    }
+
+    private void popUpMenu(java.util.List<Author> data) {
+        JPopupMenu popup = new JPopupMenu();
+        for (Author d : data) {
+            JMenuItem item = new JMenuItem(d.toString());
+            item.addActionListener(l -> createAuthorLabel(d));
+            popup.add(item);
+        }
+        popup.pack();
+        popup.show(getAuthorsSelect(), 0, getAuthorsSelect().getHeight());
+        popup.requestFocusInWindow();
+    }
+
+    private java.util.List<Author> searchForAuthors() {
+        return authorService.search(authorsSelect.getText()).stream().filter(Objects::nonNull).limit(20).collect(toList());
+    }
+
     private JTextField getAuthorsSelect() {
         if (authorsSelect == null) {
-            authorsSelect = SelectTextField.of(
-              45,
-              3,
-               () -> authorService.search(authorsSelect.getText()),
-               this::createAuthorLabel
-           );
+            authorsSelect = new JTextField(30);
+            authorsSelect.addActionListener(l -> {
+                var data = searchForAuthors();
+                if (data.isEmpty()) {
+                    createAuthorLabel(Author.of(getAuthorsSelect().getText()));
+                }
+                else {
+                    popUpMenu(data);
+                }
+            });
         }
         return authorsSelect;
     }
@@ -159,7 +191,10 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         p.add(LabelFactory.createLabel("Authors"), gbc);
         gbc.gridx++;
         gbc.weightx = inputWeight;
-        p.add(getAuthorsSelect(), gbc);
+        JPanel authorSearchPanel = new JPanel(new FlowLayout());
+        authorSearchPanel.add(getAuthorsSelect());
+        authorSearchPanel.add(searchLabel());
+        p.add(authorSearchPanel, gbc);
 
         gbc.gridy++;
         gbc.weightx = labelWeight;

@@ -24,7 +24,7 @@ public class SelectTextField<T> extends JTextField  {
         this.supplier    = Objects.requireNonNull(supplier);
         this.consumer    = (e) -> setText(e.toString());
         this.keysTrigger = 3;
-        addPopupListener();
+//        addPopupListener();
     }
 
     private void addPopupListener() {
@@ -40,7 +40,7 @@ public class SelectTextField<T> extends JTextField  {
                     }
                     popup.pack();
                     popup.show(owner,0,owner.getHeight());
-                    popup.requestFocusInWindow();
+                    //popup.requestFocusInWindow();
                 }
             }
         });
