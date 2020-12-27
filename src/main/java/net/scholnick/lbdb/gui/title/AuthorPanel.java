@@ -32,7 +32,9 @@ public final class AuthorPanel extends JPanel {
             field = new JTextField();
 
             field.addKeyListener(new KeyAdapter() {
-                @Override public void keyPressed(KeyEvent e) {}
+                @Override
+                public void keyPressed(KeyEvent e) {
+                }
             });
         }
         return field;

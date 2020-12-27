@@ -5,7 +5,6 @@ import jiconfont.swing.IconFontSwing;
 import net.scholnick.lbdb.coverphoto.CoverPhotoService;
 import net.scholnick.lbdb.domain.*;
 import net.scholnick.lbdb.gui.*;
-import net.scholnick.lbdb.gui.author.*;
 import net.scholnick.lbdb.service.*;
 import net.scholnick.lbdb.util.*;
 import org.slf4j.*;
@@ -17,13 +16,11 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static javax.swing.BorderFactory.*;
-import static net.scholnick.lbdb.util.GUIUtilities.showMessageDialog;
 
 @Component
-public class TitleMaintenance extends AbstractUpdateMaintenance {
+public final class TitleMaintenance extends AbstractUpdateMaintenance {
     private static final Logger log = LoggerFactory.getLogger(TitleMaintenance.class);
 
     private JTextField titleField;
@@ -35,7 +32,8 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
     private JTextArea commentsArea;
     private JLabel imageLabel;
     private JButton deleteButton;
-    private JTable authorsList;
+
+    private JPanel selectedAuthorsPanel;
 
     private JTextField authorsSelect;
 
@@ -47,14 +45,14 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
     private BookService bookService;
     private AuthorService         authorService;
     private CoverPhotoService coverPhotoService;
-    private AuthorQuickSearch authorQuickSearch;
-    private MultipleAuthorsDialog multipleAuthorDialog;
 
-    private static final Dimension AUTHOR_PANEL_SIZE = new Dimension(542, 100);
+    private final Icon icon;
 
     public TitleMaintenance() {
         super();
         buildGUI();
+        IconFontSwing.register(FontAwesome.getIconFont());
+        icon = IconFontSwing.buildIcon(FontAwesome.BAN, 10, Color.red);
     }
 
     @Override
@@ -74,26 +72,53 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
         return p;
     }
 
-    public JTextField getAuthorsSelect() {
+    private JPanel selectedAuthorsPanel() {
+        if (selectedAuthorsPanel == null) selectedAuthorsPanel = new JPanel(new FlowLayout());
+        return selectedAuthorsPanel;
+    }
+
+    private void createAuthorLabel(Author a) {
+        JLabel label = new JLabel(a.getName());
+        label.setBorder(BorderFactory.createEtchedBorder());
+        label.setForeground(Color.white);
+        label.setBackground(Color.black);
+        label.setOpaque(true);
+        label.setIcon(icon);
+        label.setHorizontalTextPosition(JLabel.LEFT);
+        label.addMouseListener(new MouseAdapter() {
+            @Override public void mouseClicked(MouseEvent e) {
+                selectedAuthorsPanel().remove((JLabel) e.getSource());
+            }
+        });
+        selectedAuthorsPanel().add(label);
+        getAuthorsSelect().setText("");
+        reload();
+    }
+
+    private JTextField getAuthorsSelect() {
         if (authorsSelect == null) {
-            authorsSelect = new SelectTextField<>(45, () -> authorService.search(authorsSelect.getText()).stream().limit(20).collect(Collectors.toList()));        }
+            authorsSelect = SelectTextField.of(
+              45,
+              3,
+               () -> authorService.search(authorsSelect.getText()),
+               this::createAuthorLabel
+           );
+        }
         return authorsSelect;
     }
 
     private JButton getDeleteButton() {
         if (deleteButton == null) {
             deleteButton = new JButton("Delete");
-            deleteButton.addActionListener(e -> removeTitle());
+            deleteButton.addActionListener(e -> {
+                if (JOptionPane.showConfirmDialog(this, "Delete Book?") == JOptionPane.YES_OPTION) {
+                    bookService.delete(book);
+                    sendMessage(book + " deleted");
+                    clear();
+                }
+            });
         }
         return deleteButton;
-    }
-
-    private void removeTitle() {
-        if (JOptionPane.showConfirmDialog(this, "Delete Book?") == JOptionPane.YES_OPTION) {
-            bookService.delete(book);
-            sendMessage(book + " deleted");
-            clear();
-        }
     }
 
     protected JPanel getInputPanel() {
@@ -134,8 +159,15 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
         p.add(LabelFactory.createLabel("Authors"), gbc);
         gbc.gridx++;
         gbc.weightx = inputWeight;
-//        gbc.insets = new Insets(0, 5, 0, 0);
         p.add(getAuthorsSelect(), gbc);
+
+        gbc.gridy++;
+        gbc.weightx = labelWeight;
+        gbc.gridx = 0;
+        p.add(LabelFactory.createLabel(""), gbc);
+        gbc.gridx++;
+        gbc.weightx = inputWeight;
+        p.add(selectedAuthorsPanel(), gbc);
 
         gbc.gridy++;
         gbc.gridx = 0;
@@ -219,107 +251,6 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
         getTitleField().requestFocus();
     }
 
-    private JPanel getAuthorPanel() {
-        JPanel p = new JPanel(new BorderLayout(5, 0));
-        JScrollPane scrollPane = new JScrollPane(getAuthorsList(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.setPreferredSize(AUTHOR_PANEL_SIZE);
-        scrollPane.setSize(AUTHOR_PANEL_SIZE);
-        scrollPane.setMinimumSize(AUTHOR_PANEL_SIZE);
-        scrollPane.setMaximumSize(AUTHOR_PANEL_SIZE);
-        p.add(scrollPane, BorderLayout.CENTER);
-
-        Dimension buttonSize = new Dimension(30, 30);
-
-        JPanel buttonPanel = new JPanel(new GridBagLayout());
-        buttonPanel.setPreferredSize(buttonSize);
-        buttonPanel.setSize(buttonSize);
-        buttonPanel.setMinimumSize(buttonSize);
-        buttonPanel.setMaximumSize(buttonSize);
-        buttonPanel.setSize(buttonSize);
-
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.NONE;
-
-        buttonPanel.add(getAddAuthorsLabel(), gbc);
-        gbc.gridy++;
-        gbc.insets = new Insets(0, 0, 0, 0);
-        buttonPanel.add(getAddMultipleAuthorsLabel(), gbc);
-
-        gbc.gridy++;
-        gbc.insets = new Insets(0, 3, 0, 0);
-        buttonPanel.add(getRemoveAuthorsLabel(), gbc);
-
-        p.add(buttonPanel, BorderLayout.EAST);
-
-        return p;
-    }
-
-    private JTable getAuthorsList() {
-        if (authorsList == null) {
-            authorsList = new JTable(new AuthorTableModel());
-            authorsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-            authorsList.getTableHeader().setDefaultRenderer(new HeaderRenderer(authorsList));
-            GUIUtilities.setCellsAlignment(authorsList, SwingConstants.CENTER);
-        }
-        return authorsList;
-    }
-
-    private AuthorTableModel getAuthorTableModel() {
-        return (AuthorTableModel) getAuthorsList().getModel();
-    }
-
-    private JLabel getAddAuthorsLabel() {
-        IconFontSwing.register(FontAwesome.getIconFont());
-        Icon icon = IconFontSwing.buildIcon(FontAwesome.PLUS_CIRCLE, 24, Color.GREEN);
-
-        JLabel addAuthorLabel = new JLabel(icon);
-        addAuthorLabel.setAlignmentX(SwingConstants.LEFT);
-        addAuthorLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        addAuthorLabel.setToolTipText("Add");
-
-        addAuthorLabel.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                performQuickSearch();
-            }
-        });
-        return addAuthorLabel;
-    }
-
-    private JLabel getAddMultipleAuthorsLabel() {
-        JLabel addAuthorLabel = new JLabel("++");
-        addAuthorLabel.setFont(new Font("Helvetica", Font.BOLD, 24));
-        addAuthorLabel.setForeground(Color.green);
-        addAuthorLabel.setAlignmentX(SwingConstants.LEFT);
-        addAuthorLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        addAuthorLabel.setToolTipText("Add Multiple");
-
-        addAuthorLabel.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                addMultipleAuthors();
-            }
-        });
-        return addAuthorLabel;
-    }
-
-    private JLabel getRemoveAuthorsLabel() {
-        JLabel removeAuthorLabel = new JLabel("-");
-        removeAuthorLabel.setFont(new Font("Helvetica", Font.BOLD, 24));
-        removeAuthorLabel.setForeground(Color.red);
-        removeAuthorLabel.setAlignmentX(SwingConstants.LEFT);
-        removeAuthorLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        removeAuthorLabel.setToolTipText("Remove");
-
-        removeAuthorLabel.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                removeAuthor();
-            }
-        });
-        return removeAuthorLabel;
-    }
-
     private JLabel getImageLabel() {
         if (imageLabel == null) {
             imageLabel = new JLabel();
@@ -383,11 +314,11 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
         }
     }
 
-    private void removeAuthor() {
-        int row = getAuthorsList().getSelectedRow();
-        getAuthorTableModel().delete(row);
-        reload();
-    }
+//    private void removeAuthor() {
+//        int row = getAuthorsList().getSelectedRow();
+//        getAuthorTableModel().delete(row);
+//        reload();
+//    }
 
     private JTextField getTitleField() {
         if (titleField == null) titleField = new TrimmedTextField(45, 255);
@@ -443,31 +374,6 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
         return mediaCombo;
     }
 
-    public void performQuickSearch() {
-        authorQuickSearch.initialize();
-        authorQuickSearch.setVisible(true);
-
-        if (authorQuickSearch.isApproved()) {
-            Author a = authorQuickSearch.getSelectedAuthor();
-
-            if (getAuthorTableModel().contains(a)) {
-                showMessageDialog(a.getName() + " has already been added. Skipping.");
-            }
-            else {
-                getAuthorTableModel().add(authorQuickSearch.getSelectedAuthor());
-            }
-            reload();
-        }
-    }
-
-    private void addMultipleAuthors() {
-        multipleAuthorDialog.setVisible(true);
-        if (multipleAuthorDialog.isApproved()) {
-            multipleAuthorDialog.getAuthors().forEach(a -> getAuthorTableModel().add(a));
-            reload();
-        }
-    }
-
     public void clear() {
         getAnthologyCheckBox().setSelected(false);
         getCommentsArea().setText("");
@@ -478,7 +384,7 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
         getPublishedYearField().setText("");
         getAddedDateLabel().setText("");
         getNumberOfPagesField().setText("");
-        getAuthorTableModel().clear();
+//        getAuthorTableModel().clear();
         getImageLabel().setIcon(null);
 
         book = null;
@@ -511,8 +417,8 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
         }
 
         b.clearAuthors();
-        getAuthorTableModel().stream().forEach(b::addAuthor);
-        b.setEditors(getAuthorTableModel().getEditors());
+//        getAuthorTableModel().stream().forEach(b::addAuthor);
+//        b.setEditors(getAuthorTableModel().getEditors());
 
         return b;
     }
@@ -578,8 +484,8 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
 
         getAddedDateLabel().setText(book.getAddedTimestamp());
 
-        getAuthorTableModel().clear();
-        getBook().getAuthors().stream().sorted().forEach(a -> getAuthorTableModel().add(a));
+//        getAuthorTableModel().clear();
+//        getBook().getAuthors().stream().sorted().forEach(a -> getAuthorTableModel().add(a));
         reload();
     }
 
@@ -591,16 +497,6 @@ public class TitleMaintenance extends AbstractUpdateMaintenance {
     @Autowired
     public void setCoverPhotoService(CoverPhotoService coverPhotoService) {
         this.coverPhotoService = coverPhotoService;
-    }
-
-    @Autowired
-    public void setAuthorQuickSearch(AuthorQuickSearch authorQuickSearch) {
-        this.authorQuickSearch = authorQuickSearch;
-    }
-
-    @Autowired
-    public void setMultipleAuthorDialog(MultipleAuthorsDialog multipleAuthorDialog) {
-        this.multipleAuthorDialog = multipleAuthorDialog;
     }
 
     @Autowired

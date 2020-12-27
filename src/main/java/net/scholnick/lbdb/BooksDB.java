@@ -167,11 +167,11 @@ public final class BooksDB extends JFrame {
         clearItem.addActionListener(l -> titleMaintenance.clear());
         fileMenu.add(clearItem);
 
-        JMenuItem addAuthorItem = new JMenuItem("Add Author");
-        addAuthorItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.META_DOWN_MASK));
-        addAuthorItem.setText("Add Author");
-        addAuthorItem.addActionListener(l -> titleMaintenance.performQuickSearch());
-        fileMenu.add(addAuthorItem);
+//        JMenuItem addAuthorItem = new JMenuItem("Add Author");
+//        addAuthorItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.META_DOWN_MASK));
+//        addAuthorItem.setText("Add Author");
+//        addAuthorItem.addActionListener(l -> titleMaintenance.performQuickSearch());
+//        fileMenu.add(addAuthorItem);
 
         JMenuItem exportItem = new JMenuItem("Export");
         exportItem.setText("Export");

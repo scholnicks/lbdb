@@ -16,6 +16,7 @@ import java.util.List;
 import static javax.swing.BorderFactory.createEmptyBorder;
 import static javax.swing.JOptionPane.showConfirmDialog;
 
+@Deprecated
 @Component
 public class AuthorQuickSearch extends BaseDialog {
     private JTextField nameField;

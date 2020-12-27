@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toSet;
 
+@Deprecated
 final class AuthorTableModel extends AbstractTableModel {
 	private final List<Author> dataRows;
 

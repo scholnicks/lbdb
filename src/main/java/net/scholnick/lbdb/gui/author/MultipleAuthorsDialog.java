@@ -21,6 +21,7 @@ import static java.util.stream.Collectors.toList;
 import static javax.swing.JOptionPane.*;
 import static net.scholnick.lbdb.util.GUIUtilities.center;
 
+@Deprecated
 @Component
 public class MultipleAuthorsDialog extends BaseDialog {
     private JTextField nameField;
