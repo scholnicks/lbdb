@@ -2,12 +2,11 @@ package net.scholnick.lbdb.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-
-import java.util.Set;
+import net.scholnick.lbdb.gui.Identifiable;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown=true)
-public final class Author implements Comparable<Author> {
+public final class Author implements Comparable<Author>, Identifiable {
     private Long id;
     private String name;
     private String webSite;
@@ -21,29 +20,7 @@ public final class Author implements Comparable<Author> {
     }
 
     @Override
-    public String toString() {
-        return getName();
-    }
-
-    public String lastName() {
-        int lastSpace = name.lastIndexOf(' ');
-        if (lastSpace == -1) return name;
-
-        String lastName = name.substring(lastSpace).trim();
-        if (SUFFIXES.contains(lastName.toLowerCase())) {
-            lastSpace = name.substring(0, lastSpace).trim().lastIndexOf(' ');
-            if (lastSpace == -1) return name;
-            return name.substring(0, lastSpace).trim();
-        }
-        else {
-            return lastName;
-        }
-    }
-
-    @Override
     public int compareTo(Author o) {
         return name.compareTo(o.name);
     }
-
-    private static final Set<String> SUFFIXES = Set.of("i", "ii", "iii", "iv", "jr", "sr", "jr.", "sr.");
 }

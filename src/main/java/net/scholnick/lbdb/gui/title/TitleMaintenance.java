@@ -47,13 +47,9 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     private AuthorService         authorService;
     private CoverPhotoService coverPhotoService;
 
-    private final Icon icon;
-
     public TitleMaintenance() {
         super();
         buildGUI();
-        IconFontSwing.register(FontAwesome.getIconFont());
-        icon = IconFontSwing.buildIcon(FontAwesome.BAN, 10, Color.red);
     }
 
     @Override
@@ -78,13 +74,19 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         return selectedAuthorsPanel;
     }
 
-    private void createAuthorLabel(Author a) {
-        JLabel label = new JLabel(a.getName());
+    private void createAuthorLabel(Author a, boolean reload) {
+        JLabel label = DataLabel.of(a);
         label.setBorder(BorderFactory.createEtchedBorder());
         label.setForeground(Color.white);
-        label.setBackground(Color.black);
+
+        if (a.getId() == null) {
+            label.setBackground(Color.green);
+        }
+        else {
+            label.setBackground(Color.black);
+        }
+
         label.setOpaque(true);
-        label.setIcon(icon);
         label.setHorizontalTextPosition(JLabel.LEFT);
         label.addMouseListener(new MouseAdapter() {
             @Override public void mouseClicked(MouseEvent e) {
@@ -92,8 +94,11 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
             }
         });
         selectedAuthorsPanel().add(label);
-        getAuthorsSelect().setText("");
-        reload();
+
+        if (reload) {
+            getAuthorsSelect().setText("");
+            reload();
+        }
     }
 
     private JLabel searchLabel() {
@@ -110,8 +115,8 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     private void popUpMenu(java.util.List<Author> data) {
         JPopupMenu popup = new JPopupMenu();
         for (Author d : data) {
-            JMenuItem item = new JMenuItem(d.toString());
-            item.addActionListener(l -> createAuthorLabel(d));
+            JMenuItem item = new JMenuItem(d.getName());
+            item.addActionListener(l -> createAuthorLabel(d,true));
             popup.add(item);
         }
         popup.pack();
@@ -125,11 +130,11 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
 
     private JTextField getAuthorsSelect() {
         if (authorsSelect == null) {
-            authorsSelect = new JTextField(30);
+            authorsSelect = new JTextField(15);
             authorsSelect.addActionListener(l -> {
                 var data = searchForAuthors();
                 if (data.isEmpty()) {
-                    createAuthorLabel(Author.of(getAuthorsSelect().getText()));
+                    createAuthorLabel(Author.of(getAuthorsSelect().getText()),true);
                 }
                 else {
                     popUpMenu(data);
@@ -349,12 +354,6 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         }
     }
 
-//    private void removeAuthor() {
-//        int row = getAuthorsList().getSelectedRow();
-//        getAuthorTableModel().delete(row);
-//        reload();
-//    }
-
     private JTextField getTitleField() {
         if (titleField == null) titleField = new TrimmedTextField(45, 255);
         return titleField;
@@ -419,7 +418,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         getPublishedYearField().setText("");
         getAddedDateLabel().setText("");
         getNumberOfPagesField().setText("");
-//        getAuthorTableModel().clear();
+        clear(selectedAuthorsPanel());
         getImageLabel().setIcon(null);
 
         book = null;
@@ -432,6 +431,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private Book createBookFromFormData() {
         Book b = getBook() == null ? new Book() : getBook();
 
@@ -452,10 +452,20 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         }
 
         b.clearAuthors();
-//        getAuthorTableModel().stream().forEach(b::addAuthor);
-//        b.setEditors(getAuthorTableModel().getEditors());
+        for (int i=0,n=selectedAuthorsPanel().getComponentCount(); i < n; i++) {
+            DataLabel<Author> dataLabel = (DataLabel<Author>) selectedAuthorsPanel().getComponent(i);
+            b.addAuthor(dataLabel.getData());
+        }
+
+        //        b.setEditors(getAuthorTableModel().getEditors());
 
         return b;
+    }
+
+    private void clear(JPanel panel) {
+        for (int i=panel.getComponentCount()-1; i >=0; i--) {
+            panel.remove(i);
+        }
     }
 
     private boolean databaseUpdate(Book b) {
@@ -519,8 +529,9 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
 
         getAddedDateLabel().setText(book.getAddedTimestamp());
 
-//        getAuthorTableModel().clear();
-//        getBook().getAuthors().stream().sorted().forEach(a -> getAuthorTableModel().add(a));
+        clear(selectedAuthorsPanel());
+        getBook().getAuthors().stream().sorted().forEach(a -> createAuthorLabel(a,false));
+
         reload();
     }
 
