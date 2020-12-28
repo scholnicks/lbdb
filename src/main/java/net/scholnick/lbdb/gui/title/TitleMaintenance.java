@@ -24,54 +24,45 @@ import static javax.swing.BorderFactory.*;
 public final class TitleMaintenance extends AbstractUpdateMaintenance {
     private static final Logger log = LoggerFactory.getLogger(TitleMaintenance.class);
 
-    private JTextField titleField;
-    private JTextField seriesField;
-    private JTextField publishedYearField;
-    private JTextField isbnField;
-    private JTextField numberOfPagesField;
-    private JCheckBox anthologyCheckBox;
-    private JTextArea commentsArea;
+    private final JTextField titleField;
+    private final JTextField seriesField;
+    private final JTextField publishedYearField;
+    private final JTextField isbnField;
+    private final JTextField numberOfPagesField;
+    private final JCheckBox anthologyCheckBox;
+    private final JComboBox<BookType> typeCombo;
+    private final JComboBox<Media> mediaCombo;
+    private final JTextArea commentsArea;
+
     private JLabel imageLabel;
     private JButton deleteButton;
 
-    private JPanel selectedAuthorsPanel;
-
     private JTextField authorsSelect;
-
-    private JComboBox<BookType> typeCombo;
-    private JComboBox<Media> mediaCombo;
+    private final JPanel selectedAuthorsPanel;
 
     private Book book;
 
-    private BookService bookService;
-    private AuthorService         authorService;
+    private BookService       bookService;
+    private AuthorService     authorService;
     private CoverPhotoService coverPhotoService;
 
     public TitleMaintenance() {
         super();
+
+        titleField           = new TrimmedTextField(45, 255);
+        seriesField          = new TrimmedTextField(45, 255);
+        publishedYearField   = new TrimmedTextField(10, 4);
+        isbnField            = new TrimmedTextField(30, 20);
+        numberOfPagesField   = new TrimmedTextField(15, 20);
+        anthologyCheckBox    = new JCheckBox();
+        typeCombo            = new JComboBox<>(BookType.values());
+        mediaCombo           = new JComboBox<>(Media.values());
+        selectedAuthorsPanel = new JPanel(new FlowLayout());
+
+        commentsArea = new JTextArea(5, 44);
+        commentsArea.setLineWrap(true);
+
         buildGUI();
-    }
-
-    @Override
-    protected void buildGUI() {
-        setLayout(new BorderLayout());
-        add(getImagePanel(), BorderLayout.WEST);
-        add(getInputPanel(), BorderLayout.CENTER);
-        add(getButtonPanel(), BorderLayout.SOUTH);
-    }
-
-    @Override
-    protected JPanel getButtonPanel() {
-        JPanel p = new JPanel();
-        p.add(getSaveButton());
-        p.add(getDeleteButton());
-        p.add(getClearButton());
-        return p;
-    }
-
-    private JPanel selectedAuthorsPanel() {
-        if (selectedAuthorsPanel == null) selectedAuthorsPanel = new JPanel(new FlowLayout());
-        return selectedAuthorsPanel;
     }
 
     private void createAuthorLabel(Author a, boolean reload) {
@@ -90,26 +81,15 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         label.setHorizontalTextPosition(JLabel.LEFT);
         label.addMouseListener(new MouseAdapter() {
             @Override public void mouseClicked(MouseEvent e) {
-                selectedAuthorsPanel().remove((JLabel) e.getSource());
+                selectedAuthorsPanel.remove((JLabel) e.getSource());
             }
         });
-        selectedAuthorsPanel().add(label);
+        selectedAuthorsPanel.add(label);
 
         if (reload) {
             getAuthorsSelect().setText("");
             reload();
         }
-    }
-
-    private JLabel searchLabel() {
-        IconFontSwing.register(FontAwesome.getIconFont());
-        JLabel label = new JLabel(IconFontSwing.buildIcon(FontAwesome.SEARCH, 24, Color.GREEN));
-        label.addMouseListener(new MouseAdapter() {
-            @Override public void mouseClicked(MouseEvent e) {
-                popUpMenu(searchForAuthors());
-            }
-        });
-        return label;
     }
 
     private void popUpMenu(java.util.List<Author> data) {
@@ -158,137 +138,9 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         return deleteButton;
     }
 
-    protected JPanel getInputPanel() {
-        JPanel p = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-
-        gbc.gridx = gbc.gridy = 0;
-        gbc.gridheight = 1;
-        gbc.gridwidth = 1;
-        gbc.weighty = 1.00;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.NONE;
-
-        Insets indentInsets = new Insets(0, 0, 0, 0);
-
-        double labelWeight = .10;
-        double inputWeight = .90;
-
-        gbc.weightx = labelWeight;
-        p.add(LabelFactory.createLabel("Title"), gbc);
-        gbc.weightx = inputWeight;
-        gbc.gridx++;
-        gbc.insets = indentInsets;
-        p.add(getTitleField(), gbc);
-
-        gbc.gridy++;
-        gbc.gridx = 0;
-        gbc.weightx = labelWeight;
-        p.add(LabelFactory.createLabel("Series"), gbc);
-        gbc.gridx++;
-        gbc.insets = indentInsets;
-        gbc.weightx = inputWeight;
-        p.add(getSeriesField(), gbc);
-
-        gbc.gridy++;
-        gbc.weightx = labelWeight;
-        gbc.gridx = 0;
-        p.add(LabelFactory.createLabel("Authors"), gbc);
-        gbc.gridx++;
-        gbc.weightx = inputWeight;
-        JPanel authorSearchPanel = new JPanel(new FlowLayout());
-        authorSearchPanel.add(getAuthorsSelect());
-        authorSearchPanel.add(searchLabel());
-        p.add(authorSearchPanel, gbc);
-
-        gbc.gridy++;
-        gbc.weightx = labelWeight;
-        gbc.gridx = 0;
-        p.add(LabelFactory.createLabel(""), gbc);
-        gbc.gridx++;
-        gbc.weightx = inputWeight;
-        p.add(selectedAuthorsPanel(), gbc);
-
-        gbc.gridy++;
-        gbc.gridx = 0;
-        gbc.weightx = labelWeight;
-        p.add(LabelFactory.createLabel("Type"), gbc);
-        gbc.gridx++;
-        gbc.insets = indentInsets;
-        gbc.weightx = inputWeight;
-        p.add(getTypeCombo(), gbc);
-
-        gbc.gridy++;
-        gbc.gridx = 0;
-        gbc.weightx = labelWeight;
-        p.add(LabelFactory.createLabel("Media"), gbc);
-        gbc.gridx++;
-        gbc.insets = indentInsets;
-        gbc.weightx = inputWeight;
-        p.add(getMediaCombo(), gbc);
-
-        gbc.gridy++;
-        gbc.gridx = 0;
-        gbc.weightx = labelWeight;
-        p.add(LabelFactory.createLabel("Year Published"), gbc);
-        gbc.gridx++;
-        gbc.insets = indentInsets;
-        gbc.weightx = inputWeight;
-        p.add(getPublishedYearField(), gbc);
-
-        gbc.gridy++;
-        gbc.gridx = 0;
-        gbc.weightx = labelWeight;
-        p.add(LabelFactory.createLabel("ISBN"), gbc);
-        gbc.gridx++;
-        gbc.insets = indentInsets;
-        gbc.weightx = inputWeight;
-        p.add(getISBNField(), gbc);
-
-        gbc.gridy++;
-        gbc.gridx = 0;
-        gbc.weightx = labelWeight;
-        p.add(LabelFactory.createLabel("Number of Pages"), gbc);
-        gbc.gridx++;
-        gbc.insets = indentInsets;
-        gbc.weightx = inputWeight;
-        p.add(getNumberOfPagesField(), gbc);
-
-        gbc.gridy++;
-        gbc.gridx = 0;
-        gbc.weightx = labelWeight;
-        p.add(LabelFactory.createLabel("Anthology"), gbc);
-        gbc.gridx++;
-        gbc.insets = indentInsets;
-        gbc.weightx = inputWeight;
-        p.add(getAnthologyCheckBox(), gbc);
-
-        gbc.gridy++;
-        gbc.gridx = 0;
-        gbc.weightx = labelWeight;
-        p.add(LabelFactory.createLabel("Comments"), gbc);
-        gbc.gridx++;
-        gbc.insets = new Insets(0, 5, 0, 0);
-        gbc.weightx = inputWeight;
-        p.add(new JScrollPane(getCommentsArea()), gbc);
-
-        gbc.gridy++;
-        gbc.gridx = 0;
-        gbc.weightx = labelWeight;
-        p.add(LabelFactory.createLabel("Added Date"), gbc);
-        gbc.gridx++;
-        gbc.insets = indentInsets;
-        gbc.weightx = inputWeight;
-        p.add(getAddedDateLabel(), gbc);
-
-        p.setBorder(createCompoundBorder(createEtchedBorder(), createEmptyBorder(5, 5, 5, 5)));
-
-        return p;
-    }
-
     @Override
     protected void resetFocus() {
-        getTitleField().requestFocus();
+        titleField.requestFocus();
     }
 
     private JLabel getImageLabel() {
@@ -315,10 +167,10 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
             coverPhotoService.setCoverPhoto(getBook());
             if (getBook().getCoverPhotoPath() != null) {
                 loadImage(getBook().getCoverPhotoPath().toAbsolutePath().toString());
-                getISBNField().setText(getBook().getIsbn());
+                isbnField.setText(getBook().getIsbn());
 
                 if (getBook().getNumberOfPages() != null) {
-                    getNumberOfPagesField().setText(getBook().getNumberOfPages().toString());
+                    numberOfPagesField.setText(getBook().getNumberOfPages().toString());
                 }
 
                 bookService.save(getBook());
@@ -354,71 +206,17 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         }
     }
 
-    private JTextField getTitleField() {
-        if (titleField == null) titleField = new TrimmedTextField(45, 255);
-        return titleField;
-    }
-
-    private JTextField getSeriesField() {
-        if (seriesField == null) seriesField = new TrimmedTextField(45, 255);
-        return seriesField;
-    }
-
-    private JTextField getPublishedYearField() {
-        if (publishedYearField == null) publishedYearField = new TrimmedTextField(10, 4);
-        return publishedYearField;
-    }
-
-    private JPanel getImagePanel() {
-        JPanel p = new JPanel();
-        p.add(getImageLabel());
-        return p;
-    }
-
-    private JTextField getISBNField() {
-        if (isbnField == null) isbnField = new TrimmedTextField(30, 20);
-        return isbnField;
-    }
-
-    private JTextField getNumberOfPagesField() {
-        if (numberOfPagesField == null) numberOfPagesField = new TrimmedTextField(15, 20);
-        return numberOfPagesField;
-    }
-
-    private JCheckBox getAnthologyCheckBox() {
-        if (anthologyCheckBox == null) anthologyCheckBox = new JCheckBox();
-        return anthologyCheckBox;
-    }
-
-    private JTextArea getCommentsArea() {
-        if (commentsArea == null) {
-            commentsArea = new JTextArea(5, 44);
-            commentsArea.setLineWrap(true);
-        }
-        return commentsArea;
-    }
-
-    private JComboBox<BookType> getTypeCombo() {
-        if (typeCombo == null) typeCombo = new JComboBox<>(BookType.values());
-        return typeCombo;
-    }
-
-    private JComboBox<Media> getMediaCombo() {
-        if (mediaCombo == null) mediaCombo = new JComboBox<>(Media.values());
-        return mediaCombo;
-    }
-
     public void clear() {
-        getAnthologyCheckBox().setSelected(false);
-        getCommentsArea().setText("");
-        getSeriesField().setText("");
-        getTitleField().setText("");
-        getTypeCombo().setSelectedIndex(0);
-        getISBNField().setText("");
-        getPublishedYearField().setText("");
+        anthologyCheckBox.setSelected(false);
+        commentsArea.setText("");
+        seriesField.setText("");
+        titleField.setText("");
+        typeCombo.setSelectedIndex(0);
+        isbnField.setText("");
+        publishedYearField.setText("");
         getAddedDateLabel().setText("");
-        getNumberOfPagesField().setText("");
-        clear(selectedAuthorsPanel());
+        numberOfPagesField.setText("");
+        clear(selectedAuthorsPanel);
         getImageLabel().setIcon(null);
 
         book = null;
@@ -435,25 +233,25 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     private Book createBookFromFormData() {
         Book b = getBook() == null ? new Book() : getBook();
 
-        b.setTitle(getTitleField().getText());
-        b.setSeries(getSeriesField().getText());
-        b.setComments(getCommentsArea().getText());
-        b.setAnthology(getAnthologyCheckBox().isSelected());
-        b.setPublishedYear(getPublishedYearField().getText());
-        b.setType((BookType) getTypeCombo().getSelectedItem());
-        b.setMedia((Media) getMediaCombo().getSelectedItem());
+        b.setTitle(titleField.getText());
+        b.setSeries(seriesField.getText());
+        b.setComments(commentsArea.getText());
+        b.setAnthology(anthologyCheckBox.isSelected());
+        b.setPublishedYear(publishedYearField.getText());
+        b.setType((BookType) typeCombo.getSelectedItem());
+        b.setMedia((Media) mediaCombo.getSelectedItem());
 
-        if (! NullSafe.isEmpty(getISBNField().getText())) {
-            b.setIsbn(getISBNField().getText().replace("-",""));
+        if (! NullSafe.isEmpty(isbnField.getText())) {
+            b.setIsbn(isbnField.getText().replace("-",""));
         }
 
-        if (!NullSafe.isEmpty(getNumberOfPagesField().getText())) {
-            b.setNumberOfPages(Integer.parseInt(getNumberOfPagesField().getText()));
+        if (!NullSafe.isEmpty(numberOfPagesField.getText())) {
+            b.setNumberOfPages(Integer.parseInt(numberOfPagesField.getText()));
         }
 
         b.clearAuthors();
-        for (int i=0,n=selectedAuthorsPanel().getComponentCount(); i < n; i++) {
-            DataLabel<Author> dataLabel = (DataLabel<Author>) selectedAuthorsPanel().getComponent(i);
+        for (int i=0,n=selectedAuthorsPanel.getComponentCount(); i < n; i++) {
+            DataLabel<Author> dataLabel = (DataLabel<Author>) selectedAuthorsPanel.getComponent(i);
             b.addAuthor(dataLabel.getData());
         }
 
@@ -514,22 +312,22 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     }
 
     private void loadData() {
-        getTitleField().setText(getBook().getTitle());
-        getSeriesField().setText(getBook().getSeries());
-        getCommentsArea().setText(getBook().getComments());
-        getAnthologyCheckBox().setSelected(getBook().isAnthology());
-        getTypeCombo().setSelectedItem(getBook().getType());
-        getISBNField().setText(getBook().getIsbn());
-        getPublishedYearField().setText(getBook().getPublishedYear());
-        getMediaCombo().setSelectedItem(getBook().getMedia());
+        titleField.setText(getBook().getTitle());
+        seriesField.setText(getBook().getSeries());
+        commentsArea.setText(getBook().getComments());
+        anthologyCheckBox.setSelected(getBook().isAnthology());
+        typeCombo.setSelectedItem(getBook().getType());
+        isbnField.setText(getBook().getIsbn());
+        publishedYearField.setText(getBook().getPublishedYear());
+        mediaCombo.setSelectedItem(getBook().getMedia());
 
         if (getBook().getNumberOfPages() != null && getBook().getNumberOfPages() > 0) {
-            getNumberOfPagesField().setText(String.valueOf(getBook().getNumberOfPages()));
+            numberOfPagesField.setText(String.valueOf(getBook().getNumberOfPages()));
         }
 
         getAddedDateLabel().setText(book.getAddedTimestamp());
 
-        clear(selectedAuthorsPanel());
+        clear(selectedAuthorsPanel);
         getBook().getAuthors().stream().sorted().forEach(a -> createAuthorLabel(a,false));
 
         reload();
@@ -549,4 +347,163 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     public void setAuthorService(AuthorService authorService) {
         this.authorService = authorService;
     }
+
+    // GUI related methods
+
+    @Override
+    protected void buildGUI() {
+        setLayout(new BorderLayout());
+        JPanel p = new JPanel();
+        p.add(getImageLabel());
+        add(p, BorderLayout.WEST);
+        add(getInputPanel(), BorderLayout.CENTER);
+        add(getButtonPanel(), BorderLayout.SOUTH);
+    }
+
+    @Override
+    protected JPanel getButtonPanel() {
+        JPanel p = new JPanel();
+        p.add(getSaveButton());
+        p.add(getDeleteButton());
+        p.add(getClearButton());
+        return p;
+    }
+
+    @Override
+    protected JPanel getInputPanel() {
+        JPanel p = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        gbc.gridx = gbc.gridy = 0;
+        gbc.gridheight = 1;
+        gbc.gridwidth = 1;
+        gbc.weighty = 1.00;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.NONE;
+
+        Insets indentInsets = new Insets(0, 0, 0, 0);
+
+        double labelWeight = .10;
+        double inputWeight = .90;
+
+        gbc.weightx = labelWeight;
+        p.add(LabelFactory.createLabel("Title"), gbc);
+        gbc.weightx = inputWeight;
+        gbc.gridx++;
+        gbc.insets = indentInsets;
+        p.add(titleField, gbc);
+
+        gbc.gridy++;
+        gbc.gridx = 0;
+        gbc.weightx = labelWeight;
+        p.add(LabelFactory.createLabel("Series"), gbc);
+        gbc.gridx++;
+        gbc.insets = indentInsets;
+        gbc.weightx = inputWeight;
+        p.add(seriesField, gbc);
+
+        // Start of Authors
+
+        IconFontSwing.register(FontAwesome.getIconFont());
+        JLabel searchLabel = new JLabel(IconFontSwing.buildIcon(FontAwesome.SEARCH, 24, Color.GREEN));
+        searchLabel.addMouseListener(new MouseAdapter() {@Override public void mouseClicked(MouseEvent e) { popUpMenu(searchForAuthors()); }});
+
+        gbc.gridy++;
+        gbc.weightx = labelWeight;
+        gbc.gridx = 0;
+        p.add(LabelFactory.createLabel("Authors"), gbc);
+        gbc.gridx++;
+        gbc.weightx = inputWeight;
+        JPanel authorSearchPanel = new JPanel(new FlowLayout());
+        authorSearchPanel.add(getAuthorsSelect());
+        authorSearchPanel.add(searchLabel);
+        p.add(authorSearchPanel, gbc);
+
+        gbc.gridy++;
+        gbc.weightx = labelWeight;
+        gbc.gridx = 0;
+        p.add(LabelFactory.createLabel(""), gbc);
+        gbc.gridx++;
+        gbc.weightx = inputWeight;
+        p.add(selectedAuthorsPanel, gbc);
+
+        // End of Authors
+
+        gbc.gridy++;
+        gbc.gridx = 0;
+        gbc.weightx = labelWeight;
+        p.add(LabelFactory.createLabel("Type"), gbc);
+        gbc.gridx++;
+        gbc.insets = indentInsets;
+        gbc.weightx = inputWeight;
+        p.add(typeCombo, gbc);
+
+        gbc.gridy++;
+        gbc.gridx = 0;
+        gbc.weightx = labelWeight;
+        p.add(LabelFactory.createLabel("Media"), gbc);
+        gbc.gridx++;
+        gbc.insets = indentInsets;
+        gbc.weightx = inputWeight;
+        p.add(mediaCombo, gbc);
+
+        gbc.gridy++;
+        gbc.gridx = 0;
+        gbc.weightx = labelWeight;
+        p.add(LabelFactory.createLabel("Year Published"), gbc);
+        gbc.gridx++;
+        gbc.insets = indentInsets;
+        gbc.weightx = inputWeight;
+        p.add(publishedYearField, gbc);
+
+        gbc.gridy++;
+        gbc.gridx = 0;
+        gbc.weightx = labelWeight;
+        p.add(LabelFactory.createLabel("ISBN"), gbc);
+        gbc.gridx++;
+        gbc.insets = indentInsets;
+        gbc.weightx = inputWeight;
+        p.add(isbnField, gbc);
+
+        gbc.gridy++;
+        gbc.gridx = 0;
+        gbc.weightx = labelWeight;
+        p.add(LabelFactory.createLabel("Number of Pages"), gbc);
+        gbc.gridx++;
+        gbc.insets = indentInsets;
+        gbc.weightx = inputWeight;
+        p.add(numberOfPagesField, gbc);
+
+        gbc.gridy++;
+        gbc.gridx = 0;
+        gbc.weightx = labelWeight;
+        p.add(LabelFactory.createLabel("Anthology"), gbc);
+        gbc.gridx++;
+        gbc.insets = indentInsets;
+        gbc.weightx = inputWeight;
+        p.add(anthologyCheckBox, gbc);
+
+        gbc.gridy++;
+        gbc.gridx = 0;
+        gbc.weightx = labelWeight;
+        p.add(LabelFactory.createLabel("Comments"), gbc);
+        gbc.gridx++;
+        gbc.insets = new Insets(0, 5, 0, 0);
+        gbc.weightx = inputWeight;
+        p.add(new JScrollPane(commentsArea), gbc);
+
+        gbc.gridy++;
+        gbc.gridx = 0;
+        gbc.weightx = labelWeight;
+        p.add(LabelFactory.createLabel("Added Date"), gbc);
+        gbc.gridx++;
+        gbc.insets = indentInsets;
+        gbc.weightx = inputWeight;
+        p.add(getAddedDateLabel(), gbc);
+
+        p.setBorder(createCompoundBorder(createEtchedBorder(), createEmptyBorder(5, 5, 5, 5)));
+
+        return p;
+    }
+
 }
