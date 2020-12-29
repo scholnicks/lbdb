@@ -10,6 +10,8 @@
   <logger name="net.scholnick" level="DEBUG" />
 
   <logger name="org.springframework" level="INFO" />
+  <logger name="ch.qos" level="ERROR" />
+  <logger name="com.zaxxer" level="ERROR" />
   <logger name="org.hibernate" level="ERROR" />
   <logger name="org.apache" level="ERROR" />
 
