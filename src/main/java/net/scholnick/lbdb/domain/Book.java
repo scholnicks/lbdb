@@ -57,7 +57,7 @@ public final class Book implements Comparable<Book> {
     }
 
     public void addAuthor(Author a) {
-        if (!authors.contains(a)) {
+        if (! authors.contains(a)) {
             authors.add(a);
         }
     }

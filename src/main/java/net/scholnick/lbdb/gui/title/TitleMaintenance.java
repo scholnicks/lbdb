@@ -15,9 +15,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
-import java.util.Objects;
+import java.util.*;
 
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 import static javax.swing.BorderFactory.*;
 
 @Component
@@ -40,6 +40,9 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     private JTextField authorsSelect;
     private final JPanel selectedAuthorsPanel;
 
+    private JTextField editorsSelect;
+    private final JPanel selectedEditorsPanel;
+
     private Book book;
 
     private BookService       bookService;
@@ -58,6 +61,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         typeCombo            = new JComboBox<>(BookType.values());
         mediaCombo           = new JComboBox<>(Media.values());
         selectedAuthorsPanel = new JPanel(new FlowLayout());
+        selectedEditorsPanel = new JPanel(new FlowLayout());
 
         commentsArea = new JTextArea(5, 44);
         commentsArea.setLineWrap(true);
@@ -65,7 +69,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         buildGUI();
     }
 
-    private void createAuthorLabel(Author a, boolean reload) {
+    private void createAuthorLabel(Author a, JPanel dataPanel, JTextField inputField, boolean reload) {
         JLabel label = DataLabel.of(a);
         label.setBorder(BorderFactory.createEtchedBorder());
         label.setForeground(Color.white);
@@ -81,47 +85,63 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         label.setHorizontalTextPosition(JLabel.LEFT);
         label.addMouseListener(new MouseAdapter() {
             @Override public void mouseClicked(MouseEvent e) {
-                selectedAuthorsPanel.remove((JLabel) e.getSource());
+                dataPanel.remove((JLabel) e.getSource());
             }
         });
-        selectedAuthorsPanel.add(label);
+        dataPanel.add(label);
 
         if (reload) {
-            getAuthorsSelect().setText("");
+            inputField.setText("");
             reload();
         }
     }
 
-    private void popUpMenu(java.util.List<Author> data) {
+    private void popUpMenu(java.util.List<Author> data, JPanel dataPanel, JTextField inputField) {
         JPopupMenu popup = new JPopupMenu();
         for (Author d : data) {
             JMenuItem item = new JMenuItem(d.getName());
-            item.addActionListener(l -> createAuthorLabel(d,true));
+            item.addActionListener(l -> createAuthorLabel(d,dataPanel,inputField,true));
             popup.add(item);
         }
         popup.pack();
-        popup.show(getAuthorsSelect(), 0, getAuthorsSelect().getHeight());
+        popup.show(inputField, 0, inputField.getHeight());
         popup.requestFocusInWindow();
     }
 
-    private java.util.List<Author> searchForAuthors() {
-        return authorService.search(authorsSelect.getText()).stream().filter(Objects::nonNull).limit(20).collect(toList());
+    private java.util.List<Author> searchForAuthors(JTextField inputField) {
+        return authorService.search(inputField.getText()).stream().filter(Objects::nonNull).limit(20).collect(toList());
     }
 
     private JTextField getAuthorsSelect() {
         if (authorsSelect == null) {
             authorsSelect = new JTextField(15);
             authorsSelect.addActionListener(l -> {
-                var data = searchForAuthors();
+                var data = searchForAuthors(authorsSelect);
                 if (data.isEmpty()) {
-                    createAuthorLabel(Author.of(getAuthorsSelect().getText()),true);
+                    createAuthorLabel(Author.of(getAuthorsSelect().getText()),selectedAuthorsPanel,authorsSelect,true);
                 }
                 else {
-                    popUpMenu(data);
+                    popUpMenu(data,selectedAuthorsPanel,authorsSelect);
                 }
             });
         }
         return authorsSelect;
+    }
+
+    private JTextField getEditorsSelect() {
+        if (editorsSelect == null) {
+            editorsSelect = new JTextField(15);
+            editorsSelect.addActionListener(l -> {
+                var data = searchForAuthors(editorsSelect);
+                if (data.isEmpty()) {
+                    createAuthorLabel(Author.of(getEditorsSelect().getText()),selectedEditorsPanel,editorsSelect,true);
+                }
+                else {
+                    popUpMenu(data,selectedEditorsPanel,editorsSelect);
+                }
+            });
+        }
+        return editorsSelect;
     }
 
     private JButton getDeleteButton() {
@@ -254,8 +274,12 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
             DataLabel<Author> dataLabel = (DataLabel<Author>) selectedAuthorsPanel.getComponent(i);
             b.addAuthor(dataLabel.getData());
         }
+        for (int i=0,n=selectedEditorsPanel.getComponentCount(); i < n; i++) {
+            DataLabel<Author> dataLabel = (DataLabel<Author>) selectedEditorsPanel.getComponent(i);
+            b.addAuthor(dataLabel.getData());
+        }
 
-        //        b.setEditors(getAuthorTableModel().getEditors());
+        b.setEditors(Arrays.stream(selectedEditorsPanel.getComponents()).map(c -> (DataLabel<Author>) c).map(DataLabel::getData).collect(toSet()));
 
         return b;
     }
@@ -328,7 +352,16 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         getAddedDateLabel().setText(book.getAddedTimestamp());
 
         clear(selectedAuthorsPanel);
-        getBook().getAuthors().stream().sorted().forEach(a -> createAuthorLabel(a,false));
+        clear(selectedEditorsPanel);
+
+        getBook().getAuthors().stream().sorted().forEach(a -> {
+            if (a.isEditor()) {
+                createAuthorLabel(a,selectedEditorsPanel,getEditorsSelect(),false);
+            }
+            else {
+                createAuthorLabel(a,selectedAuthorsPanel,getAuthorsSelect(),false);
+            }
+        });
 
         reload();
     }
@@ -406,7 +439,11 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
 
         IconFontSwing.register(FontAwesome.getIconFont());
         JLabel searchLabel = new JLabel(IconFontSwing.buildIcon(FontAwesome.SEARCH, 24, Color.GREEN));
-        searchLabel.addMouseListener(new MouseAdapter() {@Override public void mouseClicked(MouseEvent e) { popUpMenu(searchForAuthors()); }});
+        searchLabel.addMouseListener(new MouseAdapter() {
+            @Override public void mouseClicked(MouseEvent e) {
+                popUpMenu(searchForAuthors(getAuthorsSelect()), selectedAuthorsPanel, getAuthorsSelect());
+            }
+        });
 
         gbc.gridy++;
         gbc.weightx = labelWeight;
@@ -414,7 +451,9 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         p.add(LabelFactory.createLabel("Authors"), gbc);
         gbc.gridx++;
         gbc.weightx = inputWeight;
-        JPanel authorSearchPanel = new JPanel(new FlowLayout());
+        gbc.insets = new Insets(0, -5, 0, 0);
+        JPanel authorSearchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        authorSearchPanel.setBorder(BorderFactory.createEmptyBorder());
         authorSearchPanel.add(getAuthorsSelect());
         authorSearchPanel.add(searchLabel);
         p.add(authorSearchPanel, gbc);
@@ -428,6 +467,38 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         p.add(selectedAuthorsPanel, gbc);
 
         // End of Authors
+
+        // Start of Editors
+
+        IconFontSwing.register(FontAwesome.getIconFont());
+        JLabel editorSearchLabel = new JLabel(IconFontSwing.buildIcon(FontAwesome.SEARCH, 24, Color.GREEN));
+        editorSearchLabel.addMouseListener(new MouseAdapter() {
+            @Override public void mouseClicked(MouseEvent e) {
+                popUpMenu(searchForAuthors(getEditorsSelect()), selectedEditorsPanel, getEditorsSelect());
+            }
+        });
+
+        gbc.gridy++;
+        gbc.weightx = labelWeight;
+        gbc.gridx = 0;
+        p.add(LabelFactory.createLabel("Editors"), gbc);
+        gbc.gridx++;
+        gbc.weightx = inputWeight;
+        gbc.insets = new Insets(0, -5, 0, 0);
+        JPanel editorSearchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        editorSearchPanel.add(getEditorsSelect());
+        editorSearchPanel.add(editorSearchLabel);
+        p.add(editorSearchPanel, gbc);
+
+        gbc.gridy++;
+        gbc.weightx = labelWeight;
+        gbc.gridx = 0;
+        p.add(LabelFactory.createLabel(""), gbc);
+        gbc.gridx++;
+        gbc.weightx = inputWeight;
+        p.add(selectedEditorsPanel, gbc);
+
+        // End of Editors
 
         gbc.gridy++;
         gbc.gridx = 0;
@@ -479,7 +550,8 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         gbc.weightx = labelWeight;
         p.add(LabelFactory.createLabel("Anthology"), gbc);
         gbc.gridx++;
-        gbc.insets = indentInsets;
+        gbc.insets = new Insets(0, -5, 0, 0);
+//        gbc.insets = indentInsets;
         gbc.weightx = inputWeight;
         p.add(anthologyCheckBox, gbc);
 
