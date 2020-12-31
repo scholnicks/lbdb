@@ -237,6 +237,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         getAddedDateLabel().setText("");
         numberOfPagesField.setText("");
         clear(selectedAuthorsPanel);
+        clear(selectedEditorsPanel);
         getImageLabel().setIcon(null);
 
         book = null;
@@ -244,9 +245,10 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
 
     protected void ok() {
         Book b = createBookFromFormData();
-        if (databaseUpdate(b)) {
-            setBook(b);
-        }
+        bookService.save(b);
+        sendMessage(b.getTitle() + " has been saved.");
+        this.book = b;
+        loadData(b);
     }
 
     @SuppressWarnings("unchecked")
@@ -274,12 +276,16 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
             DataLabel<Author> dataLabel = (DataLabel<Author>) selectedAuthorsPanel.getComponent(i);
             b.addAuthor(dataLabel.getData());
         }
+
         for (int i=0,n=selectedEditorsPanel.getComponentCount(); i < n; i++) {
             DataLabel<Author> dataLabel = (DataLabel<Author>) selectedEditorsPanel.getComponent(i);
+            dataLabel.getData().setEditor(true);
             b.addAuthor(dataLabel.getData());
         }
 
-        b.setEditors(Arrays.stream(selectedEditorsPanel.getComponents()).map(c -> (DataLabel<Author>) c).map(DataLabel::getData).collect(toSet()));
+        if (selectedEditorsPanel.getComponentCount() > 0) {
+            b.setEditors(Arrays.stream(selectedEditorsPanel.getComponents()).map(c -> (DataLabel<Author>) c).map(DataLabel::getData).collect(toSet()));
+        }
 
         return b;
     }
@@ -290,63 +296,28 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         }
     }
 
-    private boolean databaseUpdate(Book b) {
-        bookService.save(b);
-        sendMessage(b.getTitle() + " has been saved.");
-        return true;
-    }
-
     private Book getBook() {
         return book;
     }
 
     public void setBook(Book b) {
         clear();
-
         this.book = b;
-
-        if (book != null) {
-            loadAllData();
-        }
+        loadData(b);
     }
 
-    private void loadAllData() {
-        loadData();
+    private void loadData(Book book) {
+        titleField.setText(book.getTitle());
+        seriesField.setText(book.getSeries());
+        commentsArea.setText(book.getComments());
+        anthologyCheckBox.setSelected(book.isAnthology());
+        typeCombo.setSelectedItem(book.getType());
+        isbnField.setText(book.getIsbn());
+        publishedYearField.setText(book.getPublishedYear());
+        mediaCombo.setSelectedItem(book.getMedia());
 
-        log.info("Load all data");
-
-
-        new SwingWorker<Object, Boolean>() {
-            @Override
-            protected Boolean doInBackground() {
-                loadCoverPhoto();
-                return Boolean.TRUE;
-            }
-        }.execute();
-    }
-
-    private void loadCoverPhoto() {
-        try {
-            getImageLabel().setIcon(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("images/loading.gif"))));
-            downloadCoverPhoto();
-        }
-        catch (Exception e) {
-            log.error("Unable to load the cover photo", e);
-        }
-    }
-
-    private void loadData() {
-        titleField.setText(getBook().getTitle());
-        seriesField.setText(getBook().getSeries());
-        commentsArea.setText(getBook().getComments());
-        anthologyCheckBox.setSelected(getBook().isAnthology());
-        typeCombo.setSelectedItem(getBook().getType());
-        isbnField.setText(getBook().getIsbn());
-        publishedYearField.setText(getBook().getPublishedYear());
-        mediaCombo.setSelectedItem(getBook().getMedia());
-
-        if (getBook().getNumberOfPages() != null && getBook().getNumberOfPages() > 0) {
-            numberOfPagesField.setText(String.valueOf(getBook().getNumberOfPages()));
+        if (book.getNumberOfPages() != null && book.getNumberOfPages() > 0) {
+            numberOfPagesField.setText(String.valueOf(book.getNumberOfPages()));
         }
 
         getAddedDateLabel().setText(book.getAddedTimestamp());
@@ -354,7 +325,8 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         clear(selectedAuthorsPanel);
         clear(selectedEditorsPanel);
 
-        getBook().getAuthors().stream().sorted().forEach(a -> {
+        book.getAuthors().stream().sorted().forEach(a -> {
+            log.debug("Author {}",a);
             if (a.isEditor()) {
                 createAuthorLabel(a,selectedEditorsPanel,getEditorsSelect(),false);
             }
@@ -364,6 +336,19 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         });
 
         reload();
+
+        new SwingWorker<Object, Boolean>() {
+            @Override protected Boolean doInBackground() {
+                try {
+                    getImageLabel().setIcon(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("images/loading.gif"))));
+                    downloadCoverPhoto();
+                }
+                catch (Exception e) {
+                    log.error("Unable to load the cover photo", e);
+                }
+                return Boolean.TRUE;
+            }
+        }.execute();
     }
 
     @Autowired

@@ -36,9 +36,8 @@ public class AuthorDAO {
     public Long create(Author a) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update((connection) -> {
-                PreparedStatement s = connection.prepareStatement("insert into author(auth_name,auth_website) values(?,?)");
+                PreparedStatement s = connection.prepareStatement("insert into author(auth_name) values(?)");
                 s.setString(1, a.getName());
-                s.setString(2, a.getWebSite());
                 return s;
             },
             keyHolder
@@ -78,11 +77,7 @@ public class AuthorDAO {
     }
 
     public void update(Author a) {
-        jdbcTemplate.update("update author set auth_name=?,auth_website=? where auth_id=?",
-            a.getName(),
-            a.getWebSite(),
-            a.getId()
-        );
+        jdbcTemplate.update("update author set auth_name=? where auth_id=?", a.getName(), a.getId());
     }
 
     public List<String> allNames() {
@@ -93,8 +88,6 @@ public class AuthorDAO {
         Author a = new Author();
         a.setId(rs.getLong("auth_id"));
         a.setName(rs.getString("auth_name"));
-        a.setWebSite(rs.getString("auth_website"));
-        a.setAddedTimestamp(rs.getString("auth_created_date"));
         return a;
     }
 }

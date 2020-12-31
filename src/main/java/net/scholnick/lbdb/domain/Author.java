@@ -9,9 +9,7 @@ import net.scholnick.lbdb.gui.Identifiable;
 public final class Author implements Comparable<Author>, Identifiable {
     private Long id;
     private String name;
-    private String webSite;
     private boolean editor;
-    private String addedTimestamp;
 
     public static Author of(String name) {
         Author a = new Author();

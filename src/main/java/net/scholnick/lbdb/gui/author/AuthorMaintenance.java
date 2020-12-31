@@ -1,8 +1,7 @@
 package net.scholnick.lbdb.gui.author;
 
 import net.scholnick.lbdb.domain.Author;
-import net.scholnick.lbdb.gui.AbstractUpdateMaintenance;
-import net.scholnick.lbdb.gui.TrimmedTextField;
+import net.scholnick.lbdb.gui.*;
 import net.scholnick.lbdb.service.AuthorService;
 import net.scholnick.lbdb.util.LabelFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,14 +10,12 @@ import org.springframework.stereotype.Component;
 import javax.swing.*;
 import java.awt.*;
 
-import static javax.swing.JOptionPane.YES_OPTION;
-import static javax.swing.JOptionPane.showConfirmDialog;
+import static javax.swing.JOptionPane.*;
 import static net.scholnick.lbdb.util.GUIUtilities.showMessageDialog;
 
 @Component
 public class AuthorMaintenance extends AbstractUpdateMaintenance {
     private JTextField nameField;
-    private JTextField webSiteField;
     private JButton deleteButton;
 
     private Author author;
@@ -39,8 +36,6 @@ public class AuthorMaintenance extends AbstractUpdateMaintenance {
     @Override
     protected void clear() {
         getNameField().setText("");
-        getWebSiteField().setText("");
-        getAddedDateLabel().setText("");
         author = null;
     }
 
@@ -83,29 +78,12 @@ public class AuthorMaintenance extends AbstractUpdateMaintenance {
         gbc.gridx++;
         p.add(getNameField(), gbc);
 
-        gbc.gridy++;
-        gbc.gridx = 0;
-        p.add(LabelFactory.createLabel("Website"), gbc);
-        gbc.gridx++;
-        p.add(getWebSiteField(), gbc);
-
-        gbc.gridy++;
-        gbc.gridx = 0;
-        p.add(LabelFactory.createLabel("Added Date"), gbc);
-        gbc.gridx++;
-        p.add(getAddedDateLabel(), gbc);
-
         return p;
     }
 
     private JTextField getNameField() {
         if (nameField == null) nameField = new TrimmedTextField(30, 255);
         return nameField;
-    }
-
-    private JTextField getWebSiteField() {
-        if (webSiteField == null) webSiteField = new TrimmedTextField(30, 100);
-        return webSiteField;
     }
 
     public Author getAuthor() {
@@ -122,14 +100,11 @@ public class AuthorMaintenance extends AbstractUpdateMaintenance {
 
     private void loadData() {
         getNameField().setText(author.getName());
-        getWebSiteField().setText(author.getWebSite());
-        getAddedDateLabel().setText(author.getAddedTimestamp());
         reload();
     }
 
     protected void ok() {
         author.setName(getNameField().getText());
-        author.setWebSite(getWebSiteField().getText());
         authorService.save(author, false);
         sendMessage(author.getName() + " has been saved");
     }

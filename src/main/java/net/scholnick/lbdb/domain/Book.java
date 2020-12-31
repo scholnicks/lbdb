@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.stream.Collectors.joining;
 
@@ -64,8 +62,12 @@ public final class Book implements Comparable<Book> {
 
     public void setEditors(Set<Author> editors) {
         for (Author a : editors) {
-            for (Author each : getAuthors()) {
-                each.setEditor(a.equals(each));
+            if (a.getName() != null) {
+                for (Author each : getAuthors()) {
+                    if (each.getName() != null) {
+                        each.setEditor(a.getName().toLowerCase(Locale.ROOT).endsWith(each.getName().toLowerCase(Locale.ROOT)));
+                    }
+                }
             }
         }
     }
