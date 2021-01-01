@@ -53,6 +53,8 @@ public class GoogleService implements CoverPhotoService {
     }
 
     private void findImage(BookResults results, Book book) throws IOException {
+        if (results.getItems() == null) return;
+
         for (BookData data: results.getItems()) {
             VolumeInfo info = data.getVolumeInfo();
             if (info.getImageLinks() == null || info.getImageLinks().isEmpty()) continue;

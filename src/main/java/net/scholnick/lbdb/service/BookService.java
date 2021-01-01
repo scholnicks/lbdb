@@ -95,9 +95,9 @@ public class BookService {
         b.setId(id);
 
         handleAuthors(b);
-        b.setAuthors(authorDAO.get(b));
+        //b.setAuthors(authorDAO.get(b));
 
-        return b;
+        return get(id);
     }
 
     private Book update(Book b) {

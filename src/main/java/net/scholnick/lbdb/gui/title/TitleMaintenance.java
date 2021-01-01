@@ -17,7 +17,7 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.*;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
 import static javax.swing.BorderFactory.*;
 
 @Component
@@ -48,6 +48,10 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     private BookService       bookService;
     private AuthorService     authorService;
     private CoverPhotoService coverPhotoService;
+
+    private static final int WIDTH = 128;
+    private static final int HEIGHT = 198;
+
 
     public TitleMaintenance() {
         super();
@@ -170,6 +174,15 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
             imageLabel.setBorder(null);
             imageLabel.setText(null);
             imageLabel.setOpaque(false);
+
+            Dimension d = new Dimension(WIDTH,HEIGHT);
+            imageLabel.setPreferredSize(d);
+            imageLabel.setSize(d);
+            imageLabel.setMaximumSize(d);
+            imageLabel.setMinimumSize(d);
+
+            IconFontSwing.register(FontAwesome.getIconFont());
+            imageLabel.setIcon(IconFontSwing.buildIcon(FontAwesome.BOOK, (float) WIDTH, Color.lightGray));
         }
         return imageLabel;
     }
@@ -209,8 +222,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
 
     private void loadImage(String imagePath) {
         if (imagePath != null) {
-            Image img = new ImageIcon(imagePath).getImage();
-            getImageLabel().setIcon(new ImageIcon(img));
+            getImageLabel().setIcon(new ImageIcon(new ImageIcon(imagePath).getImage()));
             reload();
         }
     }
@@ -238,17 +250,11 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         numberOfPagesField.setText("");
         clear(selectedAuthorsPanel);
         clear(selectedEditorsPanel);
-        getImageLabel().setIcon(null);
+
+        IconFontSwing.register(FontAwesome.getIconFont());
+        getImageLabel().setIcon(IconFontSwing.buildIcon(FontAwesome.BOOK, 48, Color.lightGray));
 
         book = null;
-    }
-
-    protected void ok() {
-        Book b = createBookFromFormData();
-        bookService.save(b);
-        sendMessage(b.getTitle() + " has been saved.");
-        this.book = b;
-        loadData(b);
     }
 
     @SuppressWarnings("unchecked")
@@ -283,9 +289,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
             b.addAuthor(dataLabel.getData());
         }
 
-        if (selectedEditorsPanel.getComponentCount() > 0) {
-            b.setEditors(Arrays.stream(selectedEditorsPanel.getComponents()).map(c -> (DataLabel<Author>) c).map(DataLabel::getData).collect(toSet()));
-        }
+        Arrays.stream(selectedEditorsPanel.getComponents()).map(c -> (DataLabel<Author>) c).map(DataLabel::getData).forEach(b::setEditor);
 
         return b;
     }
@@ -306,37 +310,16 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         loadData(b);
     }
 
-    private void loadData(Book book) {
-        titleField.setText(book.getTitle());
-        seriesField.setText(book.getSeries());
-        commentsArea.setText(book.getComments());
-        anthologyCheckBox.setSelected(book.isAnthology());
-        typeCombo.setSelectedItem(book.getType());
-        isbnField.setText(book.getIsbn());
-        publishedYearField.setText(book.getPublishedYear());
-        mediaCombo.setSelectedItem(book.getMedia());
+    @Override
+    protected void ok() {
+        Book b = createBookFromFormData();
+        bookService.save(b);
+        sendMessage(b.getTitle() + " has been saved.");
+        this.book = b;
+        loadData(b);
+    }
 
-        if (book.getNumberOfPages() != null && book.getNumberOfPages() > 0) {
-            numberOfPagesField.setText(String.valueOf(book.getNumberOfPages()));
-        }
-
-        getAddedDateLabel().setText(book.getAddedTimestamp());
-
-        clear(selectedAuthorsPanel);
-        clear(selectedEditorsPanel);
-
-        book.getAuthors().stream().sorted().forEach(a -> {
-            log.debug("Author {}",a);
-            if (a.isEditor()) {
-                createAuthorLabel(a,selectedEditorsPanel,getEditorsSelect(),false);
-            }
-            else {
-                createAuthorLabel(a,selectedAuthorsPanel,getAuthorsSelect(),false);
-            }
-        });
-
-        reload();
-
+    private void loadData(Book b) {
         new SwingWorker<Object, Boolean>() {
             @Override protected Boolean doInBackground() {
                 try {
@@ -349,6 +332,36 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
                 return Boolean.TRUE;
             }
         }.execute();
+
+        titleField.setText(b.getTitle());
+        seriesField.setText(b.getSeries());
+        commentsArea.setText(b.getComments());
+        anthologyCheckBox.setSelected(b.isAnthology());
+        typeCombo.setSelectedItem(b.getType());
+        isbnField.setText(b.getIsbn());
+        publishedYearField.setText(b.getPublishedYear());
+        mediaCombo.setSelectedItem(b.getMedia());
+
+        if (b.getNumberOfPages() != null && b.getNumberOfPages() > 0) {
+            numberOfPagesField.setText(String.valueOf(b.getNumberOfPages()));
+        }
+
+        getAddedDateLabel().setText(b.getAddedTimestamp());
+
+        clear(selectedAuthorsPanel);
+        clear(selectedEditorsPanel);
+
+        b.getAuthors().stream().sorted().forEach(a -> {
+            log.debug("Author {}",a);
+            if (a.isEditor()) {
+                createAuthorLabel(a,selectedEditorsPanel,getEditorsSelect(),false);
+            }
+            else {
+                createAuthorLabel(a,selectedAuthorsPanel,getAuthorsSelect(),false);
+            }
+        });
+
+        reload();
     }
 
     @Autowired

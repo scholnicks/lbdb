@@ -60,14 +60,10 @@ public final class Book implements Comparable<Book> {
         }
     }
 
-    public void setEditors(Set<Author> editors) {
-        for (Author a : editors) {
-            if (a.getName() != null) {
-                for (Author each : getAuthors()) {
-                    if (each.getName() != null) {
-                        each.setEditor(a.getName().toLowerCase(Locale.ROOT).endsWith(each.getName().toLowerCase(Locale.ROOT)));
-                    }
-                }
+    public void setEditor(Author other) {
+        for (Author a : getAuthors()) {
+            if (other.getName().equalsIgnoreCase(a.getName())) {
+                a.setEditor(true);
             }
         }
     }
