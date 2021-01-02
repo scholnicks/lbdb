@@ -1,26 +1,19 @@
 package net.scholnick.lbdb;
 
-import net.scholnick.lbdb.domain.Author;
-import net.scholnick.lbdb.domain.Book;
+import net.scholnick.lbdb.domain.*;
 import net.scholnick.lbdb.gui.SearchPanel;
 import net.scholnick.lbdb.gui.author.AuthorMaintenance;
 import net.scholnick.lbdb.gui.title.TitleMaintenance;
-import net.scholnick.lbdb.service.AuthorService;
-import net.scholnick.lbdb.service.BookService;
-import net.scholnick.lbdb.service.ExportService;
+import net.scholnick.lbdb.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import javax.swing.text.DefaultEditorKit;
 import java.awt.*;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 
-import static net.scholnick.lbdb.util.GUIUtilities.center;
-import static net.scholnick.lbdb.util.GUIUtilities.showMessageDialog;
+import static net.scholnick.lbdb.util.GUIUtilities.*;
 
 @Component
 public final class BooksDB extends JFrame {
@@ -35,7 +28,7 @@ public final class BooksDB extends JFrame {
 
     private static final Dimension WINDOW_SIZE = new Dimension(900, 600);
 
-    private static final String VERSION = "Version 5.0.0";
+    private static final String VERSION = "Version 6.0.0";
 
     private JLabel notificationLabel;
 

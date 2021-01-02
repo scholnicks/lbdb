@@ -41,7 +41,7 @@ public class ExportService {
     }
 
     private String getOutputDirectory() {
-        return "production".equalsIgnoreCase(System.getProperty("lbdb.database.type","dev")) ?
+        return "production".equalsIgnoreCase(System.getProperty("lbdb.environment","dev")) ?
             "/Users/steve/OneDrive/share/" :
             "/Users/steve/Desktop/"
         ;

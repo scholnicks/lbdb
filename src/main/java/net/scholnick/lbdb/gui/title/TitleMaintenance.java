@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.*;
 import java.util.*;
 
 import static java.util.stream.Collectors.toList;
@@ -182,7 +181,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
             imageLabel.setMinimumSize(d);
 
             IconFontSwing.register(FontAwesome.getIconFont());
-            imageLabel.setIcon(IconFontSwing.buildIcon(FontAwesome.BOOK, (float) WIDTH, Color.lightGray));
+            imageLabel.setIcon(IconFontSwing.buildIcon(FontAwesome.BOOK, (float) WIDTH));
         }
         return imageLabel;
     }
@@ -191,7 +190,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         try {
             log.info("Downloading cover photo");
 
-            String existingImageFile = getDownloadedImage();
+            String existingImageFile = coverPhotoService.getDownloadedImage(getBook());
             if (existingImageFile != null) {
                 loadImage(existingImageFile);
                 return;
@@ -224,17 +223,6 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         if (imagePath != null) {
             getImageLabel().setIcon(new ImageIcon(new ImageIcon(imagePath).getImage()));
             reload();
-        }
-    }
-
-    private String getDownloadedImage() throws IOException {
-        File imageFilePath = new File(FileUtils.getDestinationDirectory(), getBook().getId() + ".jpg");
-
-        if (imageFilePath.exists() && imageFilePath.canRead()) {
-            return imageFilePath.getCanonicalPath();
-        }
-        else {
-            return null;
         }
     }
 

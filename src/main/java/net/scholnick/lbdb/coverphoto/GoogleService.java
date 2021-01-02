@@ -7,13 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.*;
 
-import static net.scholnick.lbdb.util.FileUtils.getDestinationDirectory;
 import static net.scholnick.lbdb.util.NullSafe.isClose;
 
 @Service

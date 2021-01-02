@@ -44,7 +44,7 @@ public class BooksApp {
         Properties properties = new Properties();
         properties.put("autoCommit","false");
 //        properties.put("driverClassName","org.sqlite.JDBC");
-        properties.put("jdbcUrl","production".equalsIgnoreCase(System.getProperty("lbdb.database.type","dev")) ? PROD_DB : DEV_DB);
+        properties.put("jdbcUrl","production".equalsIgnoreCase(System.getProperty("lbdb.environment","dev")) ? PROD_DB : DEV_DB);
 
         return new HikariDataSource(new HikariConfig(properties));
     }
