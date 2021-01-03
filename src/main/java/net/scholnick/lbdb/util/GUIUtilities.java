@@ -9,6 +9,13 @@ import java.util.Objects;
 public class GUIUtilities {
     private GUIUtilities() {}
 
+    public static void setSizes(JComponent component, Dimension dimension) {
+        component.setSize(dimension);
+        component.setPreferredSize(dimension);
+        component.setMinimumSize(dimension);
+        component.setMaximumSize(dimension);
+    }
+
     public static GridBagConstraints getDefaultGridBagConstraints() {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = gbc.gridy = 0;

@@ -38,9 +38,11 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
 
     private JTextField authorsSelect;
     private final JPanel selectedAuthorsPanel;
+    private final Set<Author> authors;
 
     private JTextField editorsSelect;
     private final JPanel selectedEditorsPanel;
+    private final Set<Author> editors;
 
     private Book book;
 
@@ -63,7 +65,11 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         anthologyCheckBox    = new JCheckBox();
         typeCombo            = new JComboBox<>(BookType.values());
         mediaCombo           = new JComboBox<>(Media.values());
+
         selectedAuthorsPanel = new JPanel(new FlowLayout());
+        authors = new TreeSet<>();
+        editors = new TreeSet<>();
+
         selectedEditorsPanel = new JPanel(new FlowLayout());
 
         commentsArea = new JTextArea(5, 44);
@@ -73,6 +79,19 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     }
 
     private void createAuthorLabel(Author a, JPanel dataPanel, JTextField inputField, boolean reload) {
+        if (dataPanel.equals(selectedAuthorsPanel)) {
+            authors.add(a);
+            if (authors.size() >= 3) {
+                return;
+            }
+        }
+        else {
+            editors.add(a);
+            if (editors.size() >= 2) {
+                return;
+            }
+        }
+
         JLabel label = DataLabel.of(a);
         label.setBorder(BorderFactory.createEtchedBorder());
         label.setForeground(Color.white);
@@ -91,6 +110,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
                 dataPanel.remove((JLabel) e.getSource());
             }
         });
+
         dataPanel.add(label);
 
         if (reload) {
@@ -236,6 +256,9 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         publishedYearField.setText("");
         getAddedDateLabel().setText("");
         numberOfPagesField.setText("");
+
+        authors.clear();
+        editors.clear();
         clear(selectedAuthorsPanel);
         clear(selectedEditorsPanel);
 
@@ -245,7 +268,6 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         book = null;
     }
 
-    @SuppressWarnings("unchecked")
     private Book createBookFromFormData() {
         Book b = getBook() == null ? new Book() : getBook();
 
@@ -266,18 +288,8 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         }
 
         b.clearAuthors();
-        for (int i=0,n=selectedAuthorsPanel.getComponentCount(); i < n; i++) {
-            DataLabel<Author> dataLabel = (DataLabel<Author>) selectedAuthorsPanel.getComponent(i);
-            b.addAuthor(dataLabel.getData());
-        }
-
-        for (int i=0,n=selectedEditorsPanel.getComponentCount(); i < n; i++) {
-            DataLabel<Author> dataLabel = (DataLabel<Author>) selectedEditorsPanel.getComponent(i);
-            dataLabel.getData().setEditor(true);
-            b.addAuthor(dataLabel.getData());
-        }
-
-        Arrays.stream(selectedEditorsPanel.getComponents()).map(c -> (DataLabel<Author>) c).map(DataLabel::getData).forEach(b::setEditor);
+        authors.forEach(b::addAuthor);
+        editors.forEach(b::addEditor);
 
         return b;
     }
@@ -303,8 +315,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         Book b = createBookFromFormData();
         bookService.save(b);
         sendMessage(b.getTitle() + " has been saved.");
-        this.book = b;
-        loadData(b);
+        setBook(b);
     }
 
     private void loadData(Book b) {
@@ -313,6 +324,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
                 try {
                     getImageLabel().setIcon(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("images/loading.gif"))));
                     downloadCoverPhoto();
+                    reload();
                 }
                 catch (Exception e) {
                     log.error("Unable to load the cover photo", e);
@@ -336,6 +348,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
 
         getAddedDateLabel().setText(b.getAddedTimestamp());
 
+        authors.clear();
         clear(selectedAuthorsPanel);
         clear(selectedEditorsPanel);
 

@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
@@ -99,11 +99,11 @@ public class GoogleService implements CoverPhotoService {
         }
     }
 
-    private Path getBookCoverPath(Book b) throws IOException {
+    private Path getBookCoverPath(Book b) {
         return FileSystems.getDefault().getPath(getDestinationDirectory().getAbsolutePath(), b.getId() + ".jpg");
     }
 
-    private Path getDownloadedCoverPhoto(Book b) throws IOException {
+    private Path getDownloadedCoverPhoto(Book b) {
         Path imageFilePath = getBookCoverPath(b);
 
         if (Files.exists(imageFilePath) && Files.isReadable(imageFilePath)) {
