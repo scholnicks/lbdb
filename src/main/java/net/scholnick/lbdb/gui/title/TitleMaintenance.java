@@ -53,37 +53,44 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     private static final int WIDTH = 128;
     private static final int HEIGHT = 198;
 
-
+    private static final Dimension TEXT_FIELD_SIZE = new Dimension(400,20);
     public TitleMaintenance() {
         super();
 
-        titleField           = new TrimmedTextField(45, 255);
-        seriesField          = new TrimmedTextField(45, 255);
-        publishedYearField   = new TrimmedTextField(10, 4);
-        isbnField            = new TrimmedTextField(30, 20);
-        numberOfPagesField   = new TrimmedTextField(15, 20);
+        titleField           = createTextField(45, 255);
+        seriesField          = createTextField(45, 255);
+        publishedYearField   = createTextField(10, 4);
+        isbnField            = createTextField(30, 20);
+        numberOfPagesField   = createTextField(15, 20);
         anthologyCheckBox    = new JCheckBox();
         typeCombo            = new JComboBox<>(BookType.values());
         mediaCombo           = new JComboBox<>(Media.values());
 
-        selectedAuthorsPanel = new JPanel(new FlowLayout());
         authors = new TreeSet<>();
         editors = new TreeSet<>();
 
-        selectedEditorsPanel = new JPanel(new FlowLayout());
+        selectedAuthorsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        selectedEditorsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
         commentsArea = new JTextArea(5, 44);
         commentsArea.setLineWrap(true);
+        GUIUtilities.setSizes(commentsArea,new Dimension(400,50));
 
         buildGUI();
+    }
+
+    private static TrimmedTextField createTextField(int columns, int maxChars) {
+        TrimmedTextField t = new TrimmedTextField(columns,maxChars);
+        GUIUtilities.setSizes(t,TEXT_FIELD_SIZE);
+        return t;
     }
 
     private void createAuthorLabel(Author a, JPanel dataPanel, JTextField inputField, boolean reload) {
         if (dataPanel.equals(selectedAuthorsPanel)) {
             authors.add(a);
-            if (authors.size() >= 3) {
-                return;
-            }
+//            if (authors.size() >= 10) {
+//                return;
+//            }
         }
         else {
             editors.add(a);
@@ -138,6 +145,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     private JTextField getAuthorsSelect() {
         if (authorsSelect == null) {
             authorsSelect = new JTextField(15);
+            GUIUtilities.setSizes(authorsSelect,TEXT_FIELD_SIZE);
             authorsSelect.addActionListener(l -> {
                 var data = searchForAuthors(authorsSelect);
                 if (data.isEmpty()) {
@@ -154,6 +162,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     private JTextField getEditorsSelect() {
         if (editorsSelect == null) {
             editorsSelect = new JTextField(15);
+            GUIUtilities.setSizes(editorsSelect,TEXT_FIELD_SIZE);
             editorsSelect.addActionListener(l -> {
                 var data = searchForAuthors(editorsSelect);
                 if (data.isEmpty()) {
@@ -404,6 +413,8 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     @Override
     protected JPanel getInputPanel() {
         JPanel p = new JPanel(new GridBagLayout());
+        GUIUtilities.setSizes(p,new Dimension(800,500));
+
         GridBagConstraints gbc = new GridBagConstraints();
 
         gbc.gridx = gbc.gridy = 0;
@@ -462,8 +473,12 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         gbc.gridx = 0;
         p.add(LabelFactory.createLabel(""), gbc);
         gbc.gridx++;
+        gbc.insets = indentInsets;
         gbc.weightx = inputWeight;
-        p.add(selectedAuthorsPanel, gbc);
+
+        JScrollPane authorsScroll = new JScrollPane(selectedAuthorsPanel,JScrollPane.VERTICAL_SCROLLBAR_NEVER,JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        GUIUtilities.setSizes(authorsScroll,new Dimension(500,50));
+        p.add(authorsScroll, gbc);
 
         // End of Authors
 
@@ -494,8 +509,12 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         gbc.gridx = 0;
         p.add(LabelFactory.createLabel(""), gbc);
         gbc.gridx++;
+        gbc.insets = indentInsets;
         gbc.weightx = inputWeight;
-        p.add(selectedEditorsPanel, gbc);
+
+        JScrollPane editorsScroll = new JScrollPane(selectedEditorsPanel,JScrollPane.VERTICAL_SCROLLBAR_NEVER,JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        GUIUtilities.setSizes(editorsScroll,new Dimension(500,50));
+        p.add(editorsScroll, gbc);
 
         // End of Editors
 
@@ -576,5 +595,4 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
 
         return p;
     }
-
 }
