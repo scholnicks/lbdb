@@ -2,6 +2,7 @@ package net.scholnick.lbdb.gui.title;
 
 import jiconfont.icons.font_awesome.FontAwesome;
 import jiconfont.swing.IconFontSwing;
+import net.scholnick.lbdb.BooksDB;
 import net.scholnick.lbdb.coverphoto.CoverPhotoService;
 import net.scholnick.lbdb.domain.*;
 import net.scholnick.lbdb.gui.*;
@@ -60,12 +61,13 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         titleField           = createTextField(45, 255);
         seriesField          = createTextField(45, 255);
         publishedYearField   = createTextField(10, 4);
-        isbnField            = createTextField(30, 20);
+        isbnField            = createTextField(20, 20);
         numberOfPagesField   = createTextField(15, 20);
         anthologyCheckBox    = new JCheckBox();
         typeCombo            = new JComboBox<>(BookType.values());
         mediaCombo           = new JComboBox<>(Media.values());
 
+        // TODO: investigate if these are still needed
         authors = new TreeSet<>();
         editors = new TreeSet<>();
 
@@ -74,7 +76,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
 
         commentsArea = new JTextArea(5, 44);
         commentsArea.setLineWrap(true);
-        GUIUtilities.setSizes(commentsArea,new Dimension(400,50));
+        GUIUtilities.setSizes(commentsArea,new Dimension(400,75));
 
         buildGUI();
     }
@@ -94,9 +96,9 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         }
         else {
             editors.add(a);
-            if (editors.size() >= 2) {
-                return;
-            }
+//            if (editors.size() >= 2) {
+//                return;
+//            }
         }
 
         JLabel label = DataLabel.of(a);
@@ -413,7 +415,8 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     @Override
     protected JPanel getInputPanel() {
         JPanel p = new JPanel(new GridBagLayout());
-        GUIUtilities.setSizes(p,new Dimension(800,500));
+        p.setBorder(createCompoundBorder(createEtchedBorder(), createEmptyBorder(5, 5, 5, 5)));
+        GUIUtilities.setSizes(p,new Dimension(BooksDB.WINDOW_SIZE.width - 20,BooksDB.WINDOW_SIZE.height-100));
 
         GridBagConstraints gbc = new GridBagConstraints();
 
@@ -582,16 +585,14 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         gbc.weightx = inputWeight;
         p.add(new JScrollPane(commentsArea), gbc);
 
-        gbc.gridy++;
-        gbc.gridx = 0;
-        gbc.weightx = labelWeight;
-        p.add(LabelFactory.createLabel("Added Date"), gbc);
-        gbc.gridx++;
-        gbc.insets = indentInsets;
-        gbc.weightx = inputWeight;
-        p.add(getAddedDateLabel(), gbc);
-
-        p.setBorder(createCompoundBorder(createEtchedBorder(), createEmptyBorder(5, 5, 5, 5)));
+//        gbc.gridy++;
+//        gbc.gridx = 0;
+//        gbc.weightx = labelWeight;
+//        p.add(LabelFactory.createLabel("Added Date"), gbc);
+//        gbc.gridx++;
+//        gbc.insets = indentInsets;
+//        gbc.weightx = inputWeight;
+//        p.add(getAddedDateLabel(), gbc);
 
         return p;
     }

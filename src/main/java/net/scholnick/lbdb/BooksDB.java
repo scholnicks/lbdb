@@ -17,32 +17,22 @@ import static net.scholnick.lbdb.util.GUIUtilities.*;
 
 @Component
 public final class BooksDB extends JFrame {
-    private JTabbedPane tabbedPane;
+    private JTabbedPane       tabbedPane;
+    private SearchPanel       searchPanel;
+    private TitleMaintenance  titleMaintenance;
+    private AuthorMaintenance authorMaintenance;
+    private final JLabel      notificationLabel;
 
-    private final SearchPanel searchPanel;
-    private final TitleMaintenance titleMaintenance;
-    private final AuthorMaintenance authorMaintenance;
-    private final BookService bookService;
-    private final AuthorService authorService;
+    private BookService   bookService;
+    private AuthorService authorService;
     private ExportService exportService;
 
-    private static final Dimension WINDOW_SIZE = new Dimension(900, 600);
+    public static final Dimension WINDOW_SIZE = new Dimension(900, 700);
+    private static final String       VERSION = "Version 6.0.1";
 
-    private static final String VERSION = "Version 6.0.0";
-
-    private JLabel notificationLabel;
-
-    @Autowired
-    public BooksDB(SearchPanel searchPanel, TitleMaintenance titleMaintenance, AuthorMaintenance authorMaintenance, BookService bookService, AuthorService authorService) {
+    public BooksDB() {
         super("Laurel's Books Database");
-        this.searchPanel = searchPanel;
-        this.titleMaintenance = titleMaintenance;
-        this.authorMaintenance = authorMaintenance;
-        this.bookService = bookService;
-        this.authorService = authorService;
-
-        this.titleMaintenance.setMessageListener(text -> getNotificationLabel().setText(text));
-        this.authorMaintenance.setMessageListener(text -> getNotificationLabel().setText(text));
+        notificationLabel = new JLabel("",JLabel.CENTER);
     }
 
     void init() {
@@ -65,24 +55,16 @@ public final class BooksDB extends JFrame {
         getContentPane().add(getTabbedPane(), BorderLayout.CENTER);
 
         JPanel p = new JPanel();
-        p.add(getNotificationLabel());
+        p.add(notificationLabel);
         getContentPane().add(p, BorderLayout.SOUTH);
         setVisible(true);
-    }
-
-    private JLabel getNotificationLabel() {
-        if (notificationLabel == null) {
-            notificationLabel = new JLabel("Laurel's Book Database");
-            notificationLabel.setHorizontalAlignment(JLabel.CENTER);
-        }
-        return notificationLabel;
     }
 
     private void loadInfoInBackground() {
         new SwingWorker<Object,Boolean>() {
             @Override protected Boolean doInBackground() {
                 setIconImage(new ImageIcon(getClass().getResource("/images/bookcase.gif")).getImage());
-                updateTitle();
+                updateCounts();
                 return Boolean.TRUE;
             }
         }.execute();
@@ -102,16 +84,16 @@ public final class BooksDB extends JFrame {
             tabbedPane.addChangeListener(e -> {
                 JTabbedPane tp = (JTabbedPane) e.getSource();
                 if (tp.getSelectedIndex() == 0) { // back to the search tab, so update the title
-                    updateTitle();
+                    updateCounts();
                 }
-                getNotificationLabel().setText("");
+                notificationLabel.setText("");
             });
         }
         return tabbedPane;
     }
 
-    private void updateTitle() {
-        setTitle("Laurel's Book Database : " + bookService.count() + " books / " + authorService.count() + " authors");
+    private void updateCounts() {
+        notificationLabel.setText(bookService.count() + " books / " + authorService.count() + " authors");
     }
 
     private void buildMenus() {
@@ -159,12 +141,6 @@ public final class BooksDB extends JFrame {
         clearItem.setText("Clear");
         clearItem.addActionListener(l -> titleMaintenance.clear());
         fileMenu.add(clearItem);
-
-//        JMenuItem addAuthorItem = new JMenuItem("Add Author");
-//        addAuthorItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.META_DOWN_MASK));
-//        addAuthorItem.setText("Add Author");
-//        addAuthorItem.addActionListener(l -> titleMaintenance.performQuickSearch());
-//        fileMenu.add(addAuthorItem);
 
         JMenuItem exportItem = new JMenuItem("Export");
         exportItem.setText("Export");
@@ -228,5 +204,32 @@ public final class BooksDB extends JFrame {
     @Autowired
     public void setExportService(ExportService exportService) {
         this.exportService = exportService;
+    }
+
+    @Autowired
+    public void setSearchPanel(SearchPanel searchPanel) {
+        this.searchPanel = searchPanel;
+    }
+
+    @Autowired
+    public void setTitleMaintenance(TitleMaintenance titleMaintenance) {
+        this.titleMaintenance = titleMaintenance;
+        this.titleMaintenance.setMessageListener(notificationLabel::setText);
+    }
+
+    @Autowired
+    public void setAuthorMaintenance(AuthorMaintenance authorMaintenance) {
+        this.authorMaintenance = authorMaintenance;
+        this.authorMaintenance.setMessageListener(notificationLabel::setText);
+    }
+
+    @Autowired
+    public void setBookService(BookService bookService) {
+        this.bookService = bookService;
+    }
+
+    @Autowired
+    public void setAuthorService(AuthorService authorService) {
+        this.authorService = authorService;
     }
 }
