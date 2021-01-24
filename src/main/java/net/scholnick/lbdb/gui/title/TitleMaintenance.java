@@ -19,6 +19,7 @@ import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 import static javax.swing.BorderFactory.*;
+import static javax.swing.JOptionPane.*;
 
 @Component
 public final class TitleMaintenance extends AbstractUpdateMaintenance {
@@ -88,17 +89,17 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     }
 
     private void createAuthorLabel(Author a, JPanel dataPanel, JTextField inputField, boolean reload) {
+        if (a.getId() == null) {
+            if (showConfirmDialog(this, a.getName() + " not found.","Add?",YES_NO_OPTION) == JOptionPane.NO_OPTION) {
+                return;
+            }
+        }
+
         if (dataPanel.equals(selectedAuthorsPanel)) {
             authors.add(a);
-//            if (authors.size() >= 10) {
-//                return;
-//            }
         }
         else {
             editors.add(a);
-//            if (editors.size() >= 2) {
-//                return;
-//            }
         }
 
         JLabel label = DataLabel.of(a);
@@ -115,8 +116,10 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         label.setOpaque(true);
         label.setHorizontalTextPosition(JLabel.LEFT);
         label.addMouseListener(new MouseAdapter() {
+            @SuppressWarnings("unchecked")
             @Override public void mouseClicked(MouseEvent e) {
-                dataPanel.remove((JLabel) e.getSource());
+                DataLabel<Author> d = (DataLabel<Author>) e.getSource();
+                dataPanel.remove(d);
             }
         });
 
