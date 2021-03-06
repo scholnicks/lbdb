@@ -1,6 +1,7 @@
 build
 .gradle
 *.app
+*.bat
 sql/test.db
 bin
 .vscode
