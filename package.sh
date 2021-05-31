@@ -1,3 +1,5 @@
+#!/bin/bash
+
 ./gradlew clean build || exit -1
 
 jpackage --input build/ \
