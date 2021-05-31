@@ -11,12 +11,13 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.sql.DataSource;
 import javax.swing.*;
-import java.awt.EventQueue;
+import java.awt.*;
 import java.util.*;
 
 @SpringBootApplication
 public class BooksApp {
     public static void main(String... args) {
+        System.setProperty("apple.awt.application.appearance","system");
         System.setProperty("apple.laf.useScreenMenuBar","true");
         System.setProperty("com.apple.mrj.application.live-resize","true");
 

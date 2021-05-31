@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="de26adde-e421-4658-a7cc-846cdeb46a91" name="Default Changelist" comment="">
+    <list default="true" id="de26adde-e421-4658-a7cc-846cdeb46a91" name="Default Changelist" comment="upgraded Jackson and sqlite libraries">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/BooksApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/BooksApp.java" afterDir="false" />
     </list>
@@ -43,7 +43,7 @@
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="lbdb" type="f1a62948:ProjectNode" />
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
-                <item name="help" type="c8890929:TasksNode$1" />
+                <item name="build" type="c8890929:TasksNode$1" />
               </path>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
@@ -99,7 +99,7 @@
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.43764988" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.project.gradle" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
@@ -131,9 +131,14 @@
   </component>
   <component name="RunManager" selected="Application.BooksApp">
     <configuration name="BooksApp" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="ALTERNATIVE_JRE_PATH" value="15" />
       <option name="MAIN_CLASS_NAME" value="net.scholnick.lbdb.BooksApp" />
       <module name="lbdb.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="net.scholnick.lbdb.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -202,17 +207,17 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Application.BooksApp" />
       <item itemvalue="Gradle.lbdb [build]" />
       <item itemvalue="Gradle.lbdb [dependencies]" />
       <item itemvalue="Gradle.lbdb [test]" />
+      <item itemvalue="Application.BooksApp" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.lbdb [build]" />
         <item itemvalue="Application.BooksApp" />
         <item itemvalue="Gradle.lbdb [test]" />
         <item itemvalue="Gradle.lbdb [dependencies]" />
-        <item itemvalue="Gradle.lbdb [build]" />
       </list>
     </recent_temporary>
   </component>
