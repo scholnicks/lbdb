@@ -1,6 +1,7 @@
 build
 .gradle
 *.app
+*.dmg
 *.bat
 sql/test.db
 bin

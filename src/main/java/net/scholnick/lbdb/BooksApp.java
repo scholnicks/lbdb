@@ -17,6 +17,9 @@ import java.util.*;
 @SpringBootApplication
 public class BooksApp {
     public static void main(String... args) {
+        System.setProperty("apple.laf.useScreenMenuBar","true");
+        System.setProperty("com.apple.mrj.application.live-resize","true");
+
         ApplicationContext context = new SpringApplicationBuilder(BooksApp.class).headless(false).run(args);
 
         if (args != null && Arrays.asList(args).contains("--export")) {
