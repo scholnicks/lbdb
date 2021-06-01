@@ -12,6 +12,7 @@ import javax.swing.*;
 import javax.swing.text.DefaultEditorKit;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Objects;
 
 import static net.scholnick.lbdb.util.GUIUtilities.*;
 
@@ -28,7 +29,7 @@ public final class BooksDB extends JFrame {
     private ExportService exportService;
 
     public static final Dimension WINDOW_SIZE = new Dimension(900, 700);
-    private static final String       VERSION = "Version 6.0.1";
+    private static final String       VERSION = "Version 6.0.2";
 
     public BooksDB() {
         super("Laurel's Books Database");
@@ -63,7 +64,7 @@ public final class BooksDB extends JFrame {
     private void loadInfoInBackground() {
         new SwingWorker<Object,Boolean>() {
             @Override protected Boolean doInBackground() {
-                setIconImage(new ImageIcon(getClass().getResource("/images/bookcase.gif")).getImage());
+                setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/bookcase.gif"))).getImage());
                 updateCounts();
                 return Boolean.TRUE;
             }
@@ -103,7 +104,10 @@ public final class BooksDB extends JFrame {
         menuBar.add(getEditMenu());
         setJMenuBar(menuBar);
 
-        Desktop.getDesktop().setAboutHandler(e -> showMessageDialog(VERSION, "About"));
+        Desktop.getDesktop().setAboutHandler(e -> showMessageDialog(
+            VERSION + "\nMode: " + System.getProperty("lbdb.environment","dev"),
+            "About"
+        ));
     }
 
     private JMenu getEditMenu() {

@@ -58,7 +58,6 @@ public final class TitleSearchTableModel extends AbstractTableModel {
             case 4 -> data.isAnthology() ? "Yes" : "No";
             default -> null;
         };
-
     }
 
     public Book getTitleData(int row) {

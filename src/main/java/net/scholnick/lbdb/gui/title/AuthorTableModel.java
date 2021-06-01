@@ -12,95 +12,93 @@ import static java.util.stream.Collectors.toSet;
 
 @Deprecated
 final class AuthorTableModel extends AbstractTableModel {
-	private final List<Author> dataRows;
+    private final List<Author> dataRows;
 
-	AuthorTableModel() {
-		dataRows = new LinkedList<>();
-	}
+    AuthorTableModel() {
+        dataRows = new LinkedList<>();
+    }
 
-	Set<Author> getEditors() {
-		return dataRows.stream().filter(Author::isEditor).collect(toSet());
-	}
-	
-	boolean contains(Author a) {
-		return dataRows.contains(a);
-	}
-	
-	@Override
-	public int getRowCount() {
-		return dataRows.size();
-	}
+    Set<Author> getEditors() {
+        return dataRows.stream().filter(Author::isEditor).collect(toSet());
+    }
 
-	@Override
-	public int getColumnCount() {
-		return 2;
-	}
+    boolean contains(Author a) {
+        return dataRows.contains(a);
+    }
 
-	@Override
-	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		return true;
-	}
+    @Override
+    public int getRowCount() {
+        return dataRows.size();
+    }
 
-	@Override
-	public String getColumnName(int col) {
-		switch (col) {
-			case 0:
-				return "Name";
-			case 1:
-				return "Editor?";
-		}
-		return null;
-	}
+    @Override
+    public int getColumnCount() {
+        return 2;
+    }
 
-	@Override
-	public Class<?> getColumnClass(int c) {
-		return (c != 1) ? String.class : Boolean.class;
-	}
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return true;
+    }
 
-	@Override
-	public Object getValueAt(int row, int col) {
-		Author data = dataRows.get(row);
-		if (col == 0) {
-			return data.getName();
-		}
-		else if (col == 1) {
-			return data.isEditor();
-		}
-		return null;
-	}
+    @Override
+    public String getColumnName(int col) {
+        return switch (col) {
+            case 0 -> "Name";
+            case 1 -> "Editor?";
+            default -> null;
+        };
+    }
 
-	@Override
-	public void setValueAt(Object value, int rowIndex, int columnIndex) {
-		if (columnIndex == 1) {
-			dataRows.get(rowIndex).setEditor((Boolean) value);
-		}
-		fireTableDataChanged();
-	}
+    @Override
+    public Class<?> getColumnClass(int c) {
+        return (c != 1) ? String.class : Boolean.class;
+    }
 
-	public void delete(int row) {
-		dataRows.remove(row);
-		fireTableDataChanged();
-	}
+    @Override
+    public Object getValueAt(int row, int col) {
+        Author data = dataRows.get(row);
+        if (col == 0) {
+            return data.getName();
+        }
+        else if (col == 1) {
+            return data.isEditor();
+        }
+        return null;
+    }
 
-	public void add(Author a) {
-		dataRows.add(a);
-		fireTableDataChanged();
-	}
+    @Override
+    public void setValueAt(Object value, int rowIndex, int columnIndex) {
+        if (columnIndex == 1) {
+            dataRows.get(rowIndex).setEditor((Boolean) value);
+        }
+        fireTableDataChanged();
+    }
 
-	public Author get(int row) {
-		return dataRows.get(row);
-	}
+    public void delete(int row) {
+        dataRows.remove(row);
+        fireTableDataChanged();
+    }
 
-	int size() {
-		return dataRows.size();
-	}
+    public void add(Author a) {
+        dataRows.add(a);
+        fireTableDataChanged();
+    }
 
-	public Stream<Author> stream() {
-		return dataRows.stream();
-	}
+    public Author get(int row) {
+        return dataRows.get(row);
+    }
 
-	public void clear() {
-		dataRows.clear();
-		fireTableDataChanged();
-	}
+    int size() {
+        return dataRows.size();
+    }
+
+    public Stream<Author> stream() {
+        return dataRows.stream();
+    }
+
+    public void clear() {
+        dataRows.clear();
+        fireTableDataChanged();
+    }
 }

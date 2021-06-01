@@ -11,6 +11,7 @@ rm -f "${appName}-${version}".dmg
 jpackage \
   --input            build \
   --name             "${appName}" \
+  --description      "Laurel's Book Database" \
   --main-jar         "$HOME/development/java/lbdb/build/libs/laurel-book-database-${version}.jar" \
   --icon             "$HOME/development/java/lbdb/macos/book_case.icns" \
   --java-options     "-Dlbdb.environment=production" \
