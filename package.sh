@@ -21,6 +21,7 @@ jpackage \
   --mac-package-name "${appName}" \
   --verbose
 
+cp "$HOME/development/java/lbdb/build/libs/laurel-book-database-${version}.jar" $HOME/.laurel-book-database.jar
 open "${appName}-${version}".dmg
 
 exit 0
