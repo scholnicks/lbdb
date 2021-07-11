@@ -24,4 +24,6 @@ jpackage \
 cp "$HOME/development/java/lbdb/build/libs/laurel-book-database-${version}.jar" $HOME/.laurel-book-database.jar
 open "${appName}-${version}".dmg
 
+./gradlew clean
+
 exit 0
