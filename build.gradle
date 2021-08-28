@@ -20,7 +20,7 @@ sourceCompatibility = JavaVersion.VERSION_16
 targetCompatibility = JavaVersion.VERSION_16
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter:2.5.3'
+    implementation 'org.springframework.boot:spring-boot-starter:2.5.4'
     implementation 'org.springframework:spring-jdbc:5.3.9'
     implementation 'org.springframework:spring-web:5.3.9'
 
