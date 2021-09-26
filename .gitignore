@@ -7,4 +7,5 @@ sql/test.db
 bin
 .vscode
 cover-photos
+out
 
