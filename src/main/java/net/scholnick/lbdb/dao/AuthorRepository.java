@@ -11,11 +11,11 @@ import java.sql.*;
 import java.util.*;
 
 @Repository
-public class AuthorDAO {
+public class AuthorRepository {
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public AuthorDAO(JdbcTemplate jdbcTemplate) {
+    public AuthorRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

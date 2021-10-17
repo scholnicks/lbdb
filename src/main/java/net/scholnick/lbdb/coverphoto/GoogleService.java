@@ -1,8 +1,9 @@
 package net.scholnick.lbdb.coverphoto;
 
+import lombok.extern.slf4j.Slf4j;
 import net.scholnick.lbdb.domain.*;
+import net.scholnick.lbdb.util.ApplicationException;
 import org.apache.commons.io.IOUtils;
-import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -15,10 +16,9 @@ import java.util.*;
 
 import static net.scholnick.lbdb.util.NullSafe.isClose;
 
+@Slf4j
 @Service
 public class GoogleService implements CoverPhotoService {
-    private static final Logger log = LoggerFactory.getLogger(GoogleService.class);
-
     private static final String BOOK_SEARCH = "https://www.googleapis.com/books/v1/volumes?q=\"%s\"&printType=books";
     private static final String ISBN_SEARCH = "https://www.googleapis.com/books/v1/volumes?q=isbn:";
 
@@ -32,7 +32,7 @@ public class GoogleService implements CoverPhotoService {
             invalidCoverImage = IOUtils.toByteArray(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("images/invalid-book-cover.jpg")));
         }
         catch (IOException e) {
-            throw new RuntimeException("Unable to load invalid cover image data",e);
+            throw new ApplicationException("Unable to load invalid cover image data",e);
         }
     }
 

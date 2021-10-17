@@ -1,31 +1,27 @@
 package net.scholnick.lbdb.service;
 
-import net.scholnick.lbdb.dao.AuthorDAO;
-import net.scholnick.lbdb.dao.BookDAO;
+import lombok.extern.slf4j.Slf4j;
+import net.scholnick.lbdb.dao.*;
 import net.scholnick.lbdb.domain.TitleReportData;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 import java.util.stream.IntStream;
 
+@Slf4j
 @Service
 public class ExportService {
-    private final BookDAO   bookDAO;
-    private final AuthorDAO authorDAO;
+    private final BookRepository bookDAO;
+    private final AuthorRepository authorDAO;
 
     private static final List<String> HEADER_ROW = List.of("Title","Media","Authors");
 
     @Autowired
-    public ExportService(BookDAO bookDAO, AuthorDAO authorDAO) {
+    public ExportService(BookRepository bookDAO, AuthorRepository authorDAO) {
         this.bookDAO   = bookDAO;
         this.authorDAO = authorDAO;
     }
@@ -36,7 +32,7 @@ public class ExportService {
             exportTitles();
         }
         catch (IOException e) {
-            e.printStackTrace();
+            log.error("Unable to export",e);
         }
     }
 

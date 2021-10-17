@@ -1,28 +1,17 @@
 package net.scholnick.lbdb.gui;
 
-import net.scholnick.lbdb.domain.Author;
-import net.scholnick.lbdb.domain.Book;
-import net.scholnick.lbdb.domain.Media;
-import net.scholnick.lbdb.gui.author.AuthorSelectionEvent;
-import net.scholnick.lbdb.gui.author.AuthorSelectionPopUp;
-import net.scholnick.lbdb.gui.title.TitleSearchTable;
-import net.scholnick.lbdb.gui.title.TitleSearchTableModel;
-import net.scholnick.lbdb.gui.title.TitleSelectionEvent;
+import net.scholnick.lbdb.domain.*;
+import net.scholnick.lbdb.gui.author.*;
+import net.scholnick.lbdb.gui.title.*;
 import net.scholnick.lbdb.service.BookService;
-import net.scholnick.lbdb.util.GUIUtilities;
-import net.scholnick.lbdb.util.LabelFactory;
-import net.scholnick.lbdb.util.NullSafe;
+import net.scholnick.lbdb.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Vector;
+import java.awt.event.*;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 

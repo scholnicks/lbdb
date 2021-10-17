@@ -1,7 +1,11 @@
 package net.scholnick.lbdb.domain;
 
+import lombok.*;
+
 import java.util.Arrays;
 
+@Getter
+@ToString
 public enum Media implements Comparable<Media> {
     BOOK(1,"Book"),
     KINDLE(2,"Kindle"),
@@ -14,19 +18,6 @@ public enum Media implements Comparable<Media> {
     Media(int id, String description) {
         this.id = id;
         this.description = description;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    @Override
-    public String toString() {
-        return getDescription();
     }
 
     public static Media from(Integer id) {

@@ -1,9 +1,8 @@
 package net.scholnick.lbdb.gui;
 
-import net.scholnick.lbdb.util.LimitedStyledDocument;
-import net.scholnick.lbdb.util.NullSafe;
+import net.scholnick.lbdb.util.*;
 
-import javax.swing.*;
+import javax.swing.JTextField;
 
 public final class TrimmedTextField extends JTextField {
     public TrimmedTextField(int columns, int maxChars) {

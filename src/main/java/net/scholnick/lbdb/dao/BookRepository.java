@@ -2,29 +2,23 @@ package net.scholnick.lbdb.dao;
 
 import net.scholnick.lbdb.domain.*;
 import net.scholnick.lbdb.util.NullSafe;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.support.*;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.sql.*;
+import java.util.*;
 
 @Repository
-public class BookDAO {
-    private static final Logger log = LoggerFactory.getLogger(BookDAO.class);
+public class BookRepository {
+    private static final Logger log = LoggerFactory.getLogger(BookRepository.class);
 
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public BookDAO(JdbcTemplate jdbcTemplate) {
+    public BookRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -179,21 +173,22 @@ public class BookDAO {
         return b;
     }
 
-    private static final String TITLES_EXPORT_SQL = "select\n" +
-            "   b.book_title as \"Title\", \n" +
-            "   m.med_desc as \"Media\",\n" +
-            "   group_concat(a.auth_name) as \"Authors\"\n" +
-            "from\n" +
-            "   Book b\n" +
-            "join\n" +
-            "   Media_Type m on m.med_id=b.med_id\n" +
-            "join\n" +
-            "   Author_Book_Xref x on x.book_id=b.book_id\n" +
-            "join\n" +
-            "   Author a on a.auth_id=x.auth_id\n" +
-            "group by\n" +
-            "   b.book_title, m.med_desc\n" +
-            "order by\n" +
-            "   1"
+    private static final String TITLES_EXPORT_SQL = """
+            select
+               b.book_title as "Title",\s
+               m.med_desc as "Media",
+               group_concat(a.auth_name) as "Authors"
+            from
+               Book b
+            join
+               Media_Type m on m.med_id=b.med_id
+            join
+               Author_Book_Xref x on x.book_id=b.book_id
+            join
+               Author a on a.auth_id=x.auth_id
+            group by
+               b.book_title, m.med_desc
+            order by
+               1"""
         ;
 }

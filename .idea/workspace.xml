@@ -5,9 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="de26adde-e421-4658-a7cc-846cdeb46a91" name="Default Changelist" comment="upgraded Jackson and sqlite libraries">
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/util/ApplicationException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/BooksApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/BooksApp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/coverphoto/GoogleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/coverphoto/GoogleService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/dao/AuthorDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/dao/AuthorRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/dao/BookDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/dao/BookRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/domain/BookType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/domain/BookType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/domain/Media.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/domain/Media.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/BasePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/BasePanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/DataLabel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/DataLabel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/SearchPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/SearchPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/SearchTableCellRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/SearchTableCellRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/SoundPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/SoundPlayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/TrimmedTextField.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/gui/TrimmedTextField.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/service/AuthorService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/service/AuthorService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/service/BookService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/service/BookService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/service/ExportService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/service/ExportService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/util/GUIUtilities.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/scholnick/lbdb/util/GUIUtilities.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,8 +79,8 @@
       <list>
         <option value="JUnit3 Test Class" />
         <option value="JUnit4 Test Class" />
-        <option value="Class" />
         <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -100,7 +115,7 @@
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.43764988" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.project.gradle" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.import" />
   </component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">

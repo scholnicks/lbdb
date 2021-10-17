@@ -1,11 +1,11 @@
 package net.scholnick.lbdb.gui;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.Line;
+import net.scholnick.lbdb.util.ApplicationException;
+
+import javax.sound.sampled.*;
 import java.net.URL;
 
+// TOOO: convert this to a spring class and use annotation to spin the thread
 final class SoundPlayer {
     static void playAhh() {
         new Thread(() -> playFile(SoundPlayer.class.getClassLoader().getResource("aaaaahhhhh.aif"))).start();
@@ -21,10 +21,9 @@ final class SoundPlayer {
             clip.start();
         }
         catch (Throwable t) {
-            throw new RuntimeException("Unable to play audio", t);
+            throw new ApplicationException("Unable to play audio", t);
         }
     }
 
-    private SoundPlayer() {
-    }
+    private SoundPlayer() {}
 }

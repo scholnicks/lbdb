@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.swing.JLabel;
 
+@Getter
 @ToString
 public class DataLabel<T extends Identifiable> extends JLabel {
     private T data;
@@ -12,10 +13,6 @@ public class DataLabel<T extends Identifiable> extends JLabel {
         DataLabel<T> label = new DataLabel<>();
         label.setData(data);
         return label;
-    }
-
-    public T getData() {
-        return data;
     }
 
     public void setData(T data) {

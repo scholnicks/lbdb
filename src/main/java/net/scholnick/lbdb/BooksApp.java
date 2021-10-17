@@ -1,7 +1,9 @@
 package net.scholnick.lbdb;
 
 import com.zaxxer.hikari.*;
+import lombok.extern.slf4j.Slf4j;
 import net.scholnick.lbdb.service.ExportService;
+import net.scholnick.lbdb.util.*;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -11,10 +13,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
 import javax.sql.DataSource;
-import javax.swing.*;
-import java.awt.*;
+import java.awt.EventQueue;
 import java.util.*;
 
+@Slf4j
 @SpringBootApplication
 public class BooksApp {
     public static void main(String... args) {
@@ -30,17 +32,12 @@ public class BooksApp {
                 System.exit(0);
             }
 
-            // start the GUI
-            try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            }
-            catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-                System.exit(-1);
-            }
+            GUIUtilities.setLookAndFeel();
             EventQueue.invokeLater(() -> context.getBean(BooksDB.class).init());
         }
-        catch (BeansException e) {
-            e.printStackTrace();
+        catch (ApplicationException | BeansException e) {
+            log.error("Unable to start lbdb",e);
+            System.exit(-1);
         }
     }
 

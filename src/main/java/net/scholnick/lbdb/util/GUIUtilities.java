@@ -9,6 +9,15 @@ import java.util.Objects;
 public class GUIUtilities {
     private GUIUtilities() {}
 
+    public static void setLookAndFeel() {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        }
+        catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+            throw new ApplicationException("Unable to set look and feel",e);
+        }
+    }
+
     public static void setSizes(JComponent component, Dimension dimension) {
         component.setSize(dimension);
         component.setPreferredSize(dimension);

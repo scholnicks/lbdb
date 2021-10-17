@@ -1,31 +1,27 @@
 package net.scholnick.lbdb.service;
 
-import net.scholnick.lbdb.dao.AuthorDAO;
-import net.scholnick.lbdb.domain.Author;
-import net.scholnick.lbdb.domain.Book;
+import lombok.extern.slf4j.Slf4j;
+import net.scholnick.lbdb.dao.AuthorRepository;
+import net.scholnick.lbdb.domain.*;
 import net.scholnick.lbdb.util.NullSafe;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.stream.Collectors.toList;
 
+@Slf4j
 @Service
 public class AuthorService {
-    private static final Logger log = LoggerFactory.getLogger(AuthorService.class);
-
     private final Set<Author> authorsCache = ConcurrentHashMap.newKeySet();
 
-    private final AuthorDAO authorDAO;
+    private final AuthorRepository authorDAO;
 
     @Autowired
-    public AuthorService(AuthorDAO authorDAO) {
+    public AuthorService(AuthorRepository authorDAO) {
         this.authorDAO = authorDAO;
     }
 

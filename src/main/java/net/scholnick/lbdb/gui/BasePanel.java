@@ -1,12 +1,10 @@
 package net.scholnick.lbdb.gui;
 
-import net.scholnick.lbdb.gui.author.AuthorSelectionEvent;
-import net.scholnick.lbdb.gui.author.AuthorSelectionListener;
-import net.scholnick.lbdb.gui.title.TitleSelectionEvent;
-import net.scholnick.lbdb.gui.title.TitleSelectionListener;
+import net.scholnick.lbdb.gui.author.*;
+import net.scholnick.lbdb.gui.title.*;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+import java.awt.BorderLayout;
 
 public abstract class BasePanel extends JPanel {
     protected void buildGUI() {

@@ -1,9 +1,8 @@
 package net.scholnick.lbdb.gui;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
-import java.awt.*;
+import javax.swing.table.*;
+import java.awt.Component;
 
 public final class SearchTableCellRenderer extends DefaultTableCellRenderer {
     private static final SearchTableCellRenderer INSTANCE = new SearchTableCellRenderer();
@@ -22,6 +21,7 @@ public final class SearchTableCellRenderer extends DefaultTableCellRenderer {
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         if (column == 0)
             return FIRST_COLUMN_RENDERER.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
         return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
     }
 }
