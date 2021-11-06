@@ -38,7 +38,7 @@ public class ExportService {
 
     private String getOutputDirectory() {
         return "production".equalsIgnoreCase(System.getProperty("lbdb.environment","dev")) ?
-            "/Users/steve/Share/" :
+            "/Users/steve/.share/" :
             "/Users/steve/Desktop/"
         ;
     }

@@ -1,6 +1,3 @@
---
---
-
 create table book_type (
    bot_created_date	 datetime not null default (datetime(current_timestamp,'localtime')),
    bot_modified_date	 datetime,
@@ -23,9 +20,9 @@ create table author (
 );
 
 create table book (
-   book_created_date	  datetime not null default (datetime(current_timestamp,'localtime')),
-   book_modified_date	  datetime,
-   book_id				      integer not null primary key autoincrement,
+   book_created_date	   datetime not null default (datetime(current_timestamp,'localtime')),
+   book_modified_date	datetime,
+   book_id				   integer not null primary key autoincrement,
    bot_id               integer not null,
    med_id               integer not null,
    book_title           varchar(100) not null,
@@ -41,15 +38,14 @@ create table book (
 
 create table author_book_xref (
    abx_created_date		datetime not null default (datetime(current_timestamp,'localtime')),
-   abx_modified_date  datetime,
-   auth_id            integer not null,
-   book_id            integer not null,
-   abx_editor         char(1) not null default 'n',
+   abx_modified_date    datetime,
+   auth_id              integer not null,
+   book_id              integer not null,
+   abx_editor           char(1) not null default 'n',
    primary key (auth_id,book_id),
    foreign key(auth_id) references author(auth_id),
    foreign key(book_id) references book(book_id)
 );
-
 
 insert into book_type(bot_id,bot_desc) values(1,'Fiction');
 insert into book_type(bot_id,bot_desc) values(2,'Non-Fiction');
