@@ -5,7 +5,6 @@ import lombok.*;
 import java.util.Arrays;
 
 @Getter
-@ToString
 public enum BookType implements Comparable<BookType> {
     FICTION(1,"Fiction"),
     NON_FICTION(2,"Non-Fiction"),
@@ -18,6 +17,11 @@ public enum BookType implements Comparable<BookType> {
     BookType(int id, String description) {
         this.id = id;
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return description;
     }
 
     public static BookType from(Integer id) {

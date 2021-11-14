@@ -442,15 +442,6 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         gbc.insets = indentInsets;
         p.add(titleField, gbc);
 
-        gbc.gridy++;
-        gbc.gridx = 0;
-        gbc.weightx = labelWeight;
-        p.add(LabelFactory.createLabel("Series"), gbc);
-        gbc.gridx++;
-        gbc.insets = indentInsets;
-        gbc.weightx = inputWeight;
-        p.add(seriesField, gbc);
-
         // Start of Authors
 
         IconFontSwing.register(FontAwesome.getIconFont());
@@ -523,6 +514,15 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         p.add(editorsScroll, gbc);
 
         // End of Editors
+
+        gbc.gridy++;
+        gbc.gridx = 0;
+        gbc.weightx = labelWeight;
+        p.add(LabelFactory.createLabel("Series"), gbc);
+        gbc.gridx++;
+        gbc.insets = indentInsets;
+        gbc.weightx = inputWeight;
+        p.add(seriesField, gbc);
 
         gbc.gridy++;
         gbc.gridx = 0;

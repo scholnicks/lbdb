@@ -5,7 +5,6 @@ import lombok.*;
 import java.util.Arrays;
 
 @Getter
-@ToString
 public enum Media implements Comparable<Media> {
     BOOK(1,"Book"),
     KINDLE(2,"Kindle"),
@@ -18,6 +17,11 @@ public enum Media implements Comparable<Media> {
     Media(int id, String description) {
         this.id = id;
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return description;
     }
 
     public static Media from(Integer id) {
