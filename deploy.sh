@@ -16,7 +16,7 @@ cp build/libs/laurel-book-database-*.jar $app_directory/Contents/Resources
 chmod 755 $app_directory/Contents/MacOS/lbdb.sh
 
 cp -a $app_directory /Applications
-cp build/libs/laurel-book-database-*.jar $HOME/.laurel-book-database.jar
+# cp build/libs/laurel-book-database-*.jar $HOME/.laurel-book-database.jar
 
 ./gradlew clean
 
