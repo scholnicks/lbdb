@@ -26,19 +26,21 @@ public class ExportService {
         this.authorDAO = authorDAO;
     }
 
-    public void export() {
+    public String export() {
         try {
             exportAuthors();
             exportTitles();
+            return "Created files in " + getOutputDirectory();
         }
         catch (IOException e) {
             log.error("Unable to export",e);
+            return "Error: " + e.getLocalizedMessage();
         }
     }
 
     private String getOutputDirectory() {
         return "production".equalsIgnoreCase(System.getProperty("lbdb.environment","dev")) ?
-            "/Users/steve/.share/" :
+            "/Users/steve/data/" :
             "/Users/steve/Desktop/"
         ;
     }

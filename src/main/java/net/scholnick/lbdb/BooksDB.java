@@ -149,7 +149,12 @@ public final class BooksDB extends JFrame {
         JMenuItem exportItem = new JMenuItem("Export");
         exportItem.setText("Export");
         exportItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.META_DOWN_MASK));
-        exportItem.addActionListener(l -> exportService.export());
+
+        var that = this;
+        exportItem.addActionListener(l -> {
+            String message = exportService.export();
+            JOptionPane.showMessageDialog(that,message);
+        });
         fileMenu.add(exportItem);
 
         return fileMenu;

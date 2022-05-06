@@ -31,7 +31,11 @@
       <console name="Dev" type="STANDARD" schema="main" session="Main"><![CDATA[select * from Book]]></console>
     </connection>
     <connection id="1b5c9651-6f0e-4c6f-af6a-8bfffdeac844">
-      <console name="Production" type="STANDARD" schema="main" session="Main" />
+      <console name="Production" type="STANDARD" schema="main" session="Main"><![CDATA[select * from author_book_xref order by 1 desc
+
+-- select * from author order by 1 desc
+
+delete from author_book_xref where auth_id=3565]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
