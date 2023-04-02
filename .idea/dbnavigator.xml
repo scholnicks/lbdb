@@ -25,18 +25,21 @@
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
-    <loaded-nodes />
+    <loaded-nodes>
+      <connection connection-id="1b5c9651-6f0e-4c6f-af6a-8bfffdeac844">
+        <schema name="main" object-types="table, view, column" />
+      </connection>
+    </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="ca6ead93-f3dc-4c45-a195-146018193fba">
       <console name="Dev" type="STANDARD" schema="main" session="Main"><![CDATA[select * from Book]]></console>
     </connection>
     <connection id="1b5c9651-6f0e-4c6f-af6a-8bfffdeac844">
-      <console name="Production" type="STANDARD" schema="main" session="Main"><![CDATA[select * from author_book_xref order by 1 desc
+      <console name="Production" type="STANDARD" schema="main" session="Main"><![CDATA[-- select * from author_book_xref where book_id=3946;
 
--- select * from author order by 1 desc
-
-delete from author_book_xref where auth_id=3565]]></console>
+update author_book_xref set abx_editor='Y' where auth_id=3608]]></console>
+      <console name="Production 1" type="STANDARD" schema="main" session="Main"><![CDATA[select * from Book order by 1 desc]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">
@@ -190,7 +193,7 @@ delete from author_book_xref where auth_id=3565]]></console>
           <deprecated-pwd value="" />
         </database>
         <properties>
-          <auto-commit value="false" />
+          <auto-commit value="true" />
         </properties>
         <ssh-settings>
           <active value="false" />

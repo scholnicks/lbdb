@@ -50,8 +50,9 @@ public class BooksApp {
     public DataSource dataSource() {
         Properties properties = new Properties();
         properties.put("autoCommit","false");
-//        properties.put("driverClassName","org.sqlite.JDBC");
-        properties.put("jdbcUrl","production".equalsIgnoreCase(System.getProperty("lbdb.environment","dev")) ? PROD_DB : DEV_DB);
+        String database = "production".equalsIgnoreCase(System.getProperty("lbdb.environment", "dev")) ? PROD_DB : DEV_DB;
+        properties.put("jdbcUrl", database);
+        log.info("Connecting to {}",database);
 
         return new HikariDataSource(new HikariConfig(properties));
     }
