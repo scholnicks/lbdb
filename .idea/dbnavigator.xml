@@ -91,13 +91,15 @@ update author_book_xref set abx_editor='Y' where auth_id=3608]]></console>
           <database-type value="SQLITE" />
           <config-type value="BASIC" />
           <database-version value="3.39" />
-          <driver-source value="BUILTIN" />
+          <driver-source value="BUNDLED" />
           <driver-library value="" />
           <driver value="" />
           <url-type value="FILE" />
           <host value="localhost" />
           <port value="1234" />
           <database value="database" />
+          <tns-folder value="" />
+          <tns-profile value="" />
           <files>
             <file path="$PROJECT_DIR$/sql/test.db" schema="main" />
           </files>
@@ -177,14 +179,16 @@ update author_book_xref set abx_editor='Y' where auth_id=3608]]></console>
           <description value="" />
           <database-type value="SQLITE" />
           <config-type value="BASIC" />
-          <database-version value="3.39" />
-          <driver-source value="BUILTIN" />
+          <database-version value="3.41" />
+          <driver-source value="BUNDLED" />
           <driver-library value="" />
           <driver value="" />
           <url-type value="FILE" />
           <host value="" />
           <port value="" />
           <database value="" />
+          <tns-folder value="" />
+          <tns-profile value="" />
           <files>
             <file path="$USER_HOME$/data/lbdb.db" schema="main" />
           </files>
