@@ -13,8 +13,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
-import static java.util.stream.Collectors.toList;
-
 @Component
 public class SearchPanel extends BasePanel {
     private JButton searchButton;
@@ -139,7 +137,7 @@ public class SearchPanel extends BasePanel {
         if (mediaCombo == null) {
             Vector<MediaType> types = new Vector<>(Media.values().length + 1);
             types.add(new MediaType("", -1));
-            types.addAll(Arrays.stream(Media.values()).map(m -> new MediaType(m.toString(), m.getId())).collect(toList()));
+            types.addAll(Arrays.stream(Media.values()).map(m -> new MediaType(m.toString(), m.getId())).toList());
             mediaCombo = new JComboBox<>(types);
         }
         return mediaCombo;
@@ -157,7 +155,7 @@ public class SearchPanel extends BasePanel {
         Book b = new Book();
         b.setTitle(getTitleField().getText());
         b.setSeries(getSeriesField().getText());
-        b.setMedia(Media.from(Objects.requireNonNull((MediaType) getMediaCombo().getSelectedItem()).getId()));
+        b.setMedia(Media.from(Objects.requireNonNull((MediaType) getMediaCombo().getSelectedItem()).id()));
 
         if (!NullSafe.isEmpty(getAuthorNameField().getText())) {
             b.setAuthors(java.util.List.of(Author.of(getAuthorNameField().getText())));
@@ -307,24 +305,12 @@ public class SearchPanel extends BasePanel {
         return null;
     }
 
-    private static final class MediaType {
-        private final String display;
-        private final Integer id;
-
-        MediaType(String display, Integer id) {
-            this.display = display;
-            this.id = id;
-        }
-
+    private record MediaType(String display, Integer id) {
         @Override
-        public String toString() {
-            return display;
+            public String toString() {
+                return display;
+            }
         }
-
-        public Integer getId() {
-            return id;
-        }
-    }
 
     private final class SearchAction extends AbstractAction implements Runnable {
         private Thread searchThread;

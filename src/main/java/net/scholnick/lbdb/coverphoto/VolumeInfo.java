@@ -2,10 +2,12 @@ package net.scholnick.lbdb.coverphoto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.util.Map;
 import java.util.Set;
 
+@Accessors(chain=true)
 @Data
 @JsonIgnoreProperties(ignoreUnknown=true)
 public final class VolumeInfo {

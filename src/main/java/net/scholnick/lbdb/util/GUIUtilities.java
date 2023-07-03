@@ -9,6 +9,12 @@ import java.util.Objects;
 public class GUIUtilities {
     private GUIUtilities() {}
 
+    public static JPanel panel(JComponent c) {
+        JPanel p = new JPanel();
+        p.add(c);
+        return p;
+    }
+
     public static void setLookAndFeel() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

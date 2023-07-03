@@ -1,4 +1,4 @@
-package net.scholnick.lbdb.dao;
+package net.scholnick.lbdb.repository;
 
 import net.scholnick.lbdb.domain.*;
 import net.scholnick.lbdb.util.NullSafe;

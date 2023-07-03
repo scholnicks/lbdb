@@ -14,12 +14,9 @@ import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.util.Objects;
 
-import static java.util.stream.Collectors.toList;
 import static javax.swing.BorderFactory.*;
-import static javax.swing.JOptionPane.*;
 
 @Component
 public final class TitleMaintenance extends AbstractUpdateMaintenance {
@@ -38,13 +35,16 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     private JLabel imageLabel;
     private JButton deleteButton;
 
-    private JTextField authorsSelect;
-    private final JPanel selectedAuthorsPanel;
-    private final Set<Author> authors;
+    private final AuthorPanel authorsPanel;
+    private final AuthorPanel editorssPanel;
 
-    private JTextField editorsSelect;
-    private final JPanel selectedEditorsPanel;
-    private final Set<Author> editors;
+//    private JTextField authorsSelect;
+//    private final JPanel selectedAuthorsPanel;
+//    private final Set<Author> authors;
+//
+//    private JTextField editorsSelect;
+//    private final JPanel selectedEditorsPanel;
+//    private final Set<Author> editors;
 
     private Book book;
 
@@ -55,25 +55,29 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     private static final int WIDTH = 128;
     private static final int HEIGHT = 198;
 
-    private static final Dimension TEXT_FIELD_SIZE = new Dimension(400,20);
+    static final Dimension TEXT_FIELD_SIZE = new Dimension(400,20);
+
     public TitleMaintenance() {
         super();
 
-        titleField           = createTextField(45, 255);
-        seriesField          = createTextField(45, 255);
-        publishedYearField   = createTextField(10, 4);
-        isbnField            = createTextField(20, 20);
-        numberOfPagesField   = createTextField(15, 20);
+        titleField           = TrimmedTextField.create(45, 255,TEXT_FIELD_SIZE);
+        seriesField          = TrimmedTextField.create(45, 255, TEXT_FIELD_SIZE);
+        publishedYearField   = TrimmedTextField.create(10, 4, TEXT_FIELD_SIZE);
+        isbnField            = TrimmedTextField.create(20, 20, TEXT_FIELD_SIZE);
+        numberOfPagesField   = TrimmedTextField.create(15, 20, TEXT_FIELD_SIZE);
         anthologyCheckBox    = new JCheckBox();
         typeCombo            = new JComboBox<>(BookType.values());
         mediaCombo           = new JComboBox<>(Media.values());
 
-        // TODO: investigate if these are still needed
-        authors = new TreeSet<>();
-        editors = new TreeSet<>();
+        authorsPanel = new AuthorPanel("Authors");
+        editorssPanel = new AuthorPanel("Editors");
 
-        selectedAuthorsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        selectedEditorsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+//        // TODO: investigate if these are still needed
+//        authors = new TreeSet<>();
+//        editors = new TreeSet<>();
+//
+//        selectedAuthorsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+//        selectedEditorsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
         commentsArea = new JTextArea(5, 44);
         commentsArea.setLineWrap(true);
@@ -82,104 +86,98 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         buildGUI();
     }
 
-    private static TrimmedTextField createTextField(int columns, int maxChars) {
-        TrimmedTextField t = new TrimmedTextField(columns,maxChars);
-        GUIUtilities.setSizes(t,TEXT_FIELD_SIZE);
-        return t;
-    }
+//    private void createAuthorLabel(Author a, JPanel dataPanel, JTextField inputField, boolean reload) {
+//        if (a.getId() == null) {
+//            if (showConfirmDialog(this, a.getName() + " not found.","Add?",YES_NO_OPTION) == JOptionPane.NO_OPTION) {
+//                return;
+//            }
+//        }
+//
+//        if (dataPanel.equals(selectedAuthorsPanel)) {
+//            authors.add(a);
+//        }
+//        else {
+//            editors.add(a);
+//        }
+//
+//        JLabel label = DataLabel.of(a);
+//        label.setBorder(BorderFactory.createEtchedBorder());
+//        label.setForeground(Color.white);
+//
+//        if (a.getId() == null) {
+//            label.setBackground(Color.green);
+//        }
+//        else {
+//            label.setBackground(Color.black);
+//        }
+//
+//        label.setOpaque(true);
+//        label.setHorizontalTextPosition(JLabel.LEFT);
+//        label.addMouseListener(new MouseAdapter() {
+//            @SuppressWarnings("unchecked")
+//            @Override public void mouseClicked(MouseEvent e) {
+//                DataLabel<Author> d = (DataLabel<Author>) e.getSource();
+//                dataPanel.remove(d);
+//            }
+//        });
+//
+//        dataPanel.add(label);
+//
+//        if (reload) {
+//            inputField.setText("");
+//            reload();
+//        }
+//    }
 
-    private void createAuthorLabel(Author a, JPanel dataPanel, JTextField inputField, boolean reload) {
-        if (a.getId() == null) {
-            if (showConfirmDialog(this, a.getName() + " not found.","Add?",YES_NO_OPTION) == JOptionPane.NO_OPTION) {
-                return;
-            }
-        }
+//    private void popUpMenu(java.util.List<Author> data, JPanel dataPanel, JTextField inputField) {
+//        JPopupMenu popup = new JPopupMenu();
+//        for (Author d : data) {
+//            JMenuItem item = new JMenuItem(d.getName());
+//            item.addActionListener(l -> createAuthorLabel(d,dataPanel,inputField,true));
+//            popup.add(item);
+//        }
+//        popup.pack();
+//        popup.show(inputField, 0, inputField.getHeight());
+//        popup.requestFocusInWindow();
+//    }
 
-        if (dataPanel.equals(selectedAuthorsPanel)) {
-            authors.add(a);
-        }
-        else {
-            editors.add(a);
-        }
+//    private java.util.List<Author> searchForAuthors(JTextField inputField) {
+//        return authorService.search(inputField.getText()).stream().filter(Objects::nonNull).limit(20).collect(toList());
+//    }
 
-        JLabel label = DataLabel.of(a);
-        label.setBorder(BorderFactory.createEtchedBorder());
-        label.setForeground(Color.white);
+//    private JTextField getAuthorsSelect() {
+//        if (authorsSelect == null) {
+//            authorsSelect = new JTextField(15);
+//            GUIUtilities.setSizes(authorsSelect,TEXT_FIELD_SIZE);
+//            authorsSelect.addActionListener(l -> {
+//                var data = searchForAuthors(authorsSelect);
+//                if (data.isEmpty()) {
+//                    createAuthorLabel(Author.of(getAuthorsSelect().getText()),selectedAuthorsPanel,authorsSelect,true);
+//                }
+//                else {
+//                    popUpMenu(data,selectedAuthorsPanel,authorsSelect);
+//                }
+//            });
+//        }
+//        return authorsSelect;
+//    }
 
-        if (a.getId() == null) {
-            label.setBackground(Color.green);
-        }
-        else {
-            label.setBackground(Color.black);
-        }
-
-        label.setOpaque(true);
-        label.setHorizontalTextPosition(JLabel.LEFT);
-        label.addMouseListener(new MouseAdapter() {
-            @SuppressWarnings("unchecked")
-            @Override public void mouseClicked(MouseEvent e) {
-                DataLabel<Author> d = (DataLabel<Author>) e.getSource();
-                dataPanel.remove(d);
-            }
-        });
-
-        dataPanel.add(label);
-
-        if (reload) {
-            inputField.setText("");
-            reload();
-        }
-    }
-
-    private void popUpMenu(java.util.List<Author> data, JPanel dataPanel, JTextField inputField) {
-        JPopupMenu popup = new JPopupMenu();
-        for (Author d : data) {
-            JMenuItem item = new JMenuItem(d.getName());
-            item.addActionListener(l -> createAuthorLabel(d,dataPanel,inputField,true));
-            popup.add(item);
-        }
-        popup.pack();
-        popup.show(inputField, 0, inputField.getHeight());
-        popup.requestFocusInWindow();
-    }
-
-    private java.util.List<Author> searchForAuthors(JTextField inputField) {
-        return authorService.search(inputField.getText()).stream().filter(Objects::nonNull).limit(20).collect(toList());
-    }
-
-    private JTextField getAuthorsSelect() {
-        if (authorsSelect == null) {
-            authorsSelect = new JTextField(15);
-            GUIUtilities.setSizes(authorsSelect,TEXT_FIELD_SIZE);
-            authorsSelect.addActionListener(l -> {
-                var data = searchForAuthors(authorsSelect);
-                if (data.isEmpty()) {
-                    createAuthorLabel(Author.of(getAuthorsSelect().getText()),selectedAuthorsPanel,authorsSelect,true);
-                }
-                else {
-                    popUpMenu(data,selectedAuthorsPanel,authorsSelect);
-                }
-            });
-        }
-        return authorsSelect;
-    }
-
-    private JTextField getEditorsSelect() {
-        if (editorsSelect == null) {
-            editorsSelect = new JTextField(15);
-            GUIUtilities.setSizes(editorsSelect,TEXT_FIELD_SIZE);
-            editorsSelect.addActionListener(l -> {
-                var data = searchForAuthors(editorsSelect);
-                if (data.isEmpty()) {
-                    createAuthorLabel(Author.of(getEditorsSelect().getText()),selectedEditorsPanel,editorsSelect,true);
-                }
-                else {
-                    popUpMenu(data,selectedEditorsPanel,editorsSelect);
-                }
-            });
-        }
-        return editorsSelect;
-    }
+//    private JTextField getEditorsSelect() {
+//        if (editorsSelect == null) {
+//            editorsSelect = new JTextField(15);
+//            GUIUtilities.setSizes(editorsSelect,TEXT_FIELD_SIZE);
+//            editorsSelect.addActionListener(l -> {
+//                var data = searchForAuthors(editorsSelect);
+//                if (data.isEmpty()) {
+//                    createAuthorLabel(Author.of(getEditorsSelect().getText()),selectedEditorsPanel,editorsSelect,true);
+//                }
+//                else {
+//                    popUpMenu(data,selectedEditorsPanel,editorsSelect);
+//                }
+//            });
+//        }
+//        return editorsSelect;
+//    }
 
     private JButton getDeleteButton() {
         if (deleteButton == null) {
@@ -271,10 +269,10 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         getAddedDateLabel().setText("");
         numberOfPagesField.setText("");
 
-        authors.clear();
-        editors.clear();
-        clear(selectedAuthorsPanel);
-        clear(selectedEditorsPanel);
+//        authors.clear();
+//        editors.clear();
+//        clear(selectedAuthorsPanel);
+//        clear(selectedEditorsPanel);
 
         IconFontSwing.register(FontAwesome.getIconFont());
         getImageLabel().setIcon(IconFontSwing.buildIcon(FontAwesome.BOOK, 48, Color.lightGray));
@@ -302,8 +300,8 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         }
 
         b.clearAuthors();
-        authors.forEach(b::addAuthor);
-        editors.forEach(b::addEditor);
+//        authors.forEach(b::addAuthor);
+//        editors.forEach(b::addEditor);
 
         return b;
     }
@@ -362,19 +360,19 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
 
         getAddedDateLabel().setText(b.getAddedTimestamp());
 
-        authors.clear();
-        clear(selectedAuthorsPanel);
-        clear(selectedEditorsPanel);
-
-        b.getAuthors().stream().sorted().forEach(a -> {
-            log.debug("Author {}",a);
-            if (a.isEditor()) {
-                createAuthorLabel(a,selectedEditorsPanel,getEditorsSelect(),false);
-            }
-            else {
-                createAuthorLabel(a,selectedAuthorsPanel,getAuthorsSelect(),false);
-            }
-        });
+//        authors.clear();
+//        clear(selectedAuthorsPanel);
+//        clear(selectedEditorsPanel);
+//
+//        b.getAuthors().stream().sorted().forEach(a -> {
+//            log.debug("Author {}",a);
+//            if (a.isEditor()) {
+//                createAuthorLabel(a,selectedEditorsPanel,getEditorsSelect(),false);
+//            }
+//            else {
+//                createAuthorLabel(a,selectedAuthorsPanel,getAuthorsSelect(),false);
+//            }
+//        });
 
         reload();
     }
@@ -442,6 +440,20 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         gbc.insets = indentInsets;
         p.add(titleField, gbc);
 
+        gbc.gridy++;
+        gbc.gridx = 0;
+        gbc.gridheight = 1;
+        gbc.gridwidth = 1;
+        gbc.weighty = 1.00;
+        gbc.weightx = 1.00;
+        gbc.insets = new Insets(0,0,0,0);
+        p.add(authorsPanel,gbc);
+
+//        gbc.gridy++;
+//        gbc.gridx = 0;
+//        p.add(editorssPanel,gbc);
+
+        /*
         // Start of Authors
 
         IconFontSwing.register(FontAwesome.getIconFont());
@@ -514,6 +526,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         p.add(editorsScroll, gbc);
 
         // End of Editors
+         */
 
         gbc.gridy++;
         gbc.gridx = 0;

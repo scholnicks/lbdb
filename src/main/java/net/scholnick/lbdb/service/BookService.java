@@ -1,7 +1,7 @@
 package net.scholnick.lbdb.service;
 
 import lombok.extern.slf4j.Slf4j;
-import net.scholnick.lbdb.dao.*;
+import net.scholnick.lbdb.repository.*;
 import net.scholnick.lbdb.domain.*;
 import net.scholnick.lbdb.util.NullSafe;
 import org.springframework.beans.factory.annotation.Autowired;

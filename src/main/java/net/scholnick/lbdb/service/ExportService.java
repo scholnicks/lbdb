@@ -1,7 +1,7 @@
 package net.scholnick.lbdb.service;
 
 import lombok.extern.slf4j.Slf4j;
-import net.scholnick.lbdb.dao.*;
+import net.scholnick.lbdb.repository.*;
 import net.scholnick.lbdb.domain.TitleReportData;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
@@ -65,13 +65,13 @@ public class ExportService {
             for (TitleReportData data : bookDAO.titleData()) {
                  Row row = sheet.createRow(r);
                  Cell cell = row.createCell(0);
-                 cell.setCellValue(data.getTitle());
+                 cell.setCellValue(data.title());
 
                  cell = row.createCell(1);
-                 cell.setCellValue(data.getMedia());
+                 cell.setCellValue(data.media());
 
                  cell = row.createCell(2);
-                 cell.setCellValue(data.getAuthors());
+                 cell.setCellValue(data.authors());
 
                  r++;
             }

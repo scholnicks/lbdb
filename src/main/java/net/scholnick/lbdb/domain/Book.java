@@ -2,12 +2,14 @@ package net.scholnick.lbdb.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.nio.file.Path;
 import java.util.*;
 
 import static java.util.stream.Collectors.joining;
 
+@Accessors(chain=true)
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public final class Book implements Comparable<Book> {
