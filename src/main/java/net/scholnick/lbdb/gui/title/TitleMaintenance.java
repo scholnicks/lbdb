@@ -15,8 +15,9 @@ import org.springframework.stereotype.Component;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
+import java.util.Objects;
 
+import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
 import static javax.swing.BorderFactory.*;
 import static javax.swing.JOptionPane.*;
@@ -260,6 +261,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         getAddedDateLabel().setText("");
         numberOfPagesField.setText("");
 
+        authorsTable.clear();
 //        authors.clear();
 //        editors.clear();
 //        clear(selectedAuthorsPanel);
@@ -350,6 +352,9 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         }
 
         getAddedDateLabel().setText(b.getAddedTimestamp());
+
+        authorsTable.clear();
+        b.getAuthors().stream().filter(not(Author::isEditor)).forEach(authorsTable::add);
 
 //        authors.clear();
 //        clear(selectedAuthorsPanel);
@@ -463,8 +468,8 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         gbc.insets = indentInsets;
         gbc.weightx = inputWeight;
 
-        JScrollPane authorsScroll = new JScrollPane(authorsTable,JScrollPane.VERTICAL_SCROLLBAR_NEVER,JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        GUIUtilities.setSizes(authorsScroll,new Dimension(500,100));
+        JScrollPane authorsScroll = new JScrollPane(authorsTable);
+        GUIUtilities.setSizes(authorsScroll,new Dimension(AuthorTable.SIZE.width,AuthorTable.SIZE.height+30));
         p.add(authorsScroll, gbc);
 
         // End of Authors

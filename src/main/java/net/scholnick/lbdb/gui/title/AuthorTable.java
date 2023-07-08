@@ -1,12 +1,17 @@
 package net.scholnick.lbdb.gui.title;
 
+import lombok.extern.slf4j.Slf4j;
 import net.scholnick.lbdb.domain.Author;
 
 import javax.swing.*;
 import javax.swing.table.*;
+import java.awt.Dimension;
 import java.util.*;
 
+@Slf4j
 final class AuthorTable extends JTable {
+    static final Dimension SIZE = new Dimension(325,75);
+
     public AuthorTable() {
         super();
         setModel(new AuthorTableModel());
@@ -18,12 +23,29 @@ final class AuthorTable extends JTable {
         setCellSelectionEnabled(false);
         setRowSelectionAllowed(true);
         getTableHeader().setReorderingAllowed(false);
+        setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         getTableHeader().setDefaultRenderer(new HeaderRenderer(this));
-        TableColumnModel columnModel = getColumnModel();
-//            columnModel.getColumn(0).setPreferredWidth(300);
-//            columnModel.getColumn(1).setPreferredWidth(25);
+        getColumnModel().getColumn(0).setPreferredWidth(300);
+        getColumnModel().getColumn(1).setPreferredWidth(25);
+        setPreferredScrollableViewportSize(SIZE);
+        getTableHeader().setPreferredSize(new Dimension(SIZE.width,30));
+        setVisible(true);
+        validate();
+        repaint();
     }
 
+    void add(Author a) {
+        log.debug("Adding {}",a);
+        ((AuthorTableModel) getModel()).addRow(a);
+    }
+
+    List<Author> get() {
+        return List.copyOf(((AuthorTableModel) getModel()).dataRows);
+    }
+
+    void clear() {
+        ((AuthorTableModel) getModel()).clear();
+    }
 
     private static final class AuthorTableModel extends AbstractTableModel {
         private final List<Author> dataRows;
@@ -54,11 +76,7 @@ final class AuthorTable extends JTable {
 
         @Override
         public Object getValueAt(int row, int col) {
-            return getTitleData(row);
-        }
-
-        public Author getTitleData(int row) {
-            return dataRows.get(row);
+            return col == 0 ? dataRows.get(row).getName() : null;
         }
 
         public void clear() {
@@ -69,6 +87,6 @@ final class AuthorTable extends JTable {
             dataRows.add(data);
         }
 
-        private static final String[] columnNames = {"Name", "Function"};
+        private static final String[] columnNames = {"Name", ""};
     }
 }

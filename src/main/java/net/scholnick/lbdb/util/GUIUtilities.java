@@ -10,7 +10,7 @@ public class GUIUtilities {
     private GUIUtilities() {}
 
     public static JPanel panel(JComponent c) {
-        JPanel p = new JPanel();
+        JPanel p = new JPanel(new FlowLayout());
         p.add(c);
         return p;
     }
