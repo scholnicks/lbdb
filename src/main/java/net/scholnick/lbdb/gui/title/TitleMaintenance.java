@@ -78,19 +78,14 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         buildGUI();
     }
 
-    private void createAuthorLabel(Author a, JPanel dataPanel, JTextField inputField, boolean reload) {
+    private void createAuthorLabel(Author a, AuthorTable dataPanel, JTextField inputField, boolean reload) {
         if (a.getId() == null) {
             if (showConfirmDialog(this, a.getName() + " not found.","Add?",YES_NO_OPTION) == JOptionPane.NO_OPTION) {
                 return;
             }
         }
 
-//        if (dataPanel.equals(selectedAuthorsPanel)) {
-//            authors.add(a);
-//        }
-//        else {
-//            editors.add(a);
-//        }
+        authorsTable.add(a);
 
         JLabel label = DataLabel.of(a);
         label.setBorder(BorderFactory.createEtchedBorder());
@@ -121,7 +116,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         }
     }
 
-    private void popUpMenu(java.util.List<Author> data, JPanel dataPanel, JTextField inputField) {
+    private void popUpMenu(java.util.List<Author> data, AuthorTable dataPanel, JTextField inputField) {
         JPopupMenu popup = new JPopupMenu();
         for (Author d : data) {
             JMenuItem item = new JMenuItem(d.getName());
@@ -139,16 +134,16 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
 
     private JTextField getAuthorsSelect() {
         if (authorsSelect == null) {
-            authorsSelect = new JTextField(15);
+            authorsSelect = new JTextField(30);
             GUIUtilities.setSizes(authorsSelect,TEXT_FIELD_SIZE);
             authorsSelect.addActionListener(l -> {
-//                var data = searchForAuthors(authorsSelect);
-//                if (data.isEmpty()) {
-//                    createAuthorLabel(Author.of(getAuthorsSelect().getText()),selectedAuthorsPanel,authorsSelect,true);
-//                }
-//                else {
-//                    popUpMenu(data,selectedAuthorsPanel,authorsSelect);
-//                }
+                var data = searchForAuthors(authorsSelect);
+                if (data.isEmpty()) {
+                    createAuthorLabel(Author.of(getAuthorsSelect().getText()),authorsTable,authorsSelect,true);
+                }
+                else {
+                    popUpMenu(data,authorsTable,authorsSelect);
+                }
             });
         }
         return authorsSelect;
@@ -156,16 +151,16 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
 
     private JTextField getEditorsSelect() {
         if (editorsSelect == null) {
-            editorsSelect = new JTextField(15);
+            editorsSelect = new JTextField(30);
             GUIUtilities.setSizes(editorsSelect,TEXT_FIELD_SIZE);
             editorsSelect.addActionListener(l -> {
-//                var data = searchForAuthors(editorsSelect);
-//                if (data.isEmpty()) {
-//                    createAuthorLabel(Author.of(getEditorsSelect().getText()),selectedEditorsPanel,editorsSelect,true);
-//                }
-//                else {
-//                    popUpMenu(data,selectedEditorsPanel,editorsSelect);
-//                }
+                var data = searchForAuthors(editorsSelect);
+                if (data.isEmpty()) {
+                    createAuthorLabel(Author.of(getEditorsSelect().getText()),editorsTable,editorsSelect,true);
+                }
+                else {
+                    popUpMenu(data,editorsTable,editorsSelect);
+                }
             });
         }
         return editorsSelect;
@@ -262,11 +257,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         numberOfPagesField.setText("");
 
         authorsTable.clear();
-
-        //        authors.clear();
-//        editors.clear();
-//        clear(selectedAuthorsPanel);
-//        clear(selectedEditorsPanel);
+        editorsTable.clear();
 
         IconFontSwing.register(FontAwesome.getIconFont());
         getImageLabel().setIcon(IconFontSwing.buildIcon(FontAwesome.BOOK, 48, Color.lightGray));
@@ -294,8 +285,8 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         }
 
         b.clearAuthors();
-//        authors.forEach(b::addAuthor);
-//        editors.forEach(b::addEditor);
+        authorsTable.get().forEach(b::addAuthor);
+        editorsTable.get().forEach(b::addEditor);
 
         return b;
     }
@@ -357,19 +348,8 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         authorsTable.clear();
         b.getAuthors().stream().filter(not(Author::isEditor)).forEach(authorsTable::add);
 
-//        authors.clear();
-//        clear(selectedAuthorsPanel);
-//        clear(selectedEditorsPanel);
-//
-//        b.getAuthors().stream().sorted().forEach(a -> {
-//            log.debug("Author {}",a);
-//            if (a.isEditor()) {
-//                createAuthorLabel(a,selectedEditorsPanel,getEditorsSelect(),false);
-//            }
-//            else {
-//                createAuthorLabel(a,selectedAuthorsPanel,getAuthorsSelect(),false);
-//            }
-//        });
+        editorsTable.clear();
+        b.getAuthors().stream().filter(Author::isEditor).forEach(editorsTable::add);
 
         reload();
     }
@@ -469,8 +449,8 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         gbc.insets = indentInsets;
         gbc.weightx = inputWeight;
 
-        JScrollPane authorsScroll = new JScrollPane(authorsTable);
-        GUIUtilities.setSizes(authorsScroll,new Dimension(AuthorTable.SIZE.width,AuthorTable.SIZE.height+30));
+        JScrollPane authorsScroll = new JScrollPane(authorsTable,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        GUIUtilities.setSizes(authorsScroll,new Dimension(AuthorTable.SIZE.width+30,AuthorTable.SIZE.height+30));
         p.add(authorsScroll, gbc);
 
         // End of Authors
@@ -505,8 +485,8 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         gbc.insets = indentInsets;
         gbc.weightx = inputWeight;
 
-        JScrollPane editorsScroll = new JScrollPane(editorsTable,JScrollPane.VERTICAL_SCROLLBAR_NEVER,JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        GUIUtilities.setSizes(editorsScroll,new Dimension(500,50));
+        JScrollPane editorsScroll = new JScrollPane(editorsTable,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        GUIUtilities.setSizes(editorsScroll,new Dimension(AuthorTable.SIZE.width+30,AuthorTable.SIZE.height+30));
         p.add(editorsScroll, gbc);
 
         // End of Editors

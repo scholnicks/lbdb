@@ -1,16 +1,15 @@
 package net.scholnick.lbdb.gui.title;
 
-import lombok.extern.slf4j.Slf4j;
 import net.scholnick.lbdb.domain.Author;
 
 import javax.swing.*;
 import javax.swing.table.*;
-import java.awt.Dimension;
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
-@Slf4j
 final class AuthorTable extends JTable {
-    static final Dimension SIZE = new Dimension(325,75);
+    static final Dimension SIZE = new Dimension(325,55);
 
     public AuthorTable() {
         super();
@@ -24,11 +23,23 @@ final class AuthorTable extends JTable {
         setRowSelectionAllowed(true);
         getTableHeader().setReorderingAllowed(false);
         setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        getTableHeader().setDefaultRenderer(new HeaderRenderer(this));
+        getTableHeader().setDefaultRenderer(new AuthorHeaderRenderer(this));
         getColumnModel().getColumn(0).setPreferredWidth(300);
         getColumnModel().getColumn(1).setPreferredWidth(25);
         setPreferredScrollableViewportSize(SIZE);
         getTableHeader().setPreferredSize(new Dimension(SIZE.width,30));
+
+        getColumnModel().getColumn(0).setCellRenderer(new DefaultTableCellRenderer() {
+            @Override public int getHorizontalAlignment() {
+                return JLabel.LEFT;
+            }
+        });
+
+        getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
+            @Override public int getHorizontalAlignment() {
+                return JLabel.CENTER;
+            }
+        });
     }
 
     void add(Author a) {
@@ -74,7 +85,7 @@ final class AuthorTable extends JTable {
 
         @Override
         public Object getValueAt(int row, int col) {
-            return col == 0 ? dataRows.get(row).getName() : null;
+            return col == 0 ? dataRows.get(row).getName() : "x";
         }
 
         public void clear() {
@@ -87,4 +98,19 @@ final class AuthorTable extends JTable {
 
         private static final String[] columnNames = {"Name", ""};
     }
+
+    static final class AuthorHeaderRenderer implements TableCellRenderer {
+        private final DefaultTableCellRenderer renderer;
+
+        AuthorHeaderRenderer(JTable table) {
+            renderer = (DefaultTableCellRenderer) table.getTableHeader().getDefaultRenderer();
+            renderer.setHorizontalAlignment(JLabel.LEFT);
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) {
+            return renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+        }
+    }
+
 }
