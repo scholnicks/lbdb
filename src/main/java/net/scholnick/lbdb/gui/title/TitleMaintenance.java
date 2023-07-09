@@ -262,7 +262,8 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         numberOfPagesField.setText("");
 
         authorsTable.clear();
-//        authors.clear();
+
+        //        authors.clear();
 //        editors.clear();
 //        clear(selectedAuthorsPanel);
 //        clear(selectedEditorsPanel);

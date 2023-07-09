@@ -29,14 +29,11 @@ final class AuthorTable extends JTable {
         getColumnModel().getColumn(1).setPreferredWidth(25);
         setPreferredScrollableViewportSize(SIZE);
         getTableHeader().setPreferredSize(new Dimension(SIZE.width,30));
-        setVisible(true);
-        validate();
-        repaint();
     }
 
     void add(Author a) {
-        log.debug("Adding {}",a);
         ((AuthorTableModel) getModel()).addRow(a);
+        ((AuthorTableModel) getModel()).fireTableDataChanged();
     }
 
     List<Author> get() {
@@ -45,6 +42,7 @@ final class AuthorTable extends JTable {
 
     void clear() {
         ((AuthorTableModel) getModel()).clear();
+        ((AuthorTableModel) getModel()).fireTableDataChanged();
     }
 
     private static final class AuthorTableModel extends AbstractTableModel {
