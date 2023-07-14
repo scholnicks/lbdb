@@ -5,6 +5,7 @@ import net.scholnick.lbdb.domain.Author;
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
+import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
@@ -38,6 +39,13 @@ final class AuthorTable extends JTable {
         getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
             @Override public int getHorizontalAlignment() {
                 return JLabel.CENTER;
+            }
+        });
+
+        addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent event) {
+                ((AuthorTableModel) getModel()).remove(getSelectedRow());
+                ((AuthorTableModel) getModel()).fireTableDataChanged();
             }
         });
     }
@@ -88,18 +96,22 @@ final class AuthorTable extends JTable {
             return col == 0 ? dataRows.get(row).getName() : "x";
         }
 
-        public void clear() {
+        void clear() {
             dataRows.clear();
         }
 
-        public void addRow(Author data) {
+        void addRow(Author data) {
             dataRows.add(data);
+        }
+
+        void remove (int row) {
+            dataRows.remove(row);
         }
 
         private static final String[] columnNames = {"Name", ""};
     }
 
-    static final class AuthorHeaderRenderer implements TableCellRenderer {
+    private static final class AuthorHeaderRenderer implements TableCellRenderer {
         private final DefaultTableCellRenderer renderer;
 
         AuthorHeaderRenderer(JTable table) {
@@ -112,5 +124,4 @@ final class AuthorTable extends JTable {
             return renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
         }
     }
-
 }

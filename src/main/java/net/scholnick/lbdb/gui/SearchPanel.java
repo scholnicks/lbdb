@@ -72,7 +72,7 @@ public class SearchPanel extends BasePanel {
 
     private JLabel getInfoLabel() {
         if (infoLabel == null) {
-            infoLabel = LabelFactory.createLabel(" ");    // dont use "", swing will hide the component
+            infoLabel = LabelFactory.createLabel(" ");    // don't use "", swing will hide the component
             infoLabel.setVisible(true);
         }
         return infoLabel;
