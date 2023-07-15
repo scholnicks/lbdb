@@ -85,6 +85,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
             }
         }
         dataTable.add(a);
+        inputField.setText("");
     }
 
     private void popUpMenu(java.util.List<Author> data, AuthorTable dataPanel, JTextField inputField) {
@@ -110,7 +111,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
             authorsSelect.addActionListener(l -> {
                 var data = searchForAuthors(authorsSelect);
                 if (data.isEmpty()) {
-                    addAuthor(Author.of(getAuthorsSelect().getText()),authorsTable,authorsSelect);
+                    addAuthor(Author.of(authorsSelect.getText()),authorsTable,authorsSelect);
                 }
                 else {
                     popUpMenu(data,authorsTable,authorsSelect);
@@ -127,7 +128,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
             editorsSelect.addActionListener(l -> {
                 var data = searchForAuthors(editorsSelect);
                 if (data.isEmpty()) {
-                    addAuthor(Author.of(getEditorsSelect().getText()),editorsTable,editorsSelect);
+                    addAuthor(Author.of(editorsSelect.getText()),editorsTable,editorsSelect);
                 }
                 else {
                     popUpMenu(data,editorsTable,editorsSelect);

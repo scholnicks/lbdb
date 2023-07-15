@@ -11,7 +11,7 @@ import static java.util.stream.Collectors.joining;
 
 @Accessors(chain=true)
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonIgnoreProperties(ignoreUnknown=true)
 public final class Book implements Comparable<Book> {
     private Long id;
     private String title;

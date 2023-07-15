@@ -45,14 +45,12 @@ final class AuthorTable extends JTable {
         addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent event) {
                 ((AuthorTableModel) getModel()).remove(getSelectedRow());
-                ((AuthorTableModel) getModel()).fireTableDataChanged();
             }
         });
     }
 
     void add(Author a) {
-        ((AuthorTableModel) getModel()).addRow(a);
-        ((AuthorTableModel) getModel()).fireTableDataChanged();
+        ((AuthorTableModel) getModel()).add(a);
     }
 
     List<Author> get() {
@@ -61,14 +59,13 @@ final class AuthorTable extends JTable {
 
     void clear() {
         ((AuthorTableModel) getModel()).clear();
-        ((AuthorTableModel) getModel()).fireTableDataChanged();
     }
 
     private static final class AuthorTableModel extends AbstractTableModel {
         private final List<Author> dataRows;
 
         AuthorTableModel() {
-            dataRows = new ArrayList<>();
+            dataRows = new LinkedList<>();
         }
 
         @Override
@@ -98,14 +95,17 @@ final class AuthorTable extends JTable {
 
         void clear() {
             dataRows.clear();
+            fireTableDataChanged();
         }
 
-        void addRow(Author data) {
+        void add(Author data) {
             dataRows.add(data);
+            fireTableDataChanged();
         }
 
         void remove (int row) {
             dataRows.remove(row);
+            fireTableDataChanged();
         }
 
         private static final String[] columnNames = {"Name", ""};
