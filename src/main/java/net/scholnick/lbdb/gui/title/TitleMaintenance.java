@@ -417,7 +417,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         gbc.gridx = 0;
         p.add(LabelFactory.createLabel(""), gbc);
         gbc.gridx++;
-        gbc.insets = indentInsets;
+        gbc.insets = new Insets(0,4,0,0);
         gbc.weightx = inputWeight;
 
         JScrollPane authorsScroll = new JScrollPane(authorsTable,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -453,7 +453,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         gbc.gridx = 0;
         p.add(LabelFactory.createLabel(""), gbc);
         gbc.gridx++;
-        gbc.insets = indentInsets;
+        gbc.insets = new Insets(0,4,0,0);
         gbc.weightx = inputWeight;
 
         JScrollPane editorsScroll = new JScrollPane(editorsTable,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);

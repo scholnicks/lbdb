@@ -37,8 +37,14 @@ final class AuthorTable extends JTable {
         });
 
         getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
-            @Override public int getHorizontalAlignment() {
-                return JLabel.CENTER;
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                label.setHorizontalAlignment(JLabel.CENTER);
+                label.setFont(new Font(label.getFont().getName(),Font.BOLD,label.getFont().getSize()+2));
+                label.setForeground(Color.RED);
+                label.setToolTipText("Remove author");
+                return label;
             }
         });
 

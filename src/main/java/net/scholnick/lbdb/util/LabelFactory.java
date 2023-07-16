@@ -1,9 +1,6 @@
 package net.scholnick.lbdb.util;
 
-import jiconfont.icons.font_awesome.FontAwesome;
-import jiconfont.swing.IconFontSwing;
-
-import javax.swing.*;
+import javax.swing.JLabel;
 import java.awt.Color;
 
 public final class LabelFactory {
