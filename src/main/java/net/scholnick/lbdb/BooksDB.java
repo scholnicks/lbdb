@@ -29,7 +29,7 @@ public final class BooksDB extends JFrame {
     private ExportService exportService;
 
     public static final Dimension WINDOW_SIZE = new Dimension(1000, 850);
-    private static final String       VERSION = "Version 7.0.0";
+    private static final String       VERSION = "Version 7.0.1";
 
     public BooksDB() {
         super("Laurel's Books Database");
