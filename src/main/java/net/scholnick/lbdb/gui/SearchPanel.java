@@ -137,9 +137,11 @@ public class SearchPanel extends BasePanel {
     private JComboBox<MediaType> getMediaCombo() {
         if (mediaCombo == null) {
             Vector<MediaType> types = new Vector<>(Media.values().length + 1);
-            types.add(new MediaType("", -1));
+            types.add(new MediaType("Pick One", -1));
             types.addAll(Arrays.stream(Media.values()).map(m -> new MediaType(m.toString(), m.getId())).toList());
             mediaCombo = new JComboBox<>(types);
+            GUIUtilities.setColors(mediaCombo);
+            mediaCombo.setSelectedItem(new MediaType("Pick One", -1));
         }
         return mediaCombo;
     }

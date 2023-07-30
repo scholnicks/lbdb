@@ -36,11 +36,15 @@ public class GUIUtilities {
 
     public static JButton createButton(String text) {
         JButton b = new JButton(text);
-        b.setForeground(BooksDB.FOREGROUND_COLOR);
-        b.setBackground(BooksDB.BACKGROUND_COLOR);
+        setColors(b);
         b.setOpaque(true);
         b.setBorderPainted(false);
         return b;
+    }
+
+    public static void setColors(Component c) {
+        c.setForeground(BooksDB.FOREGROUND_COLOR);
+        c.setBackground(BooksDB.BACKGROUND_COLOR);
     }
 
     public static void setLookAndFeel() {
