@@ -422,6 +422,8 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
 
         JScrollPane authorsScroll = new JScrollPane(authorsTable,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         GUIUtilities.setSizes(authorsScroll,new Dimension(AuthorTable.SIZE.width+30,AuthorTable.SIZE.height+30));
+        authorsScroll.setForeground(BooksDB.FOREGROUND_COLOR);
+        authorsScroll.setBackground(BooksDB.BACKGROUND_COLOR);
         p.add(authorsScroll, gbc);
 
         // End of Authors
@@ -458,6 +460,8 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
 
         JScrollPane editorsScroll = new JScrollPane(editorsTable,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         GUIUtilities.setSizes(editorsScroll,new Dimension(AuthorTable.SIZE.width+30,AuthorTable.SIZE.height+30));
+        editorsScroll.setForeground(BooksDB.FOREGROUND_COLOR);
+        editorsScroll.setBackground(BooksDB.BACKGROUND_COLOR);
         p.add(editorsScroll, gbc);
 
         // End of Editors

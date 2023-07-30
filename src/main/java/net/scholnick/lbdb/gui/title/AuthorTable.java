@@ -1,5 +1,6 @@
 package net.scholnick.lbdb.gui.title;
 
+import net.scholnick.lbdb.BooksDB;
 import net.scholnick.lbdb.domain.Author;
 
 import javax.swing.*;
@@ -127,7 +128,10 @@ final class AuthorTable extends JTable {
 
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) {
-            return renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+            Component c = renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+            c.setBackground(BooksDB.BACKGROUND_COLOR);
+            c.setForeground(BooksDB.FOREGROUND_COLOR);
+            return c;
         }
     }
 }
