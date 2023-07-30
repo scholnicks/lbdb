@@ -1,6 +1,6 @@
 package net.scholnick.lbdb.gui.title;
 
-import net.scholnick.lbdb.gui.SearchTableCellRenderer;
+import net.scholnick.lbdb.gui.*;
 
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
@@ -38,7 +38,7 @@ public final class TitleSearchTable extends JTable {
         TableColumnModel columnModel = getColumnModel();
 
         for (int i = 0; i <= 4; i++)
-            columnModel.getColumn(i).setCellRenderer(SearchTableCellRenderer.getInstance());
+            columnModel.getColumn(i).setCellRenderer(SearchPanel.SearchTableCellRenderer.getInstance());
     }
 
     private void addListeners() {

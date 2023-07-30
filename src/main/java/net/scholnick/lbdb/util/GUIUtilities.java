@@ -1,18 +1,46 @@
 package net.scholnick.lbdb.util;
 
+import net.scholnick.lbdb.BooksDB;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.table.*;
 import java.awt.*;
-import java.util.Objects;
+import java.util.*;
 
 public class GUIUtilities {
     private GUIUtilities() {}
+
+    public static Set<Component> components(Container root) {
+        return components(root,new HashSet<>());
+    }
+
+    private static Set<Component> components(Container root, Set<Component> found) {
+        if (root == null || root.getComponents() == null) {
+            return found;
+        }
+
+        for (Component c: root.getComponents()) {
+            found.add(c);
+            if (c instanceof Container n) components(n,found);
+        }
+
+        return found;
+    }
 
     public static JPanel panel(JComponent c) {
         JPanel p = new JPanel(new FlowLayout());
         p.add(c);
         return p;
+    }
+
+    public static JButton createButton(String text) {
+        JButton b = new JButton(text);
+        b.setForeground(BooksDB.FOREGROUND_COLOR);
+        b.setBackground(BooksDB.BACKGROUND_COLOR);
+        b.setOpaque(true);
+        b.setBorderPainted(false);
+        return b;
     }
 
     public static void setLookAndFeel() {

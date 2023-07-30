@@ -5,6 +5,7 @@ import net.scholnick.lbdb.gui.SearchPanel;
 import net.scholnick.lbdb.gui.author.AuthorMaintenance;
 import net.scholnick.lbdb.gui.title.TitleMaintenance;
 import net.scholnick.lbdb.service.*;
+import net.scholnick.lbdb.util.GUIUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +31,9 @@ public final class BooksDB extends JFrame {
 
     public static final Dimension WINDOW_SIZE = new Dimension(1000, 850);
     private static final String       VERSION = "Version 7.0.1";
+
+    public static final Color BACKGROUND_COLOR = new Color(69,75,27);
+    public static final Color FOREGROUND_COLOR = Color.white;
 
     public BooksDB() {
         super("Laurel's Books Database");
@@ -58,6 +62,8 @@ public final class BooksDB extends JFrame {
         JPanel p = new JPanel();
         p.add(notificationLabel);
         getContentPane().add(p, BorderLayout.SOUTH);
+
+        GUIUtilities.components(this).forEach(c -> { c.setBackground(BACKGROUND_COLOR); c.setForeground(FOREGROUND_COLOR); });
         setVisible(true);
     }
 

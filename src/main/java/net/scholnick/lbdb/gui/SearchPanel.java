@@ -1,5 +1,6 @@
 package net.scholnick.lbdb.gui;
 
+import net.scholnick.lbdb.BooksDB;
 import net.scholnick.lbdb.domain.*;
 import net.scholnick.lbdb.gui.author.*;
 import net.scholnick.lbdb.gui.title.*;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
+import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -146,6 +148,10 @@ public class SearchPanel extends BasePanel {
     private JButton getSearchButton() {
         if (searchButton == null) {
             searchButton = new JButton("Search");
+            searchButton.setForeground(BooksDB.FOREGROUND_COLOR);
+            searchButton.setBackground(BooksDB.BACKGROUND_COLOR);
+            searchButton.setOpaque(true);
+            searchButton.setBorderPainted(false);
             searchButton.addActionListener(searchAction);
         }
         return searchButton;
@@ -176,6 +182,10 @@ public class SearchPanel extends BasePanel {
         if (clearButton == null) {
             clearButton = new JButton("Clear");
             clearButton.addActionListener(l -> clear());
+            clearButton.setForeground(BooksDB.FOREGROUND_COLOR);
+            clearButton.setBackground(BooksDB.BACKGROUND_COLOR);
+            clearButton.setOpaque(true);
+            clearButton.setBorderPainted(false);
         }
         return clearButton;
     }
@@ -270,7 +280,7 @@ public class SearchPanel extends BasePanel {
 
     private JButton getEditBookButton() {
         if (editBookButton == null) {
-            editBookButton = new JButton("Edit Book");
+            editBookButton = GUIUtilities.createButton("Edit Book");
             editBookButton.addActionListener(l -> editTitle());
         }
         return editBookButton;
@@ -280,6 +290,10 @@ public class SearchPanel extends BasePanel {
         if (editAuthorButton == null) {
             editAuthorButton = new JButton("Edit Author");
             editAuthorButton.addActionListener(l -> editAuthor());
+            editAuthorButton.setForeground(BooksDB.FOREGROUND_COLOR);
+            editAuthorButton.setBackground(BooksDB.BACKGROUND_COLOR);
+            editAuthorButton.setOpaque(true);
+            editAuthorButton.setBorderPainted(false);
         }
         return editAuthorButton;
     }
@@ -329,6 +343,28 @@ public class SearchPanel extends BasePanel {
         public void run() {
             search();
             searchThread = null;
+        }
+    }
+
+    public static final class SearchTableCellRenderer extends DefaultTableCellRenderer {
+        private static final SearchTableCellRenderer INSTANCE = new SearchTableCellRenderer();
+
+        private static final TableCellRenderer FIRST_COLUMN_RENDERER = new DefaultTableCellRenderer();
+
+        public static SearchTableCellRenderer getInstance() {
+            return INSTANCE;
+        }
+
+        private SearchTableCellRenderer() {
+            setHorizontalAlignment(SwingConstants.CENTER);
+        }
+
+        @Override
+        public java.awt.Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            if (column == 0)
+                return FIRST_COLUMN_RENDERER.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+            return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         }
     }
 }

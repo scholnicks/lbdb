@@ -1,5 +1,7 @@
 package net.scholnick.lbdb.gui.title;
 
+import net.scholnick.lbdb.BooksDB;
+
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.Component;
@@ -14,6 +16,9 @@ final class HeaderRenderer implements TableCellRenderer {
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) {
-        return renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+        Component c = renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+        c.setForeground(BooksDB.FOREGROUND_COLOR);
+        c.setBackground(BooksDB.BACKGROUND_COLOR);
+        return c;
     }
 }
