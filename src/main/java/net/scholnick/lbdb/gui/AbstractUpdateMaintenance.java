@@ -1,6 +1,6 @@
 package net.scholnick.lbdb.gui;
 
-import net.scholnick.lbdb.util.LabelFactory;
+import net.scholnick.lbdb.util.*;
 
 import javax.swing.*;
 
@@ -32,7 +32,7 @@ public abstract class AbstractUpdateMaintenance extends BasePanel {
 
     protected final JButton getClearButton() {
         if (clearButton == null) {
-            clearButton = new JButton("Clear");
+            clearButton = GUIUtilities.createButton("Clear");
             clearButton.addActionListener(e -> { clear();sendMessage(""); });
         }
         return clearButton;
@@ -40,7 +40,7 @@ public abstract class AbstractUpdateMaintenance extends BasePanel {
 
     protected final JButton getSaveButton() {
         if (saveButton == null) {
-            saveButton = new JButton("Save");
+            saveButton = GUIUtilities.createButton("Save");
             saveButton.addActionListener(e -> save());
         }
         return saveButton;

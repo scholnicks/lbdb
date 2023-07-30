@@ -3,7 +3,7 @@ package net.scholnick.lbdb.gui.author;
 import net.scholnick.lbdb.domain.Author;
 import net.scholnick.lbdb.gui.*;
 import net.scholnick.lbdb.service.AuthorService;
-import net.scholnick.lbdb.util.LabelFactory;
+import net.scholnick.lbdb.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -41,7 +41,7 @@ public class AuthorMaintenance extends AbstractUpdateMaintenance {
 
     private JButton getDeleteButton() {
         if (deleteButton == null) {
-            deleteButton = new JButton("Delete");
+            deleteButton = GUIUtilities.createButton("Delete");
             deleteButton.addActionListener(e -> removeAuthor());
         }
         return deleteButton;

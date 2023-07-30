@@ -1,6 +1,5 @@
 package net.scholnick.lbdb.gui;
 
-import net.scholnick.lbdb.BooksDB;
 import net.scholnick.lbdb.domain.*;
 import net.scholnick.lbdb.gui.author.*;
 import net.scholnick.lbdb.gui.title.*;
@@ -147,11 +146,7 @@ public class SearchPanel extends BasePanel {
 
     private JButton getSearchButton() {
         if (searchButton == null) {
-            searchButton = new JButton("Search");
-            searchButton.setForeground(BooksDB.FOREGROUND_COLOR);
-            searchButton.setBackground(BooksDB.BACKGROUND_COLOR);
-            searchButton.setOpaque(true);
-            searchButton.setBorderPainted(false);
+            searchButton = GUIUtilities.createButton("Search");
             searchButton.addActionListener(searchAction);
         }
         return searchButton;
@@ -180,12 +175,8 @@ public class SearchPanel extends BasePanel {
 
     private JButton getClearButton() {
         if (clearButton == null) {
-            clearButton = new JButton("Clear");
+            clearButton = GUIUtilities.createButton("Clear");
             clearButton.addActionListener(l -> clear());
-            clearButton.setForeground(BooksDB.FOREGROUND_COLOR);
-            clearButton.setBackground(BooksDB.BACKGROUND_COLOR);
-            clearButton.setOpaque(true);
-            clearButton.setBorderPainted(false);
         }
         return clearButton;
     }
@@ -288,12 +279,8 @@ public class SearchPanel extends BasePanel {
 
     private JButton getEditAuthorButton() {
         if (editAuthorButton == null) {
-            editAuthorButton = new JButton("Edit Author");
+            editAuthorButton = GUIUtilities.createButton("Edit Author");
             editAuthorButton.addActionListener(l -> editAuthor());
-            editAuthorButton.setForeground(BooksDB.FOREGROUND_COLOR);
-            editAuthorButton.setBackground(BooksDB.BACKGROUND_COLOR);
-            editAuthorButton.setOpaque(true);
-            editAuthorButton.setBorderPainted(false);
         }
         return editAuthorButton;
     }

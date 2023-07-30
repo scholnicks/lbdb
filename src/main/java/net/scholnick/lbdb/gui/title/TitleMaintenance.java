@@ -140,7 +140,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
 
     private JButton getDeleteButton() {
         if (deleteButton == null) {
-            deleteButton = new JButton("Delete");
+            deleteButton = GUIUtilities.createButton("Delete");
             deleteButton.addActionListener(e -> {
                 if (showConfirmDialog(this, "Delete Book?") == JOptionPane.YES_OPTION) {
                     bookService.delete(book);
