@@ -137,11 +137,12 @@ public class SearchPanel extends BasePanel {
     private JComboBox<MediaType> getMediaCombo() {
         if (mediaCombo == null) {
             Vector<MediaType> types = new Vector<>(Media.values().length + 1);
-            types.add(new MediaType("Pick One", -1));
+            types.add(new MediaType("", -1));
             types.addAll(Arrays.stream(Media.values()).map(m -> new MediaType(m.toString(), m.getId())).toList());
             mediaCombo = new JComboBox<>(types);
+            mediaCombo.setRenderer(new GUIUtilities.ListCellRenderer());
+            mediaCombo.setBorder(BorderFactory.createLineBorder(Color.white));
             GUIUtilities.setColors(mediaCombo);
-            mediaCombo.setSelectedItem(new MediaType("Pick One", -1));
         }
         return mediaCombo;
     }
@@ -215,6 +216,7 @@ public class SearchPanel extends BasePanel {
     private JTextField getAuthorNameField() {
         if (authorName == null) {
             authorName = new TrimmedTextField(20, 100);
+            authorName.setBorder(BorderFactory.createLineBorder(Color.white));
             authorName.addActionListener(searchAction);
         }
         return authorName;
@@ -290,6 +292,7 @@ public class SearchPanel extends BasePanel {
     private JTextField getTitleField() {
         if (title == null) {
             title = new TrimmedTextField(20, 100);
+            title.setBorder(BorderFactory.createLineBorder(Color.white));
             title.addActionListener(searchAction);
         }
         return title;
@@ -298,6 +301,7 @@ public class SearchPanel extends BasePanel {
     private JTextField getSeriesField() {
         if (series == null) {
             series = new TrimmedTextField(20, 100);
+            series.setBorder(BorderFactory.createLineBorder(Color.white));
             series.addActionListener(searchAction);
         }
         return series;

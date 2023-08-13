@@ -65,14 +65,19 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         isbnField            = TrimmedTextField.create(20, 20, TEXT_FIELD_SIZE);
         numberOfPagesField   = TrimmedTextField.create(15, 20, TEXT_FIELD_SIZE);
         anthologyCheckBox    = new JCheckBox();
-        typeCombo            = new JComboBox<>(BookType.values());
-        mediaCombo           = new JComboBox<>(Media.values());
+
+        typeCombo = new JComboBox<>(BookType.values());
+        typeCombo.setRenderer(new GUIUtilities.ListCellRenderer());
+
+        mediaCombo = new JComboBox<>(Media.values());
+        mediaCombo.setRenderer(new GUIUtilities.ListCellRenderer());
 
         authorsTable = new AuthorTable();
         editorsTable = new AuthorTable();
 
         commentsArea = new JTextArea(5, 44);
         commentsArea.setLineWrap(true);
+        commentsArea.setBorder(BorderFactory.createLineBorder(Color.white));
         GUIUtilities.setSizes(commentsArea,new Dimension(400,75));
 
         buildGUI();
@@ -423,6 +428,8 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         JScrollPane authorsScroll = new JScrollPane(authorsTable,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         GUIUtilities.setSizes(authorsScroll,new Dimension(AuthorTable.SIZE.width+30,AuthorTable.SIZE.height+30));
         GUIUtilities.setColors(authorsScroll);
+        authorsScroll.setBorder(BorderFactory.createLineBorder(Color.white));
+
         p.add(authorsScroll, gbc);
 
         // End of Authors
@@ -460,6 +467,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         JScrollPane editorsScroll = new JScrollPane(editorsTable,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         GUIUtilities.setSizes(editorsScroll,new Dimension(AuthorTable.SIZE.width+30,AuthorTable.SIZE.height+30));
         GUIUtilities.setColors(editorsScroll);
+        editorsScroll.setBorder(BorderFactory.createLineBorder(Color.white));
         p.add(editorsScroll, gbc);
 
         // End of Editors

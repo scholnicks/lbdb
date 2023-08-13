@@ -37,8 +37,9 @@ public class GUIUtilities {
     public static JButton createButton(String text) {
         JButton b = new JButton(text);
         setColors(b);
+        b.setBorder(BorderFactory.createLineBorder(Color.white));
         b.setOpaque(true);
-        b.setBorderPainted(false);
+//        b.setBorderPainted(false);
         return b;
     }
 
@@ -100,6 +101,14 @@ public class GUIUtilities {
     public static void showMessageDialog(String message, String title) {
         ImageIcon BOOKCASE_ICON = new ImageIcon(Objects.requireNonNull(GUIUtilities.class.getClassLoader().getResource("images/bookcase.gif")));
         JOptionPane.showMessageDialog(null, message, title, JOptionPane.PLAIN_MESSAGE, BOOKCASE_ICON);
+    }
+
+    public static final class ListCellRenderer extends DefaultListCellRenderer {
+        @Override public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            GUIUtilities.setColors(c);
+            return c;
+        }
     }
 
 //	private static final ImageIcon BOOKCASE_ICON = new ImageIcon(Objects.requireNonNull(GUIUtilities.class.getClassLoader().getResource("images/bookcase.gif")));

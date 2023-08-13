@@ -8,8 +8,8 @@ import java.util.*;
 
 public final class TitleSearchTableModel extends AbstractTableModel {
     private final List<Book> dataRows;
-    private int sortedColumn;
-    private Direction[] sortingDirections;
+    private int              sortedColumn;
+    private Direction[]      sortingDirections;
 
     TitleSearchTableModel() {
         dataRows = new ArrayList<>();

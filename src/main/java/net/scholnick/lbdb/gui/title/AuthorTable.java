@@ -23,6 +23,8 @@ final class AuthorTable extends JTable {
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         setCellSelectionEnabled(false);
         setRowSelectionAllowed(true);
+        setBorder(BorderFactory.createLineBorder(Color.white));
+
         getTableHeader().setReorderingAllowed(false);
         setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         getTableHeader().setDefaultRenderer(new AuthorHeaderRenderer(this));
