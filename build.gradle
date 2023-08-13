@@ -10,8 +10,6 @@ bootJar {
     archiveBaseName = 'laurel-book-database'
 }
 
-version = '7.0.1'
-
 repositories {
     mavenCentral()
 }

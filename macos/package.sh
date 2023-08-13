@@ -1,10 +1,9 @@
 #!/bin/bash
 
 appName="Laurel Book Database"
-version="4.6.1"
 vendor="Steve Scholnick"
 
-rm -f "${appName}-${version}".dmg
+rm -f ${appName}.dmg
 
 ./gradlew clean build || exit -1
 
@@ -17,11 +16,11 @@ jpackage \
   --java-options     "-Dlbdb.environment=production" \
   --app-version      "${version}" \
   --vendor           "${vendor}" \
-  --copyright        "Copyright 2021 ${vendor}" \
+  --copyright        "Copyright 2023 ${vendor}" \
   --mac-package-name "${appName}" \
   --verbose
 
-cp "$HOME/development/java/lbdb/build/libs/laurel-book-database-${version}.jar" $HOME/.laurel-book-database.jar
+cp "$HOME/development/java/lbdb/build/libs/laurel-book-database.jar" $HOME/.laurel-book-database.jar
 open "${appName}-${version}".dmg
 
 ./gradlew clean
