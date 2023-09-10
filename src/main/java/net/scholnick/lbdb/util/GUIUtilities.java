@@ -9,7 +9,8 @@ import java.awt.*;
 import java.util.*;
 
 public class GUIUtilities {
-    private GUIUtilities() {}
+    public static final Border EMPTY_BORDER = BorderFactory.createEmptyBorder(5, 5, 5, 5);
+    public static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
 
     public static Set<Component> components(Container root) {
         return components(root,new HashSet<>());
@@ -103,6 +104,8 @@ public class GUIUtilities {
         JOptionPane.showMessageDialog(null, message, title, JOptionPane.PLAIN_MESSAGE, BOOKCASE_ICON);
     }
 
+    private GUIUtilities() {}
+
     public static final class ListCellRenderer extends DefaultListCellRenderer {
         @Override public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
@@ -110,10 +113,4 @@ public class GUIUtilities {
             return c;
         }
     }
-
-//	private static final ImageIcon BOOKCASE_ICON = new ImageIcon(Objects.requireNonNull(GUIUtilities.class.getClassLoader().getResource("images/bookcase.gif")));
-
-    public static final Border EMPTY_BORDER = BorderFactory.createEmptyBorder(5, 5, 5, 5);
-
-    private static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
 }
