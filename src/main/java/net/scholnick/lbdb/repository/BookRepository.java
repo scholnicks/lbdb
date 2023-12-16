@@ -5,7 +5,6 @@ import net.scholnick.lbdb.util.NullSafe;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.*;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -27,25 +26,20 @@ public class BookRepository {
     }
 
     public Long create(final Book b) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update((connection) -> {
-                PreparedStatement s = connection.prepareStatement(ADD);
-                int i = 1;
-                s.setString(i++, b.getTitle());
-                s.setInt(i++, b.getType().getId());
-                s.setInt(i++, b.getMedia().getId());
-                s.setString(i++, b.isAnthology() ? "y" : "n");
-                s.setString(i++, b.getSeries());
-                s.setString(i++, b.getPublishedYear());
-                s.setString(i++, b.getIsbn());
-                s.setInt(i++, b.getNumberOfPages() == null ? 0 : b.getNumberOfPages());
-                s.setString(i, b.getComments());
-                return s;
-            },
-            keyHolder
+        //TODO: https://stackoverflow.com/questions/4298302/sqlite-jdbc-driver-not-supporting-return-generated-keys
+        jdbcTemplate.update(ADD,
+            b.getTitle(),
+            b.getType().getId(),
+            b.getMedia().getId(),
+            b.isAnthology() ? "y" : "n",
+            b.getSeries(),
+            b.getPublishedYear(),
+            b.getIsbn(),
+            b.getNumberOfPages() == null ? 0 : b.getNumberOfPages(),
+            b.getComments()
         );
 
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return jdbcTemplate.queryForObject("select last_insert_rowid()",Long.class);
     }
 
     private static final String ADD =
@@ -132,7 +126,7 @@ public class BookRepository {
             sql += " and book_id in (select book_id from author_book_xref where auth_id in" +
                     " (select auth_id from author where auth_id is not null";
 
-            Author a = b.getAuthors().get(0);
+            Author a = b.getAuthors().getFirst();
 
             if (a.getId() != null) {
                 sql += " and auth_id=?";
