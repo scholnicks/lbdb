@@ -37,7 +37,7 @@ public class GoogleService implements CoverPhotoService {
     }
 
     @Override
-    public void setCoverPhoto(Book book) throws IOException {
+    public void setCoverPhoto(Book book) {
         Path existingPhoto = getDownloadedCoverPhoto(book);
 
         if (existingPhoto != null) {
@@ -51,7 +51,7 @@ public class GoogleService implements CoverPhotoService {
         if (results != null) findImage(results,book);
     }
 
-    private void findImage(BookResults results, Book book) throws IOException {
+    private void findImage(BookResults results, Book book)  {
         if (results.getItems() == null) return;
 
         for (BookData data: results.getItems()) {
@@ -77,7 +77,7 @@ public class GoogleService implements CoverPhotoService {
         }
     }
 
-    private void loadData(VolumeInfo info, Book book) throws IOException {
+    private void loadData(VolumeInfo info, Book book) {
         log.debug("Volume info: {}",info);
 
         book.setCoverPhotoPath(null);
@@ -115,26 +115,31 @@ public class GoogleService implements CoverPhotoService {
         }
     }
 
-    private Path downloadImage(String url, Book b) throws IOException {
-        Path imageFilePath = getDownloadedCoverPhoto(b);
+    private Path downloadImage(String url, Book b)  {
+        try {
+            Path imageFilePath = getDownloadedCoverPhoto(b);
 
-        if (imageFilePath != null) {
-            log.debug("Using cached file path " + imageFilePath);
-            return imageFilePath.toAbsolutePath();
+            if (imageFilePath != null) {
+                log.debug("Using cached file path " + imageFilePath);
+                return imageFilePath.toAbsolutePath();
+            }
+
+            url = url.replace("&edge=curl","");
+            log.info("Downloading image from " + url);
+
+            byte []downloaded = IOUtils.toByteArray(new URI(url).toURL());
+
+            if (Arrays.equals(invalidCoverImage,downloaded)) {
+                log.debug("Invalid cover image");
+                return null;
+            }
+
+            Path bookCoverPath = getBookCoverPath(b);
+            Files.write(bookCoverPath,downloaded);
+            return bookCoverPath;
         }
-
-        url = url.replace("&edge=curl","");
-        log.info("Downloading image from " + url);
-
-        byte []downloaded = IOUtils.toByteArray(new URL(url));
-
-        if (Arrays.equals(invalidCoverImage,downloaded)) {
-            log.debug("Invalid cover image");
-            return null;
+        catch (IOException| URISyntaxException e) {
+            throw new ApplicationException("Unable to download cover image",e);
         }
-
-        Path bookCoverPath = getBookCoverPath(b);
-        Files.write(bookCoverPath,downloaded);
-        return bookCoverPath;
     }
 }
