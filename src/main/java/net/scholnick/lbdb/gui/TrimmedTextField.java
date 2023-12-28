@@ -9,7 +9,7 @@ public final class TrimmedTextField extends JTextField {
     public static TrimmedTextField create(int columns, int maxChars, Dimension size) {
         TrimmedTextField t = new TrimmedTextField(columns,maxChars);
         GUIUtilities.setSizes(t,size);
-        t.setBorder(BorderFactory.createLineBorder(Color.white));
+//        t.setBorder(BorderFactory.createLineBorder(Color.white));
         return t;
     }
 

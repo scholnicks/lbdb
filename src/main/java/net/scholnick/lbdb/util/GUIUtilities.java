@@ -13,21 +13,22 @@ public class GUIUtilities {
     public static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
 
     public static Set<Component> components(Container root) {
-        return components(root,new HashSet<>());
+        return Set.of();
+//        return components(root,new HashSet<>());
     }
 
-    private static Set<Component> components(Container root, Set<Component> found) {
-        if (root == null || root.getComponents() == null) {
-            return found;
-        }
-
-        for (Component c: root.getComponents()) {
-            found.add(c);
-            if (c instanceof Container n) components(n,found);
-        }
-
-        return found;
-    }
+//    private static Set<Component> components(Container root, Set<Component> found) {
+//        if (root == null || root.getComponents() == null) {
+//            return found;
+//        }
+//
+//        for (Component c: root.getComponents()) {
+//            found.add(c);
+//            if (c instanceof Container n) components(n,found);
+//        }
+//
+//        return found;
+//    }
 
     public static JPanel panel(JComponent c) {
         JPanel p = new JPanel(new FlowLayout());
@@ -37,16 +38,18 @@ public class GUIUtilities {
 
     public static JButton createButton(String text) {
         JButton b = new JButton(text);
-        setColors(b);
-        b.setBorder(BorderFactory.createLineBorder(Color.white));
+//        b.setForeground(BooksDB.FOREGROUND_COLOR);
+        b.setBackground(BooksDB.BACKGROUND_COLOR);
+//        setColors(b);
+//        b.setBorder(BorderFactory.createLineBorder(Color.white));
         b.setOpaque(true);
 //        b.setBorderPainted(false);
         return b;
     }
 
     public static void setColors(Component c) {
-        c.setForeground(BooksDB.FOREGROUND_COLOR);
-        c.setBackground(BooksDB.BACKGROUND_COLOR);
+//        c.setForeground(BooksDB.FOREGROUND_COLOR);
+//        c.setBackground(BooksDB.BACKGROUND_COLOR);
     }
 
     public static void setLookAndFeel() {

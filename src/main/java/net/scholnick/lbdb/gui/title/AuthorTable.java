@@ -1,14 +1,13 @@
 package net.scholnick.lbdb.gui.title;
 
-import net.scholnick.lbdb.BooksDB;
 import net.scholnick.lbdb.domain.Author;
 
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 final class AuthorTable extends JTable {
     static final Dimension SIZE = new Dimension(325,55);
@@ -131,8 +130,8 @@ final class AuthorTable extends JTable {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) {
             Component c = renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
-            c.setBackground(BooksDB.BACKGROUND_COLOR);
-            c.setForeground(BooksDB.FOREGROUND_COLOR);
+//            c.setBackground(BooksDB.BACKGROUND_COLOR);
+//            c.setForeground(BooksDB.FOREGROUND_COLOR);
             return c;
         }
     }

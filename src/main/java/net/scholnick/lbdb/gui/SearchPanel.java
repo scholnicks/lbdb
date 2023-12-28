@@ -264,9 +264,7 @@ public class SearchPanel extends BasePanel {
     private Author getSelectedAuthor(Book b) {
         java.util.List<Author> authors = b.getAuthors();
 
-        if (authors.size() == 1) {
-            return authors.get(0);
-        }
+        if (authors.size() == 1) return authors.getFirst();
 
         AuthorSelectionPopUp selection = new AuthorSelectionPopUp(b.getAuthors());
         selection.setVisible(true);
