@@ -13,22 +13,21 @@ public class GUIUtilities {
     public static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
 
     public static Set<Component> components(Container root) {
-        return Set.of();
-//        return components(root,new HashSet<>());
+        return components(root,new HashSet<>());
     }
 
-//    private static Set<Component> components(Container root, Set<Component> found) {
-//        if (root == null || root.getComponents() == null) {
-//            return found;
-//        }
-//
-//        for (Component c: root.getComponents()) {
-//            found.add(c);
-//            if (c instanceof Container n) components(n,found);
-//        }
-//
-//        return found;
-//    }
+    private static Set<Component> components(Container root, Set<Component> found) {
+        if (root == null || root.getComponents() == null) {
+            return found;
+        }
+
+        for (Component c: root.getComponents()) {
+            found.add(c);
+            if (c instanceof Container n) components(n,found);
+        }
+
+        return found;
+    }
 
     public static JPanel panel(JComponent c) {
         JPanel p = new JPanel(new FlowLayout());
@@ -38,18 +37,12 @@ public class GUIUtilities {
 
     public static JButton createButton(String text) {
         JButton b = new JButton(text);
-//        b.setForeground(BooksDB.FOREGROUND_COLOR);
+        b.setForeground(BooksDB.FOREGROUND_COLOR);
         b.setBackground(BooksDB.BACKGROUND_COLOR);
-//        setColors(b);
-//        b.setBorder(BorderFactory.createLineBorder(Color.white));
+        b.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(BooksDB.BACKGROUND_COLOR),BorderFactory.createEmptyBorder(5,10,5,10)));
         b.setOpaque(true);
-//        b.setBorderPainted(false);
+        b.setBorderPainted(false);
         return b;
-    }
-
-    public static void setColors(Component c) {
-//        c.setForeground(BooksDB.FOREGROUND_COLOR);
-//        c.setBackground(BooksDB.BACKGROUND_COLOR);
     }
 
     public static void setLookAndFeel() {
@@ -111,9 +104,7 @@ public class GUIUtilities {
 
     public static final class ListCellRenderer extends DefaultListCellRenderer {
         @Override public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-            GUIUtilities.setColors(c);
-            return c;
+            return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         }
     }
 }

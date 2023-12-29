@@ -140,9 +140,6 @@ public class SearchPanel extends BasePanel {
             types.add(new MediaType("", -1));
             types.addAll(Arrays.stream(Media.values()).map(m -> new MediaType(m.toString(), m.getId())).toList());
             mediaCombo = new JComboBox<>(types);
-            mediaCombo.setRenderer(new GUIUtilities.ListCellRenderer());
-            mediaCombo.setBorder(BorderFactory.createLineBorder(Color.white));
-            GUIUtilities.setColors(mediaCombo);
         }
         return mediaCombo;
     }
