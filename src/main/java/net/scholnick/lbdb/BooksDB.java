@@ -85,6 +85,9 @@ public final class BooksDB extends JFrame {
         if (tabbedPane == null) {
             tabbedPane = new JTabbedPane();
             tabbedPane.setTabPlacement(SwingConstants.TOP);
+            tabbedPane.setForeground(FOREGROUND_COLOR);
+            tabbedPane.setBackground(BACKGROUND_COLOR);
+            tabbedPane.setOpaque(true);
             tabbedPane.addTab("Search", searchPanel);
             tabbedPane.addTab("Title", titleMaintenance);
             tabbedPane.addTab("Author", authorMaintenance);
