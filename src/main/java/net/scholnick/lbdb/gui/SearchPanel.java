@@ -90,11 +90,13 @@ public class SearchPanel extends BasePanel {
         JPanel p = new JPanel();
         p.add(getSearchButton());
         p.add(getClearButton());
+        p.setBorder(BorderFactory.createEmptyBorder(10,10,5,10));
         return p;
     }
 
     private JPanel getCriteriaPanel() {
         JPanel cp = new JPanel(new GridLayout(1, 2));
+        cp.setBorder(BorderFactory.createEmptyBorder(10,10,5,10));
 
         JPanel leftPanel = new JPanel(new GridBagLayout());
         leftPanel.setBorder(GUIUtilities.EMPTY_BORDER);
@@ -125,6 +127,7 @@ public class SearchPanel extends BasePanel {
         gbc.gridx = 0;
         rightPanel.add(LabelFactory.createLabel("Media"), gbc);
         gbc.gridx++;
+        gbc.insets = new Insets(0,15,0,0);
         rightPanel.add(getMediaCombo(), gbc);
 
         JPanel extra = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -140,6 +143,7 @@ public class SearchPanel extends BasePanel {
             types.add(new MediaType("", -1));
             types.addAll(Arrays.stream(Media.values()).map(m -> new MediaType(m.toString(), m.getId())).toList());
             mediaCombo = new JComboBox<>(types);
+            mediaCombo.setBorder(BorderFactory.createEmptyBorder());
         }
         return mediaCombo;
     }
