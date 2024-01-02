@@ -95,44 +95,34 @@ public class SearchPanel extends BasePanel {
     }
 
     private JPanel getCriteriaPanel() {
-        JPanel cp = new JPanel(new GridLayout(1, 2));
+        JPanel cp = new JPanel(new GridBagLayout());
         cp.setBorder(BorderFactory.createEmptyBorder(10,10,5,10));
 
-        JPanel leftPanel = new JPanel(new GridBagLayout());
-        leftPanel.setBorder(GUIUtilities.EMPTY_BORDER);
-
         GridBagConstraints gbc = GUIUtilities.getDefaultGridBagConstraints();
+        gbc.weighty = .25;
 
-        leftPanel.add(LabelFactory.createLabel("Title"), gbc);
+        cp.add(LabelFactory.createLabel("Title"), gbc);
         gbc.gridx++;
-        leftPanel.add(getTitleField(), gbc);
-        cp.add(leftPanel);
+        cp.add(getTitleField(), gbc);
+
+        gbc.gridx++;
+        cp.add(LabelFactory.createLabel("Author Name"), gbc);
+
+        gbc.gridx++;
+        cp.add(getAuthorNameField(), gbc);
 
         gbc.gridy++;
         gbc.gridx = 0;
-        leftPanel.add(LabelFactory.createLabel("Series"), gbc);
+        cp.add(LabelFactory.createLabel("Series"), gbc);
         gbc.gridx++;
-        leftPanel.add(getSeriesField(), gbc);
-        cp.add(leftPanel);
+        cp.add(getSeriesField(), gbc);
 
-        JPanel rightPanel = new JPanel(new GridBagLayout());
-        Insets shiftedInsets = new Insets(0, 20, 0, 0);
-        gbc = GUIUtilities.getDefaultGridBagConstraints();
-        rightPanel.add(LabelFactory.createLabel("Author Name"), gbc);
         gbc.gridx++;
-        gbc.insets = shiftedInsets;
-        rightPanel.add(getAuthorNameField(), gbc);
+        cp.add(LabelFactory.createLabel("Media"), gbc);
 
-        gbc.gridy++;
-        gbc.gridx = 0;
-        rightPanel.add(LabelFactory.createLabel("Media"), gbc);
         gbc.gridx++;
-        gbc.insets = new Insets(0,15,0,0);
-        rightPanel.add(getMediaCombo(), gbc);
-
-        JPanel extra = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        extra.add(rightPanel);
-        cp.add(extra);
+        gbc.insets = new Insets(0,-7,0,0); // shift combo back to the left. no idea why it does not line up.
+        cp.add(getMediaCombo(), gbc);
 
         return cp;
     }
@@ -144,6 +134,7 @@ public class SearchPanel extends BasePanel {
             types.addAll(Arrays.stream(Media.values()).map(m -> new MediaType(m.toString(), m.getId())).toList());
             mediaCombo = new JComboBox<>(types);
             mediaCombo.setBorder(BorderFactory.createEmptyBorder());
+            mediaCombo.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
         return mediaCombo;
     }

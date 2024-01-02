@@ -39,7 +39,11 @@ public class GUIUtilities {
         JButton b = new JButton(text);
         b.setForeground(BooksDB.FOREGROUND_COLOR);
         b.setBackground(BooksDB.BACKGROUND_COLOR);
-        b.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(BooksDB.BACKGROUND_COLOR),BorderFactory.createEmptyBorder(5,10,5,10)));
+        b.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        b.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(BooksDB.BACKGROUND_COLOR),
+            BorderFactory.createEmptyBorder(5,10,5,10)
+        ));
         b.setOpaque(true);
         b.setBorderPainted(false);
         return b;
