@@ -312,17 +312,15 @@ public class SearchPanel extends BasePanel {
     }
 
     private record MediaType(String display, Integer id) {
-        @Override
-            public String toString() {
+        @Override public String toString() {
                 return display;
             }
-        }
+    }
 
     private final class SearchAction extends AbstractAction implements Runnable {
         private Thread searchThread;
 
-        @Override
-        public void actionPerformed(ActionEvent e) {
+        @Override public void actionPerformed(ActionEvent e) {
             if (searchThread != null) {
                 return;
             }
@@ -331,8 +329,7 @@ public class SearchPanel extends BasePanel {
             searchThread.start();
         }
 
-        @Override
-        public void run() {
+        @Override public void run() {
             search();
             searchThread = null;
         }
