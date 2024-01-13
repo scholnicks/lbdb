@@ -1,13 +1,19 @@
 package net.scholnick.lbdb.repository;
 
-import net.scholnick.lbdb.domain.*;
+import net.scholnick.lbdb.domain.Author;
+import net.scholnick.lbdb.domain.Book;
 import net.scholnick.lbdb.util.NullSafe;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Repository
 public class AuthorRepository {
@@ -33,7 +39,6 @@ public class AuthorRepository {
     }
 
     public Long create(Author a) {
-        //TODO: https://stackoverflow.com/questions/4298302/sqlite-jdbc-driver-not-supporting-return-generated-keys
         jdbcTemplate.update("insert into author(auth_name) values(?)",a.getName());
         return jdbcTemplate.queryForObject("select last_insert_rowid()",Long.class);
     }
