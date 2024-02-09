@@ -54,5 +54,6 @@ insert into book_type(bot_id,bot_desc) values(3,'Technical');
 insert into media_type(med_id,med_desc) values(1,'Book');
 insert into media_type(med_id,med_desc) values(2,'Kindle');
 insert into media_type(med_id,med_desc) values(3,'Nook');
+insert into media_type(med_id,med_desc) values(4,'Audible Audio Book');
 
 

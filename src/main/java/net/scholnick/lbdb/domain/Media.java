@@ -8,7 +8,8 @@ import java.util.Arrays;
 public enum Media implements Comparable<Media> {
     BOOK(1,"Book"),
     KINDLE(2,"Kindle"),
-    NOOK(3,"Nook")
+    NOOK(3,"Nook"),
+    AUDIBLE(4,"Audible Audio Book")
     ;
 
     private final int    id;
