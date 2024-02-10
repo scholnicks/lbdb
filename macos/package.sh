@@ -1,7 +1,11 @@
 #!/bin/bash
 
-appName="Laurel Book Database"
+cd $HOME/development/java/lbdb
+rm -f LBDB-*.dmg
+
+appName="LBDB"
 vendor="Steve Scholnick"
+version="1.0.0"
 
 rm -f ${appName}.dmg
 
@@ -10,8 +14,8 @@ rm -f ${appName}.dmg
 jpackage \
   --input            build \
   --name             "${appName}" \
-  --description      "Laurel's Book Database" \
-  --main-jar         "$HOME/development/java/lbdb/build/libs/laurel-book-database-${version}.jar" \
+  --description      "LBDB" \
+  --main-jar         "$HOME/development/java/lbdb/build/libs/laurel-book-database.jar" \
   --icon             "$HOME/development/java/lbdb/macos/book_case.icns" \
   --java-options     "-Dlbdb.environment=production" \
   --app-version      "${version}" \
@@ -20,8 +24,8 @@ jpackage \
   --mac-package-name "${appName}" \
   --verbose
 
-cp "$HOME/development/java/lbdb/build/libs/laurel-book-database.jar" $HOME/.laurel-book-database.jar
-open "${appName}-${version}".dmg
+# cp "$HOME/development/java/lbdb/build/libs/laurel-book-database.jar" $HOME/.laurel-book-database.jar
+# open "${appName}".dmg
 
 ./gradlew clean
 
