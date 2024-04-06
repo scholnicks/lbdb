@@ -4,23 +4,31 @@ import jiconfont.icons.font_awesome.FontAwesome;
 import jiconfont.swing.IconFontSwing;
 import net.scholnick.lbdb.BooksDB;
 import net.scholnick.lbdb.coverphoto.CoverPhotoService;
-import net.scholnick.lbdb.domain.*;
-import net.scholnick.lbdb.gui.*;
-import net.scholnick.lbdb.service.*;
-import net.scholnick.lbdb.util.*;
-import org.slf4j.*;
+import net.scholnick.lbdb.domain.Author;
+import net.scholnick.lbdb.domain.Book;
+import net.scholnick.lbdb.domain.BookType;
+import net.scholnick.lbdb.domain.Media;
+import net.scholnick.lbdb.gui.AbstractUpdateMaintenance;
+import net.scholnick.lbdb.gui.TrimmedTextField;
+import net.scholnick.lbdb.service.AuthorService;
+import net.scholnick.lbdb.service.BookService;
+import net.scholnick.lbdb.util.GUIUtilities;
+import net.scholnick.lbdb.util.LabelFactory;
+import net.scholnick.lbdb.util.NullSafe;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.Objects;
 
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
 import static javax.swing.BorderFactory.*;
-import static javax.swing.JOptionPane.*;
+import static javax.swing.JOptionPane.YES_NO_OPTION;
+import static javax.swing.JOptionPane.showConfirmDialog;
 
 @Component
 public final class TitleMaintenance extends AbstractUpdateMaintenance {
@@ -396,14 +404,6 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
 
         // Start of Authors
 
-        IconFontSwing.register(FontAwesome.getIconFont());
-        JLabel searchLabel = new JLabel(IconFontSwing.buildIcon(FontAwesome.SEARCH, 24, Color.GREEN));
-        searchLabel.addMouseListener(new MouseAdapter() {
-            @Override public void mouseClicked(MouseEvent e) {
-                popUpMenu(searchForAuthors(getAuthorsSelect()), authorsTable, getAuthorsSelect());
-            }
-        });
-
         gbc.gridy++;
         gbc.weightx = labelWeight;
         gbc.gridx = 0;
@@ -414,7 +414,6 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         JPanel authorSearchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         authorSearchPanel.setBorder(BorderFactory.createEmptyBorder());
         authorSearchPanel.add(getAuthorsSelect());
-        authorSearchPanel.add(searchLabel);
         p.add(authorSearchPanel, gbc);
 
         gbc.gridy++;
@@ -433,14 +432,6 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
 
         // Start of Editors
 
-        IconFontSwing.register(FontAwesome.getIconFont());
-        JLabel editorSearchLabel = new JLabel(IconFontSwing.buildIcon(FontAwesome.SEARCH, 24, Color.GREEN));
-        editorSearchLabel.addMouseListener(new MouseAdapter() {
-            @Override public void mouseClicked(MouseEvent e) {
-                popUpMenu(searchForAuthors(getEditorsSelect()), editorsTable, getEditorsSelect());
-            }
-        });
-
         gbc.gridy++;
         gbc.weightx = labelWeight;
         gbc.gridx = 0;
@@ -450,7 +441,6 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         gbc.insets = new Insets(0, -5, 0, 0);
         JPanel editorSearchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         editorSearchPanel.add(getEditorsSelect());
-        editorSearchPanel.add(editorSearchLabel);
         p.add(editorSearchPanel, gbc);
 
         gbc.gridy++;

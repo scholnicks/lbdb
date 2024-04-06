@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '3.2.3'
+    id 'org.springframework.boot' version '3.2.4'
     id 'io.spring.dependency-management' version '1.1.4'
     id "io.freefair.lombok" version "8.4"
     id 'java-library'
@@ -20,9 +20,9 @@ java {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter:3.2.3'
-    implementation 'org.springframework:spring-jdbc:6.1.4'
-    implementation 'org.springframework:spring-websocket:6.1.4'
+    implementation 'org.springframework.boot:spring-boot-starter:3.2.4'
+    implementation 'org.springframework:spring-jdbc:6.1.5'
+    implementation 'org.springframework:spring-websocket:6.1.5'
 
     implementation 'org.xerial:sqlite-jdbc:3.45.1.0'
     implementation 'com.zaxxer:HikariCP:5.1.0'
@@ -30,9 +30,9 @@ dependencies {
     implementation 'com.github.jiconfont:jiconfont-swing:1.0.1'
     implementation 'com.github.jiconfont:jiconfont-font_awesome:4.7.0.1'
 
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.16.1'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.1'
-    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.16.1'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.16.2'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.2'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.16.2'
 
     implementation 'org.apache.poi:poi:5.2.5'
     implementation 'org.apache.poi:poi-ooxml:5.2.5'
