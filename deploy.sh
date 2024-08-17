@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# vi: set syntax=sh ts=4 sw=4 sts=4 et ff=unix ai si :
 
 ./gradlew clean build || exit -1
 
