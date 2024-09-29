@@ -9,3 +9,4 @@ bin
 .vscode
 cover-photos
 out
+package.sh

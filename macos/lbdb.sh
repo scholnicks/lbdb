@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/usr/bin/env bash
+# vi: set syntax=sh ts=4 sw=4 sts=4 et ff=unix ai si :
 
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-21.jdk/Contents/Home
 cd `dirname $0`/../Resources

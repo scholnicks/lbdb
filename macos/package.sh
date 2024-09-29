@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# vi: set syntax=sh ts=4 sw=4 sts=4 et ff=unix ai si :
 
 cd $HOME/development/java/lbdb
 rm -f LBDB-*.dmg
@@ -13,6 +14,7 @@ rm -f ${appName}.dmg
 
 jpackage \
   --input            build \
+  --type             dmg \
   --name             "${appName}" \
   --description      "LBDB" \
   --main-jar         "$HOME/development/java/lbdb/build/libs/laurel-book-database.jar" \
