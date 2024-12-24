@@ -1,11 +1,11 @@
 package net.scholnick.lbdb.domain;
 
-import lombok.*;
+import lombok.Getter;
 
 import java.util.Arrays;
 
 @Getter
-public enum Media implements Comparable<Media> {
+public enum Media {
     BOOK(1,"Book"),
     KINDLE(2,"Kindle"),
     NOOK(3,"Nook"),

@@ -48,10 +48,6 @@ public final class Book implements Comparable<Book> {
         return authors.stream().sorted().filter(Author::isEditor).findFirst().orElse(authors.get(0));
     }
 
-    public List<Author> getAuthors() {
-        return authors;
-    }
-
     public void clearAuthors() {
         authors.clear();
     }

@@ -1,11 +1,11 @@
 package net.scholnick.lbdb.domain;
 
-import lombok.*;
+import lombok.Getter;
 
 import java.util.Arrays;
 
 @Getter
-public enum BookType implements Comparable<BookType> {
+public enum BookType {
     FICTION(1,"Fiction"),
     NON_FICTION(2,"Non-Fiction"),
     TECHNICAL(3,"Technical")

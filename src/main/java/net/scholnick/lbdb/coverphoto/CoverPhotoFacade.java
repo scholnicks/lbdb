@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
+import java.io.File;
 
 @Service
 @Primary
@@ -18,7 +18,7 @@ public class CoverPhotoFacade implements CoverPhotoService {
     }
 
     @Override
-    public void setCoverPhoto(Book book) throws IOException {
+    public void setCoverPhoto(Book book) {
         googleService.setCoverPhoto(book);
     }
 
@@ -28,7 +28,7 @@ public class CoverPhotoFacade implements CoverPhotoService {
     }
 
     @Override
-    public String getDownloadedImage(Book b) throws IOException {
+    public String getDownloadedImage(Book b) {
         return googleService.getDownloadedImage(b);
     }
 }

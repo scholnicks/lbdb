@@ -1,11 +1,10 @@
 package net.scholnick.lbdb.coverphoto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Accessors(chain=true)
 @Data
@@ -17,4 +16,6 @@ public final class VolumeInfo {
     private Map<String,String>      imageLinks;
     private Set<IndustryIdentifier> industryIdentifiers;
     private String                  publishedDate;
+
+    public record IndustryIdentifier(@JsonProperty("type") String type, @JsonProperty("identifier") String identifier) {}
 }

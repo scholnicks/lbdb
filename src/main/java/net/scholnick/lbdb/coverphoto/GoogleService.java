@@ -51,11 +51,11 @@ public class GoogleService implements CoverPhotoService {
         if (results != null) findImage(results,book);
     }
 
-    private void findImage(BookResults results, Book book)  {
-        if (results.getItems() == null) return;
+    private void findImage(BookResults results, Book book) {
+        if (results.items() == null) return;
 
-        for (BookData data: results.getItems()) {
-            VolumeInfo info = data.getVolumeInfo();
+        for (BookResults.BookData data: results.items()) {
+            VolumeInfo info = data.volumeInfo();
             if (info.getImageLinks() == null || info.getImageLinks().isEmpty()) continue;
 
             if (book.getIsbn() != null) {
@@ -85,8 +85,8 @@ public class GoogleService implements CoverPhotoService {
         book.setNumberOfPages(info.getPageCount());
 
         if (book.getIsbn() == null && info.getIndustryIdentifiers() != null) {
-            info.getIndustryIdentifiers().stream().filter(i -> "ISBN_13".equals(i.getType())).findFirst()
-                .ifPresent(isbn13 -> book.setIsbn(isbn13.getIdentifier()));
+            info.getIndustryIdentifiers().stream().filter(i -> "ISBN_13".equals(i.type())).findFirst()
+                .ifPresent(isbn13 -> book.setIsbn(isbn13.identifier()));
         }
 
         try {
@@ -107,7 +107,7 @@ public class GoogleService implements CoverPhotoService {
         Path imageFilePath = getBookCoverPath(b);
 
         if (Files.exists(imageFilePath) && Files.isReadable(imageFilePath)) {
-            log.info("Using cached file path " + imageFilePath);
+            log.info("Using cached file path {}",imageFilePath);
             return imageFilePath.toAbsolutePath();
         }
         else {
@@ -120,12 +120,12 @@ public class GoogleService implements CoverPhotoService {
             Path imageFilePath = getDownloadedCoverPhoto(b);
 
             if (imageFilePath != null) {
-                log.debug("Using cached file path " + imageFilePath);
+                log.debug("Using cached file path {}",imageFilePath);
                 return imageFilePath.toAbsolutePath();
             }
 
             url = url.replace("&edge=curl","");
-            log.info("Downloading image from " + url);
+            log.info("Downloading image from {}",url);
 
             byte []downloaded = IOUtils.toByteArray(new URI(url).toURL());
 
@@ -138,7 +138,7 @@ public class GoogleService implements CoverPhotoService {
             Files.write(bookCoverPath,downloaded);
             return bookCoverPath;
         }
-        catch (IOException| URISyntaxException e) {
+        catch (IOException | URISyntaxException e) {
             throw new ApplicationException("Unable to download cover image",e);
         }
     }
