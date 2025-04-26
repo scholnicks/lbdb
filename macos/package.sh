@@ -22,7 +22,7 @@ jpackage \
   --java-options     "-Dlbdb.environment=production" \
   --app-version      "${version}" \
   --vendor           "${vendor}" \
-  --copyright        "Copyright 2023 ${vendor}" \
+  --copyright        "Copyright 2025 ${vendor}" \
   --mac-package-name "${appName}" \
   --verbose
 

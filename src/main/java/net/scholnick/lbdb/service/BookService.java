@@ -15,23 +15,23 @@ import static net.scholnick.lbdb.util.GUIUtilities.showMessageDialog;
 @Slf4j
 @Service
 public class BookService {
-    private final BookRepository bookDAO;
-    private final AuthorRepository authorDAO;
+    private final BookRepository bookRepository;
+    private final AuthorRepository authorRepository;
     private final AuthorService authorService;
 
     @Autowired
-    public BookService(BookRepository bookDAO, AuthorRepository authorDAO, AuthorService authorService) {
-        this.bookDAO = bookDAO;
-        this.authorDAO = authorDAO;
+    public BookService(BookRepository bookRepository, AuthorRepository authorRepository, AuthorService authorService) {
+        this.bookRepository = bookRepository;
+        this.authorRepository = authorRepository;
         this.authorService = authorService;
     }
 
     @Transactional(readOnly = true)
     public Book get(Long id) {
-        Book b = bookDAO.get(id);
-        b.setAuthors(authorDAO.get(b));
+        Book b = bookRepository.get(id);
+        b.setAuthors(authorRepository.get(b));
 
-        Set<Long> editorIds = authorDAO.getEditors(b);
+        Set<Long> editorIds = authorRepository.getEditors(b);
 
         for (Author a : b.getAuthors()) {
             if (editorIds.contains(a.getId())) {
@@ -52,20 +52,20 @@ public class BookService {
 
     @Transactional(readOnly = true)
     public Long count() {
-        return bookDAO.count();
+        return bookRepository.count();
     }
 
     @Transactional
     public void delete(Book b) {
-        log.info("Deleting book " + b.getTitle());
-        bookDAO.removeJoinRecords(b);
-        bookDAO.delete(b);
+        log.info("Deleting book {}",b.getTitle());
+        bookRepository.removeJoinRecords(b);
+        bookRepository.delete(b);
     }
 
     @Transactional(readOnly = true)
     public List<Book> search(Book searchCriteria) {
-        List<Book> results = bookDAO.search(searchCriteria);
-        results.forEach(b -> b.setAuthors(authorDAO.get(b)));
+        List<Book> results = bookRepository.search(searchCriteria);
+        results.forEach(b -> b.setAuthors(authorRepository.get(b)));
         return results;
     }
 
@@ -83,7 +83,7 @@ public class BookService {
         }
 
         log.info("Creating new book " + b);
-        Long id = bookDAO.create(b);
+        Long id = bookRepository.create(b);
         b.setId(id);
 
         handleAuthors(b);
@@ -94,7 +94,7 @@ public class BookService {
 
     private Book update(Book b) {
         log.info("Updating existing book " + b);
-        bookDAO.update(b);
+        bookRepository.update(b);
 
         handleAuthors(b);
 
@@ -102,8 +102,8 @@ public class BookService {
     }
 
     private void handleAuthors(Book b) {
-        bookDAO.removeJoinRecords(b);
+        bookRepository.removeJoinRecords(b);
         b.getAuthors().forEach(a -> authorService.save(a, true));
-        bookDAO.addJoinRecords(b);
+        bookRepository.addJoinRecords(b);
     }
 }
