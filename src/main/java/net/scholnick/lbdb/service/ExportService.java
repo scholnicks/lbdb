@@ -2,7 +2,7 @@ package net.scholnick.lbdb.service;
 
 import lombok.extern.slf4j.Slf4j;
 import net.scholnick.lbdb.repository.*;
-import net.scholnick.lbdb.domain.TitleReportData;
+import net.scholnick.lbdb.util.NullSafe;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,18 +12,20 @@ import java.io.*;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import static java.util.Comparator.comparing;
+
 @Slf4j
 @Service
 public class ExportService {
-    private final BookRepository bookDAO;
-    private final AuthorRepository authorDAO;
+    private final BookRepository   bookRepository;
+    private final AuthorRepository authorRepository;
 
     private static final List<String> HEADER_ROW = List.of("Title","Media","Authors");
 
     @Autowired
-    public ExportService(BookRepository bookDAO, AuthorRepository authorDAO) {
-        this.bookDAO   = bookDAO;
-        this.authorDAO = authorDAO;
+    public ExportService(BookRepository bookRepository, AuthorRepository authorRepository) {
+        this.bookRepository   = bookRepository;
+        this.authorRepository = authorRepository;
     }
 
     public String export() {
@@ -62,7 +64,7 @@ public class ExportService {
             }
 
             int r = 1;
-            for (TitleReportData data : bookDAO.titleData()) {
+            for (TitleReportData data : bookRepository.titleData().stream().sorted(comparing(TitleReportData::slug)).toList()) {
                  Row row = sheet.createRow(r);
                  Cell cell = row.createCell(0);
                  cell.setCellValue(data.title());
@@ -99,7 +101,7 @@ public class ExportService {
             titleCell.setCellValue("Name");
 
             int r = 1;
-            for (String data : authorDAO.allNames()) {
+            for (String data : authorRepository.allNames()) {
                 Row row = sheet.createRow(r);
                 Cell cell = row.createCell(0);
                 cell.setCellValue(data);
@@ -111,6 +113,16 @@ public class ExportService {
             sheet.createFreezePane(0,1);
 
             workbook.write(fous);
+        }
+    }
+
+    public record TitleReportData(String title, String media, String authors) {
+        String slug() {
+            if (NullSafe.isEmpty(title)) return "";
+            if (title.startsWith("The ")) return title.substring("The ".length()).toLowerCase().strip();
+            if (title.startsWith("A ")) return title.substring("A ".length()).toLowerCase().strip();
+            if (title.startsWith("An ")) return title.substring("An ".length()).toLowerCase().strip();
+            return title.toLowerCase().strip();
         }
     }
 }

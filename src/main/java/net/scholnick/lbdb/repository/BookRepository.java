@@ -1,6 +1,7 @@
 package net.scholnick.lbdb.repository;
 
 import net.scholnick.lbdb.domain.*;
+import net.scholnick.lbdb.service.ExportService.TitleReportData;
 import net.scholnick.lbdb.util.NullSafe;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class BookRepository {
     }
 
     public Long create(final Book b) {
-        //TODO: https://stackoverflow.com/questions/4298302/sqlite-jdbc-driver-not-supporting-return-generated-keys
+        // https://stackoverflow.com/questions/4298302/sqlite-jdbc-driver-not-supporting-return-generated-keys
         jdbcTemplate.update(ADD,
             b.getTitle(),
             b.getType().getId(),
@@ -35,7 +36,7 @@ public class BookRepository {
             b.getSeries(),
             b.getPublishedYear(),
             b.getIsbn(),
-            b.getNumberOfPages() == null ? 0 : b.getNumberOfPages(),
+            Objects.requireNonNullElse(b.getNumberOfPages(),0),
             b.getComments()
         );
 
