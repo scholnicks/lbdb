@@ -35,7 +35,7 @@ public class BookRepository {
             b.isAnthology() ? "y" : "n",
             b.getSeries(),
             b.getPublishedYear(),
-            b.getIsbn(),
+            b.getIsbn(),    
             Objects.requireNonNullElse(b.getNumberOfPages(),0),
             b.getComments()
         );
