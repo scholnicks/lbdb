@@ -1,0 +1,75 @@
+#!/usr/bin/env python -B
+# vi: set syntax=python ts=4 sw=4 sts=4 et ff=unix ai si :
+#
+
+"""
+export-lbdb-data: Exports lbdb data from the database to Excel files.
+
+Usage:
+    export-lbdb-data [options]
+
+Options:
+    -a, --authors=<file>   Exported authors file [default: authors.xlsx]
+    --debug                Enable debug mode
+    --directory=<path>     Directory to export files [default: /Users/steve/data]
+    -h, --help             Show this help screen
+    -t, --titles=<file>    Exported titles file. [default: titles.xlsx]
+    --version              Prints the version
+"""
+
+import sys
+import sqlite3
+import pandas as pd
+from pathlib import Path
+
+DATABASE = '/Users/steve/data/lbdb.db'
+
+def main():
+    export(
+        'select auth_name as "Name" from Author order by 1',
+        Path(arguments["--directory"]) / arguments["--authors"]
+    )
+
+    export(
+        """
+        select
+           b.book_title as "Title", m.med_desc as "Media", group_concat(a.auth_name) as "Authors"
+        from
+           Book b
+        join
+           Media_Type m on m.med_id=b.med_id
+        join
+           Author_Book_Xref x on x.book_id=b.book_id
+        join
+           Author a on a.auth_id=x.auth_id
+        group by
+           b.book_title, m.med_desc
+        order by
+           lower(b.book_title)
+        """,
+        Path(arguments["--directory"]) / arguments["--titles"]
+    )
+
+    sys.exit(0)
+
+
+def export(query, output_path):
+    """Exports data from a SQLite database to an Excel file."""
+
+    # Connect and read
+    conn = sqlite3.connect(DATABASE)
+    df = pd.read_sql_query(query, conn)
+    conn.close()
+
+    # Write to Excel
+    df.to_excel(output_path, index=False)
+
+    if arguments['--debug']:
+        print(f"Data exported successfully to {output_path}")
+
+
+if __name__ == '__main__':
+    from docopt import docopt
+    arguments = docopt(__doc__, version='0.0.1')
+    main()
+
