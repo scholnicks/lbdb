@@ -9,17 +9,17 @@ Usage:
     export-lbdb-data [options]
 
 Options:
-    -a, --authors=<file>   Exported authors file [default: authors.xlsx]
-    --debug                Enable debug mode
-    --directory=<path>     Directory to export files [default: /Users/steve/data]
-    -h, --help             Show this help screen
-    -t, --titles=<file>    Exported titles file. [default: titles.xlsx]
-    --version              Prints the version
+    -a, --authors=<file>    Exported authors file [default: authors.xlsx]
+    --debug                 Enable debug mode
+    -d, --directory=<path>  Directory to export files [default: /Users/steve/data]
+    -h, --help              Show this help screen
+    -t, --titles=<file>     Exported titles file. [default: titles.xlsx]
+    --version               Prints the version
 """
 
 import sys
 import sqlite3
-import pandas as pd
+import pandas
 from pathlib import Path
 
 DATABASE = '/Users/steve/data/lbdb.db'
@@ -53,19 +53,19 @@ def main():
     sys.exit(0)
 
 
-def export(query, output_path):
+def export(query, outputPath):
     """Exports data from a SQLite database to an Excel file."""
 
     # Connect and read
-    conn = sqlite3.connect(DATABASE)
-    df = pd.read_sql_query(query, conn)
-    conn.close()
+    connection = sqlite3.connect(DATABASE)
+    dataFrame = pandas.read_sql_query(query, connection)
+    connection.close()
 
     # Write to Excel
-    df.to_excel(output_path, index=False)
+    dataFrame.to_excel(outputPath, index=False)
 
     if arguments['--debug']:
-        print(f"Data exported successfully to {output_path}")
+        print(f"Data exported successfully to {outputPath}")
 
 
 if __name__ == '__main__':
