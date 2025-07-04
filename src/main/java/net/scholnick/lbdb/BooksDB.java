@@ -26,10 +26,9 @@ public final class BooksDB extends JFrame {
 
     private BookService   bookService;
     private AuthorService authorService;
-    private ExportService exportService;
 
     public static final Dimension WINDOW_SIZE = new Dimension(1000, 850);
-    private static final String       VERSION = "Version 7.2.5";
+    private static final String       VERSION = "Version 7.3.0";
 
     public static final Color BACKGROUND_COLOR = new Color(4,106,56);
     public static final Color FOREGROUND_COLOR = Color.white;
@@ -160,13 +159,6 @@ public final class BooksDB extends JFrame {
         exportItem.setText("Export");
         exportItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.META_DOWN_MASK));
 
-        var that = this;
-        exportItem.addActionListener(l -> {
-            String message = exportService.export();
-            JOptionPane.showMessageDialog(that,message);
-        });
-        fileMenu.add(exportItem);
-
         return fileMenu;
     }
 
@@ -218,11 +210,6 @@ public final class BooksDB extends JFrame {
     @Override
     public Dimension getMaximumSize() {
         return WINDOW_SIZE;
-    }
-
-    @Autowired
-    public void setExportService(ExportService exportService) {
-        this.exportService = exportService;
     }
 
     @Autowired

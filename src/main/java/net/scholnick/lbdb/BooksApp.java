@@ -2,7 +2,6 @@ package net.scholnick.lbdb;
 
 import com.zaxxer.hikari.*;
 import lombok.extern.slf4j.Slf4j;
-import net.scholnick.lbdb.service.ExportService;
 import net.scholnick.lbdb.util.*;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,8 +12,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
 import javax.sql.DataSource;
-import java.awt.EventQueue;
-import java.util.*;
+import java.awt.*;
+import java.util.Properties;
 
 @Slf4j
 @SpringBootApplication
@@ -26,11 +25,6 @@ public class BooksApp {
             System.setProperty("com.apple.mrj.application.live-resize","true");
 
             ApplicationContext context = new SpringApplicationBuilder(BooksApp.class).headless(false).run(args);
-
-            if (args != null && Arrays.asList(args).contains("--export")) {
-                context.getBean(ExportService.class).export();
-                System.exit(0);
-            }
 
             GUIUtilities.setLookAndFeel();
             EventQueue.invokeLater(() -> context.getBean(BooksDB.class).init());

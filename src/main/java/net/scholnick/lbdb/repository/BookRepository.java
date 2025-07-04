@@ -1,7 +1,6 @@
 package net.scholnick.lbdb.repository;
 
 import net.scholnick.lbdb.domain.*;
-import net.scholnick.lbdb.service.ExportService.TitleReportData;
 import net.scholnick.lbdb.util.NullSafe;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,12 +92,6 @@ public class BookRepository {
         return jdbcTemplate.queryForObject("select count(book_id) from book", Long.class);
     }
 
-    public List<TitleReportData> titleData() {
-        return jdbcTemplate.query(TITLES_EXPORT_SQL,(r,c) ->
-            new TitleReportData(r.getString(1),r.getString(2),r.getString(3))
-        );
-    }
-
     public List<Book> search(Book b) {
         String sql = BASE_SEARCH;
         List<String> criteria = new ArrayList<>(2);
@@ -167,21 +160,4 @@ public class BookRepository {
 
         return b;
     }
-
-    private static final String TITLES_EXPORT_SQL = """
-        select
-           b.book_title as "Title", m.med_desc as "Media", group_concat(a.auth_name) as "Authors"
-        from
-           Book b
-        join
-           Media_Type m on m.med_id=b.med_id
-        join
-           Author_Book_Xref x on x.book_id=b.book_id
-        join
-           Author a on a.auth_id=x.auth_id
-        group by
-           b.book_title, m.med_desc
-        order by
-           lower(b.book_title)
-       """;
 }
