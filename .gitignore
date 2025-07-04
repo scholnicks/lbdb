@@ -10,3 +10,5 @@ bin
 cover-photos
 out
 package.sh
+*.xlsx
+
