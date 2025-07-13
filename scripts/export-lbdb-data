@@ -1,6 +1,5 @@
 #!/usr/bin/env python -B
 # vi: set syntax=python ts=4 sw=4 sts=4 et ff=unix ai si :
-#
 
 """
 export-lbdb-data: Exports lbdb data from the database to Excel files.
@@ -54,22 +53,21 @@ def main():
 
 
 def export(query, outputPath):
-    """Exports data from a SQLite database to an Excel file."""
+   """Exports data from a SQLite database to an Excel file."""
 
-    # Connect and read
-    connection = sqlite3.connect(DATABASE)
-    dataFrame = pandas.read_sql_query(query, connection)
-    connection.close()
+   # Connect and read
+   with sqlite3.connect(DATABASE) as connection:
+      dataFrame = pandas.read_sql_query(query, connection)
 
-    # Write to Excel
-    dataFrame.to_excel(outputPath, index=False)
+   # Write to Excel
+   dataFrame.to_excel(outputPath, index=False)
 
-    if arguments['--debug']:
-        print(f"Data exported successfully to {outputPath}")
+   if arguments['--debug']:
+      print(f"Data exported successfully to {outputPath}")
 
 
 if __name__ == '__main__':
     from docopt import docopt
-    arguments = docopt(__doc__, version='0.0.1')
+    arguments = docopt(__doc__, version='0.0.3')
     main()
 
