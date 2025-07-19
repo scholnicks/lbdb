@@ -8,11 +8,11 @@ Usage:
     export-lbdb-data [options]
 
 Options:
-    -a, --authors=<file>    Exported authors file [default: authors.xlsx]
+    -a, --authors=<file>    Exported authors filename [default: authors.xlsx]
     --debug                 Enable debug mode
-    -d, --directory=<path>  Directory to export files [default: /Users/steve/data]
+    -d, --directory=<path>  Directory to export files [default: .]
     -h, --help              Show this help screen
-    -t, --titles=<file>     Exported titles file. [default: titles.xlsx]
+    -t, --titles=<file>     Exported titles filename. [default: titles.xlsx]
     --version               Prints the version
 """
 
@@ -21,7 +21,7 @@ import sqlite3
 import pandas
 from pathlib import Path
 
-DATABASE = '/Users/steve/data/lbdb.db'
+DATABASE = Path.home() / 'data' / 'lbdb.db'
 
 def main():
     export(
@@ -53,7 +53,7 @@ def main():
 
 
 def export(query, outputPath):
-   """Exports data from a SQLite database to an Excel file."""
+   """Exports data from the database to an Excel file."""
 
    # Connect and read
    with sqlite3.connect(DATABASE) as connection:
@@ -68,6 +68,6 @@ def export(query, outputPath):
 
 if __name__ == '__main__':
     from docopt import docopt
-    arguments = docopt(__doc__, version='0.0.3')
+    arguments = docopt(__doc__, version='0.0.4')
     main()
 
