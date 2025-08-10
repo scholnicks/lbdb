@@ -21,13 +21,11 @@ import sqlite3
 import pandas
 from pathlib import Path
 
-DATABASE = Path.home() / 'data' / 'lbdb.db'
+DATABASE = Path.home() / "data" / "lbdb.db"
+
 
 def main():
-    export(
-        'select auth_name as "Name" from Author order by 1',
-        Path(arguments["--directory"]) / arguments["--authors"]
-    )
+    export('select auth_name as "Name" from Author order by 1', Path(arguments["--directory"]) / arguments["--authors"])
 
     export(
         """
@@ -46,28 +44,28 @@ def main():
         order by
            lower(b.book_title)
         """,
-        Path(arguments["--directory"]) / arguments["--titles"]
+        Path(arguments["--directory"]) / arguments["--titles"],
     )
 
     sys.exit(0)
 
 
 def export(query, outputPath):
-   """Exports data from the database to an Excel file."""
+    """Exports data from the database to an Excel file."""
 
-   # Connect and read
-   with sqlite3.connect(DATABASE) as connection:
-      dataFrame = pandas.read_sql_query(query, connection)
+    # Connect and read
+    with sqlite3.connect(DATABASE) as connection:
+        dataFrame = pandas.read_sql_query(query, connection)
 
-   # Write to Excel
-   dataFrame.to_excel(outputPath, index=False)
+    # Write to Excel
+    dataFrame.to_excel(outputPath, index=False)
 
-   if arguments['--debug']:
-      print(f"Data exported successfully to {outputPath}")
+    if arguments["--debug"]:
+        print(f"Data exported successfully to {outputPath}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     from docopt import docopt
-    arguments = docopt(__doc__, version='0.0.4')
-    main()
 
+    arguments = docopt(__doc__, version="0.0.4")
+    main()
