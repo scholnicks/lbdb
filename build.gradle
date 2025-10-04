@@ -1,7 +1,7 @@
 plugins {
-    id 'org.springframework.boot' version '3.5.3'
+    id 'org.springframework.boot' version '3.5.5'
     id 'io.spring.dependency-management' version '1.1.7'
-    id "io.freefair.lombok" version "8.14"
+    id "io.freefair.lombok" version "9.0.0"
     id 'java-library'
     id 'idea'
 }
@@ -15,33 +15,32 @@ repositories {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_24
-    targetCompatibility = JavaVersion.VERSION_24
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
 }
 
 dependencies {
-//    annotationProcessor 'org.projectlombok:lombok:1.18.38'
-//    implementation 'org.projectlombok:lombok:1.18.38'
-    implementation 'org.springframework.boot:spring-boot-starter:3.5.3'
-    implementation 'org.springframework:spring-jdbc:6.2.8'
-    implementation 'org.springframework:spring-websocket:6.2.8'
+    implementation 'org.springframework.boot:spring-boot-starter:3.5.5'
+    implementation 'org.springframework:spring-jdbc:6.2.11'
+    implementation 'org.springframework:spring-websocket:6.2.11'
 
-    implementation 'org.xerial:sqlite-jdbc:3.50.2.0'
-    implementation 'com.zaxxer:HikariCP:6.3.0'
+    implementation 'org.xerial:sqlite-jdbc:3.50.3.0'
+    implementation 'com.zaxxer:HikariCP:7.0.2'
 
     implementation 'com.github.jiconfont:jiconfont-swing:1.0.1'
     implementation 'com.github.jiconfont:jiconfont-font_awesome:4.7.0.1'
 
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.19.1'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.19.1'
-    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.19.1'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.20.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.20.0'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.20'
 
     implementation 'org.apache.poi:poi:5.4.1'
     implementation 'org.apache.poi:poi-ooxml:5.4.1'
-    implementation 'org.apache.commons:commons-compress:1.27.1'
+    implementation("org.apache.commons:commons-lang3:3.19.0")
+    implementation 'org.apache.commons:commons-compress:1.28.0'
 
-    implementation 'commons-io:commons-io:2.19.0'
-    implementation 'org.apache.commons:commons-text:1.13.1'
+    implementation 'commons-io:commons-io:2.20.0'
+    implementation 'org.apache.commons:commons-text:1.14.0'
 }
 
 tasks.withType(JavaCompile).configureEach {
