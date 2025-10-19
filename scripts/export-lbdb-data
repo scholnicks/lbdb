@@ -16,10 +16,11 @@ Options:
     --version               Prints the version
 """
 
-import sys
 import sqlite3
-import pandas
+import sys
 from pathlib import Path
+
+import pandas
 
 DATABASE = Path.home() / "data" / "lbdb.db"
 
