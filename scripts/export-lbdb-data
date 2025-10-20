@@ -22,10 +22,10 @@ from pathlib import Path
 
 import pandas
 
-DATABASE = Path.home() / "data" / "lbdb.db"
+DATABASE: Path = Path.home() / "data" / "lbdb.db"
 
 
-def main():
+def main() -> None:
     export('select auth_name as "Name" from Author order by 1', Path(arguments["--directory"]) / arguments["--authors"])
 
     export(
@@ -51,12 +51,12 @@ def main():
     sys.exit(0)
 
 
-def export(query, outputPath):
+def export(query: str, outputPath: str) -> None:
     """Exports data from the database to an Excel file."""
 
     # Connect and read
     with sqlite3.connect(DATABASE) as connection:
-        dataFrame = pandas.read_sql_query(query, connection)
+        dataFrame: pandas.DataFrame = pandas.read_sql_query(query, connection)
 
     # Write to Excel
     dataFrame.to_excel(outputPath, index=False)
