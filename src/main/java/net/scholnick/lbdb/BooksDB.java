@@ -28,7 +28,7 @@ public final class BooksDB extends JFrame {
     private AuthorService authorService;
 
     public static final Dimension WINDOW_SIZE = new Dimension(1000, 850);
-    private static final String       VERSION = "Version 7.3.0";
+    private static final String       VERSION = "Version 7.3.1";
 
     public static final Color BACKGROUND_COLOR = new Color(4,106,56);
     public static final Color FOREGROUND_COLOR = Color.white;
@@ -76,7 +76,7 @@ public final class BooksDB extends JFrame {
             }
         }.execute();
 
-        // load the author cache in a separate short lived thread
+        // load the author cache in a separate short-lived thread
         new Thread(authorService::loadCache).start();
     }
 
