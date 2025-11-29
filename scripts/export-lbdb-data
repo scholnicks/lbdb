@@ -22,7 +22,7 @@ from pathlib import Path
 
 import pandas
 
-DATABASE: Path = Path.home() / "data" / "lbdb.db"
+DATABASE = Path.home() / "data" / "lbdb.db"
 
 
 def main() -> None:
@@ -56,7 +56,7 @@ def export(query: str, outputPath: str) -> None:
 
     # Connect and read
     with sqlite3.connect(DATABASE) as connection:
-        dataFrame: pandas.DataFrame = pandas.read_sql_query(query, connection)
+        dataFrame = pandas.read_sql_query(query, connection)
 
     # Write to Excel
     dataFrame.to_excel(outputPath, index=False)
@@ -70,3 +70,4 @@ if __name__ == "__main__":
 
     arguments = docopt(__doc__, version="0.0.4")
     main()
+
