@@ -1,6 +1,8 @@
 package net.scholnick.lbdb;
 
 import com.zaxxer.hikari.*;
+import jiconfont.icons.font_awesome.FontAwesome;
+import jiconfont.swing.IconFontSwing;
 import lombok.extern.slf4j.Slf4j;
 import net.scholnick.lbdb.util.*;
 import org.springframework.beans.BeansException;
@@ -27,6 +29,7 @@ public class BooksApp {
             ApplicationContext context = new SpringApplicationBuilder(BooksApp.class).headless(false).run(args);
 
             GUIUtilities.setLookAndFeel();
+            IconFontSwing.register(FontAwesome.getIconFont());
             EventQueue.invokeLater(() -> context.getBean(BooksDB.class).init());
         }
         catch (ApplicationException | BeansException e) {

@@ -4,31 +4,23 @@ import jiconfont.icons.font_awesome.FontAwesome;
 import jiconfont.swing.IconFontSwing;
 import net.scholnick.lbdb.BooksDB;
 import net.scholnick.lbdb.coverphoto.CoverPhotoService;
-import net.scholnick.lbdb.domain.Author;
-import net.scholnick.lbdb.domain.Book;
-import net.scholnick.lbdb.domain.BookType;
-import net.scholnick.lbdb.domain.Media;
-import net.scholnick.lbdb.gui.AbstractUpdateMaintenance;
-import net.scholnick.lbdb.gui.TrimmedTextField;
-import net.scholnick.lbdb.service.AuthorService;
-import net.scholnick.lbdb.service.BookService;
-import net.scholnick.lbdb.util.GUIUtilities;
-import net.scholnick.lbdb.util.LabelFactory;
-import net.scholnick.lbdb.util.NullSafe;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import net.scholnick.lbdb.domain.*;
+import net.scholnick.lbdb.gui.*;
+import net.scholnick.lbdb.service.*;
+import net.scholnick.lbdb.util.*;
+import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 import java.util.Objects;
 
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
 import static javax.swing.BorderFactory.*;
-import static javax.swing.JOptionPane.YES_NO_OPTION;
-import static javax.swing.JOptionPane.showConfirmDialog;
+import static javax.swing.JOptionPane.*;
 
 @Component
 public final class TitleMaintenance extends AbstractUpdateMaintenance {
@@ -396,6 +388,27 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         double inputWeight = .90;
 
         gbc.weightx = labelWeight;
+        p.add(LabelFactory.createLabel("ISBN"), gbc);
+        gbc.gridx++;
+        gbc.insets = indentInsets;
+        gbc.weightx = inputWeight;
+        JPanel isbnPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,0,0));
+        isbnPanel.setBorder(BorderFactory.createEmptyBorder());
+        isbnPanel.add(isbnField);
+
+        JLabel searchIcon = new JLabel(IconFontSwing.buildIcon(FontAwesome.SEARCH, 18, Color.BLACK));
+        searchIcon.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        searchIcon.addMouseListener(new MouseAdapter() {
+            @Override public void mouseClicked(MouseEvent e) {
+                log.debug("Searching for book using ISBN={}", isbnField.getText());
+            }
+        });
+        isbnPanel.add(searchIcon);
+        p.add(isbnPanel, gbc);
+
+        gbc.gridy++;
+        gbc.gridx = 0;
+        gbc.weightx = labelWeight;
         p.add(LabelFactory.createLabel("Title"), gbc);
         gbc.weightx = inputWeight;
         gbc.gridx++;
@@ -492,15 +505,6 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         gbc.insets = indentInsets;
         gbc.weightx = inputWeight;
         p.add(publishedYearField, gbc);
-
-        gbc.gridy++;
-        gbc.gridx = 0;
-        gbc.weightx = labelWeight;
-        p.add(LabelFactory.createLabel("ISBN"), gbc);
-        gbc.gridx++;
-        gbc.insets = indentInsets;
-        gbc.weightx = inputWeight;
-        p.add(isbnField, gbc);
 
         gbc.gridy++;
         gbc.gridx = 0;
