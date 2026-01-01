@@ -6,6 +6,7 @@ import net.scholnick.lbdb.BooksDB;
 import net.scholnick.lbdb.coverphoto.CoverPhotoService;
 import net.scholnick.lbdb.domain.*;
 import net.scholnick.lbdb.gui.*;
+import net.scholnick.lbdb.isbn.BookProviderFacade;
 import net.scholnick.lbdb.service.*;
 import net.scholnick.lbdb.util.*;
 import org.slf4j.*;
@@ -50,6 +51,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     private BookService       bookService;
     private AuthorService     authorService;
     private CoverPhotoService coverPhotoService;
+    private BookProviderFacade bookProviderFacade;
 
     private static final int WIDTH = 128;
     private static final int HEIGHT = 198;
@@ -81,6 +83,25 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         GUIUtilities.setSizes(commentsArea,new Dimension(400,75));
 
         buildGUI();
+    }
+
+    /** Search for a book by its ISBN using the BookProviderFacade */
+    private void searchByISBN() {
+        String isbn = isbnField.getText();
+        if (NullSafe.isEmpty(isbn)) {
+            showMessageDialog(this, "Please enter an ISBN to search for.");
+            return;
+        }
+
+        Book results = bookProviderFacade.search(isbn.replace("-",""));
+        if (results == null) {
+            showMessageDialog(this, "No book found for ISBN " + isbn);
+            return;
+        }
+
+        results.setType(BookType.FICTION);
+        results.setMedia(Media.BOOK);
+        setBook(results);
     }
 
     private void addAuthor(Author a, AuthorTable dataTable, JTextField inputField) {
@@ -201,7 +222,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
                     numberOfPagesField.setText(getBook().getNumberOfPages().toString());
                 }
 
-                bookService.save(getBook());
+                //bookService.save(getBook());
             }
             else {
                 getImageLabel().setIcon(null);
@@ -346,6 +367,11 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         this.authorService = authorService;
     }
 
+    @Autowired
+    public void setBookProviderFacade(BookProviderFacade bookProviderFacade) {
+        this.bookProviderFacade = bookProviderFacade;
+    }
+
     // GUI related methods
 
     @Override
@@ -400,7 +426,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         searchIcon.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         searchIcon.addMouseListener(new MouseAdapter() {
             @Override public void mouseClicked(MouseEvent e) {
-                log.debug("Searching for book using ISBN={}", isbnField.getText());
+                searchByISBN();
             }
         });
         isbnPanel.add(searchIcon);

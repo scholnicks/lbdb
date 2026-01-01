@@ -14,9 +14,7 @@ public final class Author implements Comparable<Author>, Identifiable {
     private boolean editor;
 
     public static Author of(String name) {
-        Author a = new Author();
-        a.name = name;
-        return a;
+        return new Author().setName(name);
     }
 
     @Override
