@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.time.LocalDate;
 import java.util.*;
 
 @Accessors(chain=true)
@@ -16,7 +15,7 @@ public final class VolumeInfo {
     private int                     pageCount;
     private Map<String,String>      imageLinks;
     private Set<IndustryIdentifier> industryIdentifiers;
-    private LocalDate               publishedDate;
+    private String                  publishedDate;
 
     public record IndustryIdentifier(@JsonProperty("type") String type, @JsonProperty("identifier") String identifier) {}
 }
