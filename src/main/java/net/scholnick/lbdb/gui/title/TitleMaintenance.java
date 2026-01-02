@@ -121,7 +121,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         JPopupMenu popup = new JPopupMenu();
         for (Author d : data) {
             JMenuItem item = new JMenuItem(d.getName());
-            item.addActionListener(l -> addAuthor(d,dataPanel,inputField));
+            item.addActionListener(_ -> addAuthor(d,dataPanel,inputField));
             popup.add(item);
         }
         popup.pack();
@@ -137,7 +137,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         if (authorsSelect == null) {
             authorsSelect = new JTextField(30);
             GUIUtilities.setSizes(authorsSelect,TEXT_FIELD_SIZE);
-            authorsSelect.addActionListener(l -> {
+            authorsSelect.addActionListener(_ -> {
                 var data = searchForAuthors(authorsSelect);
                 if (data.isEmpty()) {
                     addAuthor(Author.of(authorsSelect.getText()),authorsTable,authorsSelect);
@@ -154,7 +154,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         if (editorsSelect == null) {
             editorsSelect = new JTextField(30);
             GUIUtilities.setSizes(editorsSelect,TEXT_FIELD_SIZE);
-            editorsSelect.addActionListener(l -> {
+            editorsSelect.addActionListener(_ -> {
                 var data = searchForAuthors(editorsSelect);
                 if (data.isEmpty()) {
                     addAuthor(Author.of(editorsSelect.getText()),editorsTable,editorsSelect);
@@ -170,7 +170,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     private JButton getDeleteButton() {
         if (deleteButton == null) {
             deleteButton = GUIUtilities.createButton("Delete");
-            deleteButton.addActionListener(e -> {
+            deleteButton.addActionListener(_ -> {
                 if (showConfirmDialog(this, "Delete Book?") == JOptionPane.YES_OPTION) {
                     bookService.delete(book);
                     sendMessage(book + " deleted");
@@ -225,7 +225,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
                     numberOfPagesField.setText(getBook().getNumberOfPages().toString());
                 }
 
-                //bookService.save(getBook());
+                bookService.save(getBook());
             }
             else {
                 getImageLabel().setIcon(null);
@@ -292,12 +292,6 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         return b;
     }
 
-    private void clear(JPanel panel) {
-        for (int i=panel.getComponentCount()-1; i >=0; i--) {
-            panel.remove(i);
-        }
-    }
-
     private Book getBook() {
         return book;
     }
@@ -317,24 +311,17 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     }
 
     private void loadData(Book b) {
-        new SwingWorker<Object, Boolean>() {
-            @Override protected Boolean doInBackground() {
-                try {
-                    getImageLabel().setIcon(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("images/loading.gif"))));
-                    downloadCoverPhoto();
-                    reload();
-                }
-                catch (Exception e) {
-                    log.error("Unable to load the cover photo", e);
-                }
-                return Boolean.TRUE;
-            }
-        }.execute();
+        SwingUtilities.invokeLater(() -> {
+            getImageLabel().setIcon(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("images/loading.gif"))));
+            downloadCoverPhoto();
+            reload();
+        });
 
         loadFields(b);
         reload();
     }
 
+    /** Load the fields from the given Book into the form */
     private void loadFields(Book b) {
         titleField.setText(b.getTitle());
         seriesField.setText(b.getSeries());

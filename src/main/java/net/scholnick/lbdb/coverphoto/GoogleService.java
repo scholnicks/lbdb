@@ -139,7 +139,8 @@ public class GoogleService implements CoverPhotoService {
             return bookCoverPath;
         }
         catch (IOException | URISyntaxException e) {
-            throw new ApplicationException("Unable to download cover image",e);
+            log.error("Error while downloading image from {}",url,e);
+            throw new ApplicationException("Unable to download cover image");
         }
     }
 }
