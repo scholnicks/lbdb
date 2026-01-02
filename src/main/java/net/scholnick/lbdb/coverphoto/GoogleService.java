@@ -90,8 +90,8 @@ public class GoogleService implements CoverPhotoService {
         }
 
         try {
-            if (info.getPublishedDate() != null && info.getPublishedDate().contains("-")) {
-                book.setPublishedYear(info.getPublishedDate().substring(0,info.getPublishedDate().indexOf("-")));
+            if (info.getPublishedDate() != null) {
+                book.setPublishedYear(String.valueOf(info.getPublishedDate().getYear()));
             }
         }
         catch (Exception e) {

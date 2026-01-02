@@ -99,9 +99,12 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
             return;
         }
 
+        log.debug("Found results {}", results);
+
         results.setType(BookType.FICTION);
         results.setMedia(Media.BOOK);
-        setBook(results);
+        loadFields(results);
+        reload();
     }
 
     private void addAuthor(Author a, AuthorTable dataTable, JTextField inputField) {
@@ -328,6 +331,11 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
             }
         }.execute();
 
+        loadFields(b);
+        reload();
+    }
+
+    private void loadFields(Book b) {
         titleField.setText(b.getTitle());
         seriesField.setText(b.getSeries());
         commentsArea.setText(b.getComments());
@@ -348,8 +356,6 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
 
         editorsTable.clear();
         b.getAuthors().stream().filter(Author::isEditor).forEach(editorsTable::add);
-
-        reload();
     }
 
     @Autowired
