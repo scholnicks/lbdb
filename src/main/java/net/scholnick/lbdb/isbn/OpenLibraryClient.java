@@ -9,6 +9,11 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
+/**
+ * OpenLibraryClient - Client for Open Library Books API
+ *
+ * @author Steve Scholnick <scholnicks@gmail.com>
+ */
 @Component
 public class OpenLibraryClient implements BookProvider {
     private final RestTemplate restTemplate;

@@ -7,6 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * GoogleClient - Client for Google Books API
+ *
+ * @author Steve Scholnick <scholnicks@gmail.com>
+ */
 @Component
 public class GoogleClient implements BookProvider {
     private final RestTemplate restTemplate;

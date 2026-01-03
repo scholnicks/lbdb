@@ -6,6 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+/**
+ * DefaultBookProvider - Implementation of BookProvider that uses Google and OpenLibrary clients to search for book information by ISBN.
+ *
+ * @author Steve Scholnick <scholnicks@gmail.com>
+ */
 @Service
 @Primary
 public class DefaultBookProvider implements BookProvider {
