@@ -6,7 +6,7 @@ import net.scholnick.lbdb.BooksDB;
 import net.scholnick.lbdb.coverphoto.CoverPhotoService;
 import net.scholnick.lbdb.domain.*;
 import net.scholnick.lbdb.gui.*;
-import net.scholnick.lbdb.isbn.BookProviderFacade;
+import net.scholnick.lbdb.isbn.DefaultBookProvider;
 import net.scholnick.lbdb.service.*;
 import net.scholnick.lbdb.util.*;
 import org.slf4j.*;
@@ -51,7 +51,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     private BookService       bookService;
     private AuthorService     authorService;
     private CoverPhotoService coverPhotoService;
-    private BookProviderFacade bookProviderFacade;
+    private DefaultBookProvider defaultBookProvider;
 
     private static final int WIDTH = 128;
     private static final int HEIGHT = 198;
@@ -93,7 +93,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
             return;
         }
 
-        Book results = bookProviderFacade.search(isbn.replace("-",""));
+        Book results = defaultBookProvider.search(isbn.replace("-",""));
         if (results == null) {
             showMessageDialog(this, "No book found for ISBN " + isbn);
             return;
@@ -361,8 +361,8 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     }
 
     @Autowired
-    public void setBookProviderFacade(BookProviderFacade bookProviderFacade) {
-        this.bookProviderFacade = bookProviderFacade;
+    public void setBookProviderFacade(DefaultBookProvider defaultBookProvider) {
+        this.defaultBookProvider = defaultBookProvider;
     }
 
     // GUI related methods

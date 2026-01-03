@@ -7,13 +7,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 @Component
-public class GoogleBooks implements BookProvider {
+public class GoogleClient implements BookProvider {
     private final RestTemplate restTemplate;
 
     private static final String URL = "https://www.googleapis.com/books/v1/volumes?q=isbn:%s&maxResults=1";
 
     @Autowired
-    public GoogleBooks(RestTemplate restTemplate) {
+    public GoogleClient(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
