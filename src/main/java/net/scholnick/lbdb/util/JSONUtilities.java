@@ -11,7 +11,7 @@ public final class JSONUtilities {
             return MAPPER.readValue(json, clazz);
         }
         catch (JacksonException e) {
-            throw new RuntimeException(e);
+            throw new ApplicationException(e);
         }
     }
 
