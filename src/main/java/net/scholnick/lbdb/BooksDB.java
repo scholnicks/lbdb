@@ -28,7 +28,7 @@ public final class BooksDB extends JFrame {
     private AuthorService authorService;
 
     public static final Dimension WINDOW_SIZE = new Dimension(1000, 850);
-    private static final String       VERSION = "Version 7.3.1";
+    private static final String       VERSION = "Version 8.0.0";
 
     public static final Color BACKGROUND_COLOR = new Color(4,106,56);
     public static final Color FOREGROUND_COLOR = Color.white;
