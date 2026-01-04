@@ -4,6 +4,11 @@ import org.apache.commons.text.similarity.LevenshteinDistance;
 
 import java.util.Collection;
 
+/**
+ * NullSafe provides utility methods for null-safe operations.
+ *
+ * @author Steve Scholnick <scholnicks@gmail.com>
+ */
 public final class NullSafe {
     /** Checks if a string is null or empty (after trimming). */
     public static boolean isEmpty(String s) {

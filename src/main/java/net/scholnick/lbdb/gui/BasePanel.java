@@ -62,5 +62,4 @@ public abstract class BasePanel extends JPanel {
             }
         }
     }
-
 }

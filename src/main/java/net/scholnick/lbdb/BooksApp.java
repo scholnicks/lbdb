@@ -3,8 +3,8 @@ package net.scholnick.lbdb;
 import com.zaxxer.hikari.*;
 import jiconfont.icons.font_awesome.FontAwesome;
 import jiconfont.swing.IconFontSwing;
-import lombok.extern.slf4j.Slf4j;
 import net.scholnick.lbdb.util.*;
+import org.slf4j.*;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -17,10 +17,16 @@ import javax.sql.DataSource;
 import java.awt.*;
 import java.util.Properties;
 
-@Slf4j
+/**
+ * BooksApp is the main entry point for the application.
+ *
+ * @author Steve Scholnick <scholnicks@gmail.com>
+ */
 @SpringBootApplication
 public class BooksApp {
-    public static void main(String... args) {
+    private static final Logger log = LoggerFactory.getLogger(BooksApp.class);
+
+    static void main(String... args) {
         try {
             System.setProperty("apple.awt.application.appearance","system");
             System.setProperty("apple.laf.useScreenMenuBar","true");
@@ -43,6 +49,7 @@ public class BooksApp {
         return builder.build();
     }
 
+    /** Configure the DataSource based on the environment. */
     @Bean(destroyMethod="close")
     public DataSource dataSource() {
         Properties properties = new Properties();
