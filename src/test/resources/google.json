@@ -1,0 +1,74 @@
+{
+  "kind": "books#volumes",
+  "totalItems": 1000000,
+  "items": [
+    {
+      "kind": "books#volume",
+      "id": "n2uGzQEACAAJ",
+      "etag": "z1oH6dqT73Q",
+      "selfLink": "https://www.googleapis.com/books/v1/volumes/n2uGzQEACAAJ",
+      "volumeInfo": {
+        "title": "The Horror Collection",
+        "subtitle": "Silver Edition",
+        "authors": [
+          "Steve Stred",
+          "Lex H Jones",
+          "Edward Lee"
+        ],
+        "publishedDate": "2020-01-27",
+        "description": "Book five in KJK Publishing's The Horror Collection series, adds 4 new authors to the mix. Some have been around for a long time and others are newer names in the horror world. As always, each author invited is a favourite of the editor, and once again he brings you a wide variety or horror stories for your reading pleasure. Some mystical, some creepy, and others just outright scary. Join us once again and take a wild ride with us.",
+        "industryIdentifiers": [
+          {
+            "type": "ISBN_13",
+            "identifier": "9798605282624"
+          }
+        ],
+        "readingModes": {
+          "text": false,
+          "image": false
+        },
+        "pageCount": 186,
+        "printType": "BOOK",
+        "maturityRating": "NOT_MATURE",
+        "allowAnonLogging": false,
+        "contentVersion": "preview-1.0.0",
+        "panelizationSummary": {
+          "containsEpubBubbles": false,
+          "containsImageBubbles": false
+        },
+        "imageLinks": {
+          "smallThumbnail": "http://books.google.com/books/content?id=n2uGzQEACAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api",
+          "thumbnail": "http://books.google.com/books/content?id=n2uGzQEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api"
+        },
+        "language": "en",
+        "previewLink": "http://books.google.com/books?id=n2uGzQEACAAJ&dq=isbn:9798605282624&hl=&cd=1&source=gbs_api",
+        "infoLink": "http://books.google.com/books?id=n2uGzQEACAAJ&dq=isbn:9798605282624&hl=&source=gbs_api",
+        "canonicalVolumeLink": "https://books.google.com/books/about/The_Horror_Collection.html?hl=&id=n2uGzQEACAAJ"
+      },
+      "saleInfo": {
+        "country": "US",
+        "saleability": "NOT_FOR_SALE",
+        "isEbook": false
+      },
+      "accessInfo": {
+        "country": "US",
+        "viewability": "NO_PAGES",
+        "embeddable": false,
+        "publicDomain": false,
+        "textToSpeechPermission": "ALLOWED",
+        "epub": {
+          "isAvailable": false
+        },
+        "pdf": {
+          "isAvailable": false
+        },
+        "webReaderLink": "http://play.google.com/books/reader?id=n2uGzQEACAAJ&hl=&source=gbs_api",
+        "accessViewStatus": "NONE",
+        "quoteSharingAllowed": false
+      },
+      "searchInfo": {
+        "textSnippet": "Book five in KJK Publishing&#39;s The Horror Collection series, adds 4 new authors to the mix."
+      }
+    }
+  ]
+}

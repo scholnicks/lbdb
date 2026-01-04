@@ -1,0 +1,52 @@
+{
+  "data": {
+    "editions": [
+      {
+        "id": 31665868,
+        "isbn_13": "9781668057551",
+        "isbn_10": "1668057557",
+        "book": {
+          "id": 1594485,
+          "title": "The End of the World As We Know It: New Tales of Stephen King's The Stand",
+          "slug": "the-end-of-the-world-as-we-know-it-new-tales-of-stephen-kings-the-stand",
+          "description": "An original short story anthology based on master storyteller Stephen King’s #1 New York Times bestselling classic The Stand! Since its initial publication in 1978, The Stand has been considered Stephen King’s seminal masterpiece of apocalyptic fiction, with millions of copies sold and adapted twice for television. Although there are other extraordinary works exploring the unraveling of human society, none have been as influential as this iconic novel—generations of writers have been impacted by its dark yet ultimately hopeful vision of the end and new beginning of civilization, and its stunning array of characters. Now for the first time, Stephen King has fully authorized a return to the harrowing world of The Stand through this original short story anthology as presented by award-winning authors and editors Christopher Golden and Brian Keene. Bringing together some of today’s greatest and most visionary writers, The End of the World As We Know It features unforgettable, all-new stories set during and after (and some perhaps long after) the events of The Stand—brilliant, terrifying, and painfully human tales that will resonate with readers everywhere as an essential companion to the classic, bestselling novel. Featuring an introduction by Stephen King, a foreword by Christopher Golden, and an afterword by Brian Keene. Contributors include Wayne Brady and Maurice Broaddus, Poppy Z. Brite, Somer Canon, C. Robert Cargill, Nat Cassidy, V. Castro, Richard Chizmar, S. A. Cosby, Tananarive Due and Steven Barnes, Meg Gardiner, Gabino Iglesias, Jonathan Janz, Alma Katsu, Caroline Kepnes, Michael Koryta, Sarah Langan, Joe R. Lansdale, Tim Lebbon, Josh Malerman, Ronald Malfi, Usman T. Malik, Premee Mohamed, Cynthia Pelayo, Hailey Piper, David J. Schow, Alex Segura, Bryan Smith, Paul Tremblay, Catherynne M. Valente, Bev Vincent, Catriona Ward, Chuck Wendig, Wrath James White, and Rio Youers.",
+          "release_date": "2025-01-01",
+          "cached_image": {
+            "id": 5704471,
+            "url": "https://assets.hardcover.app/external_data/1243374/78e4d47d3814ee7446fa21ec9f88ef616484a09b.jpeg",
+            "color": "#ce1007",
+            "width": 331,
+            "height": 500,
+            "color_name": "Red"
+          },
+          "contributions": [
+            {
+              "contribution": "Editor",
+              "author": {
+                "id": 125598,
+                "name": "Christopher Golden",
+                "slug": "christopher-golden"
+              }
+            },
+            {
+              "contribution": "Editor",
+              "author": {
+                "id": 137417,
+                "name": "Brian Keene",
+                "slug": "brian-keene"
+              }
+            },
+            {
+              "contribution": "Introduction",
+              "author": {
+                "id": 154441,
+                "name": "Stephen King",
+                "slug": "stephen-king"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

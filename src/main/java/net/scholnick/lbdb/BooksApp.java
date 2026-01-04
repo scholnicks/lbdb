@@ -11,7 +11,8 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.web.client.*;
 
 import javax.sql.DataSource;
 import java.awt.*;
@@ -47,6 +48,15 @@ public class BooksApp {
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
         return builder.build();
+    }
+
+    @Bean
+    RestClient restClient() {
+        SimpleClientHttpRequestFactory rf = new SimpleClientHttpRequestFactory();
+        rf.setConnectTimeout(10_000);
+        rf.setReadTimeout(15_000);
+
+        return RestClient.builder().requestFactory(rf).build();
     }
 
     /** Configure the DataSource based on the environment. */

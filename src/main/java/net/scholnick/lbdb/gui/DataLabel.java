@@ -6,6 +6,7 @@ import javax.swing.JLabel;
 
 @Getter
 @ToString
+@Deprecated
 public class DataLabel<T extends Identifiable> extends JLabel {
     private T data;
 

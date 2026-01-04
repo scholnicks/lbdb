@@ -18,16 +18,19 @@ public class DefaultBookProvider implements BookProvider {
 
     private final GoogleClient      googleClient;
     private final OpenLibraryClient openLibraryClient;
+    private final HardcoverClient hardcoverClient;
 
     @Autowired
-    public DefaultBookProvider(GoogleClient googleClient, OpenLibraryClient openLibraryClient) {
+    public DefaultBookProvider(GoogleClient googleClient, OpenLibraryClient openLibraryClient, HardcoverClient hardcoverClient) {
         this.googleClient      = googleClient;
         this.openLibraryClient = openLibraryClient;
+        this.hardcoverClient = hardcoverClient;
     }
 
     @Override
     public Book search(String isbn) {
         try {
+            hardcoverClient.search(isbn);
             Book results = googleClient.search(isbn);
 
             if (results == null) {
