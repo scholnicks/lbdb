@@ -3,29 +3,40 @@ package net.scholnick.lbdb.gui;
 import net.scholnick.lbdb.gui.author.*;
 import net.scholnick.lbdb.gui.title.*;
 
-import javax.swing.JPanel;
-import java.awt.BorderLayout;
+import javax.swing.*;
+import java.awt.*;
 
+/**
+ * BasePanel provides a base class for all GUI panels.
+ *
+ * @author Steve Scholnick <scholnicks@gmail.com>
+ */
 public abstract class BasePanel extends JPanel {
+    /** Builds the GUI components. */
     protected void buildGUI() {
         setLayout(new BorderLayout());
         add(getInputPanel(), BorderLayout.CENTER);
         add(getButtonPanel(), BorderLayout.SOUTH);
     }
 
+    /** Returns the input panel. */
     protected abstract JPanel getInputPanel();
 
+    /** Returns the button panel. */
     protected abstract JPanel getButtonPanel();
 
+    /** Reload the panel data. */
     protected void reload() {
         validate();
         repaint();
     }
 
+    /** Listener list for event handling. */
     public final void addTitleSelectionListener(TitleSelectionListener listener) {
         listenerList.add(TitleSelectionListener.class, listener);
     }
 
+    /** Fire a title selection event. */
     final void fireTitleSelection(TitleSelectionEvent event) {
         Object[] listeners = listenerList.getListenerList();
 
@@ -36,10 +47,12 @@ public abstract class BasePanel extends JPanel {
         }
     }
 
+    /** Listener list for event handling. */
     public final void addAuthorSelectionListener(AuthorSelectionListener listener) {
         listenerList.add(AuthorSelectionListener.class, listener);
     }
 
+    /** Fire an author selection event. */
     final void fireAuthorSelection(AuthorSelectionEvent event) {
         Object[] listeners = listenerList.getListenerList();
 

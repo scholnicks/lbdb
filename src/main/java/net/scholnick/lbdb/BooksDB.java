@@ -16,6 +16,11 @@ import java.util.Objects;
 
 import static net.scholnick.lbdb.util.GUIUtilities.*;
 
+/**
+ *  BooksDB is the main application window.
+ *
+ * @author Steve Scholnick <scholnicks@gmail.com>
+ */
 @Component
 public final class BooksDB extends JFrame {
     private JTabbedPane       tabbedPane;
@@ -38,6 +43,7 @@ public final class BooksDB extends JFrame {
         notificationLabel = new JLabel("",JLabel.CENTER);
     }
 
+    /** Initialize the main window. */
     void init() {
         setSize(WINDOW_SIZE);
         center(this);
@@ -67,6 +73,7 @@ public final class BooksDB extends JFrame {
         setVisible(true);
     }
 
+    /** Load information in the background. */
     private void loadInfoInBackground() {
         SwingUtilities.invokeLater(() -> {
             setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/bookcase.gif"))).getImage());
@@ -77,6 +84,7 @@ public final class BooksDB extends JFrame {
         new Thread(authorService::loadCache).start();
     }
 
+    /** Get the tabbed pane. */
     private JTabbedPane getTabbedPane() {
         if (tabbedPane == null) {
             tabbedPane = new JTabbedPane();
@@ -99,10 +107,12 @@ public final class BooksDB extends JFrame {
         return tabbedPane;
     }
 
+    /** Update the counts in the notification label. */
     private void updateCounts() {
         notificationLabel.setText(bookService.count() + " books / " + authorService.count() + " authors");
     }
 
+    /** Build the application menus. */
     private void buildMenus() {
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(getTitleMenu());
@@ -110,12 +120,13 @@ public final class BooksDB extends JFrame {
         menuBar.add(getEditMenu());
         setJMenuBar(menuBar);
 
-        Desktop.getDesktop().setAboutHandler(e -> showMessageDialog(
+        Desktop.getDesktop().setAboutHandler(_ -> showMessageDialog(
             VERSION + "\nMode: " + System.getProperty("lbdb.environment","dev"),
             "About"
         ));
     }
 
+    /** Build the Edit menu. */
     private JMenu getEditMenu() {
         JMenu editMenu = new JMenu("Edit");
 
@@ -137,19 +148,20 @@ public final class BooksDB extends JFrame {
         return editMenu;
     }
 
+    /** Build the Title menu. */
     private JMenu getTitleMenu() {
         JMenu fileMenu = new JMenu("Title");
 
         JMenuItem saveItem = new JMenuItem("Save");
         saveItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.META_DOWN_MASK));
         saveItem.setText("Save");
-        saveItem.addActionListener(l -> titleMaintenance.save());
+        saveItem.addActionListener(_ -> titleMaintenance.save());
         fileMenu.add(saveItem);
 
         JMenuItem clearItem = new JMenuItem("Clear");
         clearItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K, InputEvent.META_DOWN_MASK));
         clearItem.setText("Clear");
-        clearItem.addActionListener(l -> titleMaintenance.clear());
+        clearItem.addActionListener(_ -> titleMaintenance.clear());
         fileMenu.add(clearItem);
 
         JMenuItem exportItem = new JMenuItem("Export");
@@ -159,29 +171,31 @@ public final class BooksDB extends JFrame {
         return fileMenu;
     }
 
+    /** Build the Go menu. */
     private JMenu getGoMenu() {
         JMenu goMenu = new JMenu("Go");
 
         JMenuItem searchItem = new JMenuItem("Search");
         searchItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.META_DOWN_MASK));
         searchItem.setText("Search");
-        searchItem.addActionListener(l -> getTabbedPane().setSelectedIndex(0));
+        searchItem.addActionListener(_ -> getTabbedPane().setSelectedIndex(0));
         goMenu.add(searchItem);
 
         JMenuItem titleItem = new JMenuItem("Title");
         titleItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.META_DOWN_MASK));
         titleItem.setText("Title");
-        titleItem.addActionListener(l -> getTabbedPane().setSelectedIndex(1));
+        titleItem.addActionListener(_ -> getTabbedPane().setSelectedIndex(1));
         goMenu.add(titleItem);
 
         JMenuItem authorItem = new JMenuItem("Author");
         authorItem.setText("Author");
-        authorItem.addActionListener(l -> getTabbedPane().setSelectedIndex(2));
+        authorItem.addActionListener(_ -> getTabbedPane().setSelectedIndex(2));
         goMenu.add(authorItem);
 
         return goMenu;
     }
 
+    /** Load the search panel listeners. */
     private void loadSearchPanel() {
         searchPanel.addTitleSelectionListener(event -> {
             titleMaintenance.setBook((Book) event.getSource());

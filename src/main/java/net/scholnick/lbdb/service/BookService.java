@@ -1,9 +1,9 @@
 package net.scholnick.lbdb.service;
 
-import lombok.extern.slf4j.Slf4j;
-import net.scholnick.lbdb.repository.*;
 import net.scholnick.lbdb.domain.*;
+import net.scholnick.lbdb.repository.*;
 import net.scholnick.lbdb.util.NullSafe;
+import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,9 +12,15 @@ import java.util.*;
 
 import static net.scholnick.lbdb.util.GUIUtilities.showMessageDialog;
 
-@Slf4j
+/**
+ * BookService handles business logic related to books.
+ *
+ * @author Steve Scholnick <scholnicks@gmail.com>
+ */
 @Service
 public class BookService {
+    private static final Logger log = LoggerFactory.getLogger(BookService.class);
+
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
     private final AuthorService authorService;
@@ -26,6 +32,7 @@ public class BookService {
         this.authorService = authorService;
     }
 
+    /** Get a book by its ID. */
     @Transactional(readOnly=true)
     public Book get(Long id) {
         Book b = bookRepository.get(id);
@@ -50,6 +57,7 @@ public class BookService {
         return NullSafe.compare(a1.getName(), a2.getName());
     };
 
+    /** Count the total number of books. */
     @Transactional(readOnly=true)
     public Long count() {
         return bookRepository.count();

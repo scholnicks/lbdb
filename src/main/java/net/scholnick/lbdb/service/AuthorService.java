@@ -1,22 +1,28 @@
 package net.scholnick.lbdb.service;
 
-import lombok.extern.slf4j.Slf4j;
-import net.scholnick.lbdb.repository.AuthorRepository;
 import net.scholnick.lbdb.domain.*;
+import net.scholnick.lbdb.repository.AuthorRepository;
 import net.scholnick.lbdb.util.NullSafe;
+import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.*;
 
-@Slf4j
+/**
+ * AuthorService handles business logic related to {@link Author}s.
+ *
+ * @author Steve Scholnick <scholnicks@gmail.com>
+ */
+
 @Service
 public class AuthorService {
+    private static final Logger log = LoggerFactory.getLogger(AuthorService.class);
+
     private final Set<Author> authorsCache = ConcurrentHashMap.newKeySet();
 
     private final AuthorRepository authorDAO;
@@ -26,6 +32,7 @@ public class AuthorService {
         this.authorDAO = authorDAO;
     }
 
+    /** Load all authors into the cache. */
     public void loadCache() {
         authorsCache.addAll(authorDAO.all());
     }
@@ -40,11 +47,13 @@ public class AuthorService {
             .collect(toList());
     }
 
+    /** Get an author by ID. */
     @Transactional(readOnly=true)
     public Author get(Long id) {
         return authorDAO.get(id);
     }
 
+    /** Count the total number of authors. */
     @Transactional(readOnly=true)
     public Long count() {
         return authorDAO.count();
@@ -83,14 +92,15 @@ public class AuthorService {
         Map<String,Author> existingAuthors = authorsCache.stream().collect(toMap(Author::getName, a -> a));
         for (Author a : authors) {
             Author existing = existingAuthors.get(a.getName());
-            if (existing != null) {
-                a.setId(existing.getId());
-            } else {
+            if (existing == null) {
                 create(a);
+            } else {
+                a.setId(existing.getId());
             }
         }
     }
 
+    /** Create a new author. */
     private void create(Author a) {
         log.info("Creating new author : {}",a);
         Long id = authorDAO.create(a);
@@ -98,6 +108,7 @@ public class AuthorService {
         authorsCache.add(a);
     }
 
+    /** Update an existing author. */
     private void update(Author a) {
         log.info("Updating existing author : {}",a);
         authorDAO.update(a);

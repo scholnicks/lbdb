@@ -23,6 +23,11 @@ import static java.util.stream.Collectors.toList;
 import static javax.swing.BorderFactory.*;
 import static javax.swing.JOptionPane.*;
 
+/**
+ * TitleMaintenance is the GUI component for adding and editing {@link Book} records.
+ *
+ * @author Steve Scholnick <scholnicks@gmail.com>
+ */
 @Component
 public final class TitleMaintenance extends AbstractUpdateMaintenance {
     private static final Logger log = LoggerFactory.getLogger(TitleMaintenance.class);
