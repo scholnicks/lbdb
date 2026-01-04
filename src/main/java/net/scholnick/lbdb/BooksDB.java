@@ -28,7 +28,7 @@ public final class BooksDB extends JFrame {
     private AuthorService authorService;
 
     public static final Dimension WINDOW_SIZE = new Dimension(1000, 850);
-    private static final String       VERSION = "Version 8.0.0";
+    private static final String       VERSION = "Version 8.0.1";
 
     public static final Color BACKGROUND_COLOR = new Color(4,106,56);
     public static final Color FOREGROUND_COLOR = Color.white;
@@ -68,13 +68,10 @@ public final class BooksDB extends JFrame {
     }
 
     private void loadInfoInBackground() {
-        new SwingWorker<Object,Boolean>() {
-            @Override protected Boolean doInBackground() {
-                setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/bookcase.gif"))).getImage());
-                updateCounts();
-                return Boolean.TRUE;
-            }
-        }.execute();
+        SwingUtilities.invokeLater(() -> {
+            setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/bookcase.gif"))).getImage());
+            updateCounts();
+        });
 
         // load the author cache in a separate short-lived thread
         new Thread(authorService::loadCache).start();

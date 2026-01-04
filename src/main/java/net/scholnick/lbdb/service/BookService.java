@@ -26,7 +26,7 @@ public class BookService {
         this.authorService = authorService;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly=true)
     public Book get(Long id) {
         Book b = bookRepository.get(id);
         b.setAuthors(authorRepository.get(b));
@@ -50,11 +50,12 @@ public class BookService {
         return NullSafe.compare(a1.getName(), a2.getName());
     };
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly=true)
     public Long count() {
         return bookRepository.count();
     }
 
+    /** Delete a book. */
     @Transactional
     public void delete(Book b) {
         log.info("Deleting book {}",b.getTitle());
@@ -62,48 +63,52 @@ public class BookService {
         bookRepository.delete(b);
     }
 
-    @Transactional(readOnly = true)
+    /** Search for books matching the given criteria. */
+    @Transactional(readOnly=true)
     public List<Book> search(Book searchCriteria) {
         List<Book> results = bookRepository.search(searchCriteria);
         results.forEach(b -> b.setAuthors(authorRepository.get(b)));
         return results;
     }
 
+    /** Save a book, creating or updating as necessary. */
     @Transactional
-    public Book save(Book b) {
-        return b.getId() == null ? create(b) : update(b);
+    public void save(Book b) {
+        if (b.getId() == null) {
+            create(b);
+        }
+        else {
+            update(b);
+        }
     }
 
-    private Book create(Book b) {
+    /** Create a new book. */
+    private void create(Book b) {
         List<Book> searchResults = search(b);
         if (searchResults != null && searchResults.contains(b)) {
-            log.info("Entry already present. Not creating duplicate for " + b);
+            log.info("Entry already present. Not creating duplicate for {}",b);
             showMessageDialog(b.getTitle() + " already exists. Not creating duplicate");
             throw new RuntimeException("Existing entry found");
         }
 
-        log.info("Creating new book " + b);
+        log.info("Creating new book {}",b);
         Long id = bookRepository.create(b);
         b.setId(id);
 
         handleAuthors(b);
-        //b.setAuthors(authorDAO.get(b));
-
-        return get(id);
     }
 
-    private Book update(Book b) {
-        log.info("Updating existing book " + b);
+    /** Update an existing book. */
+    private void update(Book b) {
+        log.info("Updating existing book {}",b);
         bookRepository.update(b);
-
         handleAuthors(b);
-
-        return get(b.getId());
     }
 
+    /** Handle saving authors and updating join records for a book. */
     private void handleAuthors(Book b) {
         bookRepository.removeJoinRecords(b);
-        b.getAuthors().forEach(a -> authorService.save(a, true));
+        authorService.save(b.getAuthors());
         bookRepository.addJoinRecords(b);
     }
 }

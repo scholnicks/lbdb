@@ -1,5 +1,6 @@
 package net.scholnick.lbdb.gui.author;
 
+import lombok.Getter;
 import net.scholnick.lbdb.domain.Author;
 import net.scholnick.lbdb.gui.*;
 import net.scholnick.lbdb.service.AuthorService;
@@ -14,6 +15,7 @@ import static javax.swing.JOptionPane.*;
 import static net.scholnick.lbdb.util.GUIUtilities.showMessageDialog;
 
 @Component
+@Getter
 public class AuthorMaintenance extends AbstractUpdateMaintenance {
     private JTextField nameField;
     private JButton deleteButton;
@@ -86,16 +88,9 @@ public class AuthorMaintenance extends AbstractUpdateMaintenance {
         return nameField;
     }
 
-    public Author getAuthor() {
-        return author;
-    }
-
     public void setAuthor(Author a) {
         author = a;
-
-        if (author != null) {
-            loadData();
-        }
+        if (author != null) loadData();
     }
 
     private void loadData() {
@@ -105,7 +100,7 @@ public class AuthorMaintenance extends AbstractUpdateMaintenance {
 
     protected void ok() {
         author.setName(getNameField().getText());
-        authorService.save(author, false);
+        authorService.save(author);
         sendMessage(author.getName() + " has been saved");
     }
 }

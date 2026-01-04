@@ -10,8 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 
 @Slf4j
 @Service
@@ -29,7 +30,8 @@ public class AuthorService {
         authorsCache.addAll(authorDAO.all());
     }
 
-    @Transactional(readOnly = true)
+    /** Search for authors whose names start with the given criteria. */
+    @Transactional(readOnly=true)
     public List<Author> search(String criteria) {
         if (NullSafe.isEmpty(criteria)) return List.of();
 
@@ -38,48 +40,68 @@ public class AuthorService {
             .collect(toList());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly=true)
     public Author get(Long id) {
         return authorDAO.get(id);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly=true)
     public Long count() {
         return authorDAO.count();
     }
 
+    /** Delete an author. */
     @Transactional
     public void delete(Author a) {
-        log.info("Deleting author : " + a);
+        log.info("Deleting author : {}",a);
         authorDAO.delete(a);
         authorsCache.remove(a);
     }
 
-    @Transactional(readOnly = true)
+    /** Get the authors for a given book. */
+    @Transactional(readOnly=true)
     public List<Author> get(Book b) {
-        log.debug("Returning authors for book " + b);
+        log.debug("Returning authors for book {}",b);
         return authorDAO.get(b);
     }
 
+    /** Save an author, creating or updating as necessary. */
     @Transactional
-    public Author save(Author a, boolean createOnly) {
-        log.debug("Saving author information " + a);
-        return a.getId() == null ? create(a) : createOnly ? a : update(a);
+    public void save(Author a) {
+        log.debug("Saving author information {}",a);
+        if (a.getId() == null) {
+            create(a);
+        }
+        else {
+            update(a);
+        }
     }
 
-    private Author create(Author a) {
-        log.info("Creating new author : " + a);
+    /** Save a list of authors, creating any that do not already exist. Existing authors will have their IDs set appropriately. */
+    @Transactional
+    public void save(List<Author> authors) {
+        Map<String,Author> existingAuthors = authorsCache.stream().collect(toMap(Author::getName, a -> a));
+        for (Author a : authors) {
+            Author existing = existingAuthors.get(a.getName());
+            if (existing != null) {
+                a.setId(existing.getId());
+            } else {
+                create(a);
+            }
+        }
+    }
+
+    private void create(Author a) {
+        log.info("Creating new author : {}",a);
         Long id = authorDAO.create(a);
         a.setId(id);
         authorsCache.add(a);
-        return a;
     }
 
-    private Author update(Author a) {
-        log.info("Updating existing author : " + a);
+    private void update(Author a) {
+        log.info("Updating existing author : {}",a);
         authorDAO.update(a);
         authorsCache.remove(a);
         authorsCache.add(a);
-        return get(a.getId());
     }
 }
