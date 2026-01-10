@@ -3,6 +3,7 @@ package net.scholnick.lbdb.util;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 
 import java.util.Collection;
+import java.util.stream.Stream;
 
 /**
  * NullSafe provides utility methods for null-safe operations.
@@ -19,6 +20,10 @@ public final class NullSafe {
     /** Checks if a collection is null or empty. */
     public static boolean isEmpty(Collection<?> c) {
         return c == null || c.isEmpty();
+    }
+
+    public static <T> Stream<T> stream(Collection<T> c) {
+        return isEmpty(c) ? Stream.empty() : c.stream();
     }
 
     /** Trims a string, returning an empty string if null. */

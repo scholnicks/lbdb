@@ -29,6 +29,15 @@ public final class Book implements Comparable<Book> {
 
     private Path coverPhotoPath;
 
+
+    /** Parse the year from a release date string in the format "YYYY-MM-DD" or "YYYY". */
+    public static String parseYear(String releaseDate) {
+        if (releaseDate == null || releaseDate.isBlank()) return null;
+        String[] parts = releaseDate.split("-");
+        return parts.length > 0 ? parts[0] : null;
+    }
+
+
     public Book() {
         authors = new ArrayList<>();
     }
