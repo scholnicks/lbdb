@@ -2,7 +2,7 @@ package net.scholnick.lbdb.util;
 
 import org.apache.commons.text.similarity.LevenshteinDistance;
 
-import java.util.Collection;
+import java.util.*;
 import java.util.stream.Stream;
 
 /**
@@ -24,6 +24,11 @@ public final class NullSafe {
 
     public static <T> Stream<T> stream(Collection<T> c) {
         return isEmpty(c) ? Stream.empty() : c.stream();
+    }
+
+    /** Returns an empty list if the collection is null or empty, otherwise returns a new list with the collection's elements. */
+    public static <T>List<T> nvl(List<T> c) {
+        return isEmpty(c) ? List.of() : c;
     }
 
     /** Trims a string, returning an empty string if null. */

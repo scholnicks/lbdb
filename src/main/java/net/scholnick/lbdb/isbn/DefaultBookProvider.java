@@ -1,10 +1,15 @@
 package net.scholnick.lbdb.isbn;
 
-import net.scholnick.lbdb.domain.Book;
+import net.scholnick.lbdb.domain.*;
+import net.scholnick.lbdb.util.NullSafe;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
+
+import static java.util.Comparator.comparing;
 
 /**
  * DefaultBookProvider - Implementation of BookProvider that uses Google and OpenLibrary clients to search for book information by ISBN.
@@ -30,12 +35,22 @@ public class DefaultBookProvider implements BookProvider {
     @Override
     public Book search(String isbn) {
         try {
-            log.debug("Hardcover results, {}",hardcoverClient.search(isbn));
-            Book results = googleClient.search(isbn);
+            Set<Author> authors = new HashSet<>();
 
-            if (results == null) {
-                results = openLibraryClient.search(isbn);
-            }
+            Book google = googleClient.search(isbn);
+            if (google != null) authors.addAll(NullSafe.nvl(google.getAuthors()));
+
+            Book open = openLibraryClient.search(isbn);
+            if (open != null) authors.addAll(NullSafe.nvl(open.getAuthors()));
+
+            Book hardCover = hardcoverClient.search(isbn);
+            if (hardCover != null) authors.addAll(NullSafe.nvl(hardCover.getAuthors()));
+
+            Book results = google == null ? (open == null ? hardCover : open) : google;
+            if (results == null) return null;
+
+            results.setAuthors(authors.stream().sorted(comparing(Author::getName)).toList());
+            results.setIsbn(isbn);
 
             return results;
         }
