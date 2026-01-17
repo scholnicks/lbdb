@@ -40,6 +40,10 @@ public class GoogleClient implements BookProvider {
             book.setAuthors( v.getAuthors().stream().map(Author::of).toList() );
         }
 
+        if (v.getImageLinks() != null) {
+            book.setCoverURL(v.getImageLinks().thumbnail() == null ? v.getImageLinks().smallThumbnail() : v.getImageLinks().thumbnail());
+        }
+
         return book;
     }
 }

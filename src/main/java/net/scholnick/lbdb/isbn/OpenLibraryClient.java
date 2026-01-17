@@ -44,11 +44,23 @@ public class OpenLibraryClient implements BookProvider {
             book.setAuthors( data.authors().stream().map(OLAuthor::name).map(Author::of).toList() );
         }
 
+        if (data.cover != null) {
+            book.setCoverURL(data.cover().image());
+        }
+
         return book;
     }
 
     @JsonIgnoreProperties(ignoreUnknown=true)
-    private record Data(String title, int number_of_pages, List<OLAuthor> authors, String publish_date) {}
+    private record Data(String title, int number_of_pages, List<OLAuthor> authors, String publish_date, Cover cover) {}
+
+    private record Cover(String small, String medium, String large) {
+        public String image() {
+            if (large != null) return large;
+            if (medium != null) return medium;
+            return small;
+        }
+    }
 
     @JsonIgnoreProperties(ignoreUnknown=true)
     private record OLAuthor(String name) {}

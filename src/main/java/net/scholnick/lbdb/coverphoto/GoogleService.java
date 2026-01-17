@@ -56,7 +56,7 @@ public class GoogleService implements CoverPhotoService {
 
         for (BookResults.BookData data: results.items()) {
             VolumeInfo info = data.volumeInfo();
-            if (info.getImageLinks() == null || info.getImageLinks().isEmpty()) continue;
+            if (info.getImageLinks() == null) continue;
 
             if (book.getIsbn() != null) {
                 loadData(info,book);
@@ -81,7 +81,7 @@ public class GoogleService implements CoverPhotoService {
         log.debug("Volume info: {}",info);
 
         book.setCoverPhotoPath(null);
-        book.setCoverPhotoPath( downloadImage(info.getImageLinks().get("thumbnail"), book) );
+        book.setCoverPhotoPath( downloadImage(info.getImageLinks().thumbnail(), book) );
         book.setNumberOfPages(info.getPageCount());
 
         if (book.getIsbn() == null && info.getIndustryIdentifiers() != null) {

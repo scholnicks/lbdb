@@ -45,10 +45,11 @@ public class HardcoverClient implements BookProvider {
         if (edition == null) return null;
 
         return new Book()
-            .setIsbn(NullSafe.isEmpty(edition.isbn_13) ? edition.isbn_10() : edition.isbn_13())
+            .setIsbn(isbn)
             .setTitle(edition.book().title())
             .setAuthors(NullSafe.stream(edition.book.contributions).map(Contribution::author).map(HCAuthor::name).map(Author::of).toList())
             .setPublishedYear(Book.parseYear(edition.book.release_date))
+            .setCoverURL(edition.book.cached_image == null ? null : edition.book.cached_image.url())
         ;
     }
 
@@ -62,7 +63,10 @@ public class HardcoverClient implements BookProvider {
     public record Edition(String isbn_13, String isbn_10, HCBook book) {}
 
     @JsonIgnoreProperties(ignoreUnknown=true)
-    public record HCBook(String title, String release_date, List<Contribution> contributions) {}
+    public record HCBook(String title, String release_date, List<Contribution> contributions, Cover cached_image) {}
+
+    @JsonIgnoreProperties(ignoreUnknown=true)
+    public record Cover(String url) {}
 
     @JsonIgnoreProperties(ignoreUnknown=true)
     public record Contribution(String contribution, HCAuthor author) {}

@@ -9,6 +9,11 @@ import java.util.*;
 
 import static java.util.stream.Collectors.joining;
 
+/**
+ * Book is a representation of a physical or e-book.
+ *
+ * @author Steve Scholnick <scholnicks@gmail.com>
+ */
 @Accessors(chain=true)
 @Data
 @JsonIgnoreProperties(ignoreUnknown=true)
@@ -18,28 +23,22 @@ public final class Book implements Comparable<Book> {
     private BookType type;
     private Media media;
     private String series;
-    private String addedTimestamp;
+    private String addedTimestamp;      // TODO: change this to a LocalDateTime
     private String publishedYear;
     private String isbn;
     private String comments;
     private boolean anthology;
     private Integer numberOfPages;
+    private String coverURL;
+    private List<Author> authors = new ArrayList<>();
 
-    private List<Author> authors;
-
-    private Path coverPhotoPath;
-
+    @Deprecated private Path coverPhotoPath;
 
     /** Parse the year from a release date string in the format "YYYY-MM-DD" or "YYYY". */
     public static String parseYear(String releaseDate) {
         if (releaseDate == null || releaseDate.isBlank()) return null;
         String[] parts = releaseDate.split("-");
         return parts.length > 0 ? parts[0] : null;
-    }
-
-
-    public Book() {
-        authors = new ArrayList<>();
     }
 
     public String getAuthorNames() {

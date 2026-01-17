@@ -17,7 +17,7 @@ create table Media_Type (
 create table Author (
    auth_created_date   datetime not null default (datetime(current_timestamp,'localtime')),
    auth_id             integer not null primary key autoincrement,
-   auth_name           varchar(200) not null,
+   auth_name           text not null,
    auth_website        varchar(100)
 );
 
@@ -33,7 +33,8 @@ create table Book (
    book_published_year  varchar(4),
    book_isbn            varchar(20),
    book_number_of_pages integer,
-   book_comments        varchar(255),
+   book_comments        text,
+   book_cover_url       text,
    foreign key(bot_id) references Book_Type(bot_id),
    foreign key(med_id) references Media_Type(med_id)
 );

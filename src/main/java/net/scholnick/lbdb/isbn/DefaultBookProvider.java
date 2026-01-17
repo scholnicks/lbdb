@@ -38,12 +38,15 @@ public class DefaultBookProvider implements BookProvider {
             Set<Author> authors = new HashSet<>();
 
             Book google = googleClient.search(isbn);
+            log.debug("Google: {}", google);
             if (google != null) authors.addAll(NullSafe.nvl(google.getAuthors()));
 
             Book open = openLibraryClient.search(isbn);
+            log.debug("OpenLibrary: {}", open);
             if (open != null) authors.addAll(NullSafe.nvl(open.getAuthors()));
 
             Book hardCover = hardcoverClient.search(isbn);
+            log.debug("HardCover: {}", hardCover);
             if (hardCover != null) authors.addAll(NullSafe.nvl(hardCover.getAuthors()));
 
             Book results = google == null ? (open == null ? hardCover : open) : google;
@@ -51,6 +54,14 @@ public class DefaultBookProvider implements BookProvider {
 
             results.setAuthors(authors.stream().sorted(comparing(Author::getName)).toList());
             results.setIsbn(isbn);
+
+            // TODO: which service for the image. Hardcover is probably the best
+
+            if (open != null && open.getCoverURL() != null)
+                results.setCoverURL(open.getCoverURL());
+
+            if (hardCover != null && hardCover.getCoverURL() != null)
+                results.setCoverURL(hardCover.getCoverURL());
 
             return results;
         }
