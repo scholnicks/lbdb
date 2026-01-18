@@ -25,16 +25,16 @@ public class AuthorService {
 
     private final Set<Author> authorsCache = ConcurrentHashMap.newKeySet();
 
-    private final AuthorRepository authorDAO;
+    private final AuthorRepository repository;
 
     @Autowired
-    public AuthorService(AuthorRepository authorDAO) {
-        this.authorDAO = authorDAO;
+    public AuthorService(AuthorRepository repository) {
+        this.repository = repository;
     }
 
     /** Load all authors into the cache. */
     public void loadCache() {
-        authorsCache.addAll(authorDAO.all());
+        authorsCache.addAll(repository.all());
     }
 
     /** Search for authors whose names start with the given criteria. */
@@ -50,20 +50,20 @@ public class AuthorService {
     /** Get an author by ID. */
     @Transactional(readOnly=true)
     public Author get(Long id) {
-        return authorDAO.get(id);
+        return repository.get(id);
     }
 
     /** Count the total number of authors. */
     @Transactional(readOnly=true)
     public Long count() {
-        return authorDAO.count();
+        return repository.count();
     }
 
     /** Delete an author. */
     @Transactional
     public void delete(Author a) {
         log.info("Deleting author : {}",a);
-        authorDAO.delete(a);
+        repository.delete(a);
         authorsCache.remove(a);
     }
 
@@ -71,7 +71,7 @@ public class AuthorService {
     @Transactional(readOnly=true)
     public List<Author> get(Book b) {
         log.debug("Returning authors for book {}",b);
-        return authorDAO.get(b);
+        return repository.get(b);
     }
 
     /** Save an author, creating or updating as necessary. */
@@ -89,9 +89,12 @@ public class AuthorService {
     /** Save a list of authors, creating any that do not already exist. Existing authors will have their IDs set appropriately. */
     @Transactional
     public void save(List<Author> authors) {
-        Map<String,Author> existingAuthors = authorsCache.stream().collect(toMap(Author::getName, a -> a));
         for (Author a : authors) {
-            Author existing = existingAuthors.get(a.getName());
+            Author existing = authorsCache.stream()
+                .filter(ac -> ac.getName().equalsIgnoreCase(a.getName()))
+                .findFirst()
+                .orElse(null);
+
             if (existing == null) {
                 create(a);
             } else {
@@ -103,7 +106,7 @@ public class AuthorService {
     /** Create a new author. */
     private void create(Author a) {
         log.info("Creating new author : {}",a);
-        Long id = authorDAO.create(a);
+        Long id = repository.create(a);
         a.setId(id);
         authorsCache.add(a);
     }
@@ -111,7 +114,7 @@ public class AuthorService {
     /** Update an existing author. */
     private void update(Author a) {
         log.info("Updating existing author : {}",a);
-        authorDAO.update(a);
+        repository.update(a);
         authorsCache.remove(a);
         authorsCache.add(a);
     }

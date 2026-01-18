@@ -10,6 +10,11 @@ import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.util.*;
 
+/**
+ * BookRepository is a repository for managing {@link Book} records in the database.
+ *
+ * @author Steve Scholnick <scholnicks@gmail.com>
+ */
 @Repository
 public class BookRepository {
     private static final Logger log = LoggerFactory.getLogger(BookRepository.class);
@@ -21,10 +26,12 @@ public class BookRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    /** Retrieve a book by its unique ID. */
     public Book get(Long id) {
         return jdbcTemplate.queryForObject("select * from book where book_id=?", this::mapRow, id);
     }
 
+    /** Create a new book record. */
     public Long create(final Book b) {
         // https://stackoverflow.com/questions/4298302/sqlite-jdbc-driver-not-supporting-return-generated-keys
         jdbcTemplate.update(ADD,
@@ -36,16 +43,19 @@ public class BookRepository {
             b.getPublishedYear(),
             b.getIsbn(),    
             Objects.requireNonNullElse(b.getNumberOfPages(),0),
-            b.getComments()
+            b.getComments(),
+            b.getCoverURL()
         );
 
         return jdbcTemplate.queryForObject("select last_insert_rowid()",Long.class);
     }
 
-    private static final String ADD =
-        "insert into book(book_title,bot_id,med_id,book_anthology,book_series,book_published_year,book_isbn,book_number_of_pages,book_comments) " +
-        "values(?,?,?,?,?,?,?,?,?)";
+    private static final String ADD = """
+        insert into book(book_title,bot_id,med_id,book_anthology,book_series,book_published_year,book_isbn,book_number_of_pages,book_comments,book_cover_url)
+        values(?,?,?,?,?,?,?,?,?,?)
+    """;
 
+    /** Add join records for a book's authors. */
     public void addJoinRecords(Book b) {
         removeJoinRecords(b);
 
@@ -56,8 +66,9 @@ public class BookRepository {
 
     private static final String ADD_JOIN = "insert into author_book_xref(book_id,auth_id,abx_editor) values(?,?,?)";
 
+    /** Update an existing book record. */
     public void update(Book b) {
-        log.debug("Updating " + b);
+        log.debug("Updating {}",b);
 
         jdbcTemplate.update(UPDATE,
             b.getTitle(),
@@ -69,29 +80,38 @@ public class BookRepository {
             b.getIsbn(),
             b.getNumberOfPages(),
             b.getComments(),
+            b.getCoverURL(),
             b.getId()
         );
     }
 
-    private static final String UPDATE =
-        "update book " +
-        "set book_title=?,bot_id=?,med_id=?,book_anthology=?,book_series=?,"
-        + "  book_published_year=?,book_isbn=?,book_number_of_pages=?,book_comments=?, "
-        + "  book_modified_date=datetime(current_timestamp,'localtime') " +
-        "where book_id=?";
+    private static final String UPDATE = """
+        update
+            book
+        set
+           book_title=?, bot_id=?, med_id=?, book_anthology=?, book_series=?,
+           book_published_year=?, book_isbn=?, book_number_of_pages=?, book_comments=?,book_cover_url=?,
+           book_modified_date=datetime(current_timestamp,'localtime')
+        where
+            book_id=?
+    """;
 
+    /** Delete a book record. */
     public void delete(Book b) {
         jdbcTemplate.update("delete from book where book_id=?", b.getId());
     }
 
+    /** Remove all join records for a book. */
     public void removeJoinRecords(Book b) {
         jdbcTemplate.update("delete from author_book_xref where book_id=?", b.getId());
     }
 
+    /** Count the total number of book records. */
     public Long count() {
         return jdbcTemplate.queryForObject("select count(book_id) from book", Long.class);
     }
 
+    /** Search for books matching the given criteria. */
     public List<Book> search(Book b) {
         String sql = BASE_SEARCH;
         List<String> criteria = new ArrayList<>(2);
@@ -157,6 +177,7 @@ public class BookRepository {
         b.setType(BookType.from(rs.getInt("bot_id")));
         b.setMedia(Media.from(rs.getInt("med_id")));
         b.setAddedTimestamp(rs.getString("book_created_date"));
+        b.setCoverURL(rs.getString("book_cover_url"));
 
         return b;
     }

@@ -33,6 +33,7 @@ public class OpenLibraryClient implements BookProvider {
 
         results = results.replaceAll("ISBN:%s".formatted(isbn), "data");
         Data data = JSONUtilities.fromJSON(results, Wrapper.class).data;
+        if (data == null) return null;
 
         Book book = new Book()
                 .setTitle(data.title)

@@ -13,9 +13,13 @@ import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.*;
 import java.util.Objects;
 
 import static java.util.function.Predicate.not;
@@ -107,7 +111,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         log.debug("Found results {}", results);
 
         results.setType(BookType.FICTION);
-        results.setMedia(Media.BOOK);
+        results.setMedia(Media.KINDLE);
         loadFields(results);
         reload();
     }
@@ -348,6 +352,18 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
 
         editorsTable.clear();
         b.getAuthors().stream().filter(Author::isEditor).forEach(editorsTable::add);
+
+        if (b.getCoverURL() != null) {
+           SwingUtilities.invokeLater(() -> {
+               try {
+                   Image image = ImageIO.read(new URI(b.getCoverURL()).toURL()).getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
+                   getImageLabel().setIcon(new ImageIcon(image));
+               }
+               catch (IOException | URISyntaxException e) {
+                   log.error("Unable to load cover image", e);
+               }
+           });
+        }
     }
 
     @Autowired
