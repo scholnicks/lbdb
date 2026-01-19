@@ -17,7 +17,6 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.*;
 import java.util.Objects;
@@ -218,28 +217,8 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     private void downloadCoverPhoto() {
         try {
             log.info("Downloading cover photo");
-
-            String existingImageFile = coverPhotoService.getDownloadedImage(getBook());
-            if (existingImageFile != null) {
-                loadImage(existingImageFile);
-                return;
-            }
-
             coverPhotoService.setCoverPhoto(getBook());
-            if (getBook().getCoverPhotoPath() != null) {
-                loadImage(getBook().getCoverPhotoPath().toAbsolutePath().toString());
-                isbnField.setText(getBook().getIsbn());
-
-                if (getBook().getNumberOfPages() != null) {
-                    numberOfPagesField.setText(getBook().getNumberOfPages().toString());
-                }
-
-                bookService.save(getBook());
-            }
-            else {
-                getImageLabel().setIcon(null);
-                reload();
-            }
+            loadImage(getBook().getCoverURL());
         }
         catch (Exception e) {
             log.error("Unable to download cover", e);
@@ -248,11 +227,18 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         }
     }
 
-    private void loadImage(String imagePath) {
-        if (imagePath != null) {
-            getImageLabel().setIcon(new ImageIcon(new ImageIcon(imagePath).getImage()));
-            reload();
-        }
+    private void loadImage(String url) {
+        if (NullSafe.isEmpty(url)) return;
+
+        SwingUtilities.invokeLater(() -> {
+            try {
+                Image image = ImageIO.read(new URI(url).toURL()).getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
+                getImageLabel().setIcon(new ImageIcon(image));
+            }
+            catch (IOException | URISyntaxException e) {
+                log.error("Unable to load cover image", e);
+            }
+        });
     }
 
     public void clear() {
@@ -353,17 +339,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         editorsTable.clear();
         b.getAuthors().stream().filter(Author::isEditor).forEach(editorsTable::add);
 
-        if (b.getCoverURL() != null) {
-           SwingUtilities.invokeLater(() -> {
-               try {
-                   Image image = ImageIO.read(new URI(b.getCoverURL()).toURL()).getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
-                   getImageLabel().setIcon(new ImageIcon(image));
-               }
-               catch (IOException | URISyntaxException e) {
-                   log.error("Unable to load cover image", e);
-               }
-           });
-        }
+        loadImage(b.getCoverURL());
     }
 
     @Autowired

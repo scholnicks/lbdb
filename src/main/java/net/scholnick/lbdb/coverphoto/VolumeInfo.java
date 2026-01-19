@@ -18,5 +18,10 @@ public final class VolumeInfo {
     private ImageLinks              imageLinks;
 
     public record IndustryIdentifier(@JsonProperty("type") String type, @JsonProperty("identifier") String identifier) {}
-    public record ImageLinks(String smallThumbnail, String thumbnail) {}
+
+    public record ImageLinks(String smallThumbnail, String thumbnail) {
+        public String getImageURL() {
+            return thumbnail != null ? thumbnail.replace("&edge=curl","") : smallThumbnail.replace("&edge=curl","");
+        }
+    }
 }

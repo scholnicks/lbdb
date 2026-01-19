@@ -80,7 +80,6 @@ public class BookRepository {
             b.getIsbn(),
             b.getNumberOfPages(),
             b.getComments(),
-            b.getCoverURL(),
             b.getId()
         );
     }
@@ -90,7 +89,7 @@ public class BookRepository {
             book
         set
            book_title=?, bot_id=?, med_id=?, book_anthology=?, book_series=?,
-           book_published_year=?, book_isbn=?, book_number_of_pages=?, book_comments=?,book_cover_url=?,
+           book_published_year=?, book_isbn=?, book_number_of_pages=?, book_comments=?,
            book_modified_date=datetime(current_timestamp,'localtime')
         where
             book_id=?

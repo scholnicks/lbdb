@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.nio.file.Path;
 import java.util.*;
 
 import static java.util.stream.Collectors.joining;
@@ -31,8 +30,6 @@ public final class Book implements Comparable<Book> {
     private Integer numberOfPages;
     private String coverURL;
     private List<Author> authors = new ArrayList<>();
-
-    @Deprecated private Path coverPhotoPath;
 
     /** Parse the year from a release date string in the format "YYYY-MM-DD" or "YYYY". */
     public static String parseYear(String releaseDate) {

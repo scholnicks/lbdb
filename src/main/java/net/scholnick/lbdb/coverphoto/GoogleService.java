@@ -2,17 +2,12 @@ package net.scholnick.lbdb.coverphoto;
 
 import lombok.extern.slf4j.Slf4j;
 import net.scholnick.lbdb.domain.*;
-import net.scholnick.lbdb.util.ApplicationException;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
-import java.net.*;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.*;
-import java.util.*;
 
 import static net.scholnick.lbdb.util.NullSafe.isClose;
 
@@ -23,27 +18,14 @@ public class GoogleService implements CoverPhotoService {
     private static final String ISBN_SEARCH = "https://www.googleapis.com/books/v1/volumes?q=isbn:";
 
     private final RestTemplate restTemplate;
-    private final byte[] invalidCoverImage;
 
     @Autowired
     public GoogleService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
-        try {
-            invalidCoverImage = IOUtils.toByteArray(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("images/invalid-book-cover.jpg")));
-        }
-        catch (IOException e) {
-            throw new ApplicationException("Unable to load invalid cover image data",e);
-        }
     }
 
     @Override
     public void setCoverPhoto(Book book) {
-        Path existingPhoto = getDownloadedCoverPhoto(book);
-
-        if (existingPhoto != null) {
-            book.setCoverPhotoPath(existingPhoto);
-        }
-
         String url = book.getIsbn() != null ? ISBN_SEARCH + book.getIsbn() :
             String.format(BOOK_SEARCH, URLEncoder.encode(book.getTitle(), StandardCharsets.UTF_8));
 
@@ -80,8 +62,7 @@ public class GoogleService implements CoverPhotoService {
     private void loadData(VolumeInfo info, Book book) {
         log.debug("Volume info: {}",info);
 
-        book.setCoverPhotoPath(null);
-        book.setCoverPhotoPath( downloadImage(info.getImageLinks().thumbnail(), book) );
+        book.setCoverURL(info.getImageLinks().getImageURL());
         book.setNumberOfPages(info.getPageCount());
 
         if (book.getIsbn() == null && info.getIndustryIdentifiers() != null) {
@@ -96,51 +77,6 @@ public class GoogleService implements CoverPhotoService {
         }
         catch (Exception e) {
             log.error("Unable to parse: {}",info.getPublishedDate(),e);
-        }
-    }
-
-    private Path getBookCoverPath(Book b) {
-        return FileSystems.getDefault().getPath(getDestinationDirectory().getAbsolutePath(), b.getId() + ".jpg");
-    }
-
-    private Path getDownloadedCoverPhoto(Book b) {
-        Path imageFilePath = getBookCoverPath(b);
-
-        if (Files.exists(imageFilePath) && Files.isReadable(imageFilePath)) {
-            log.info("Using cached file path {}",imageFilePath);
-            return imageFilePath.toAbsolutePath();
-        }
-        else {
-            return null;
-        }
-    }
-
-    private Path downloadImage(String url, Book b)  {
-        try {
-            Path imageFilePath = getDownloadedCoverPhoto(b);
-
-            if (imageFilePath != null) {
-                log.debug("Using cached file path {}",imageFilePath);
-                return imageFilePath.toAbsolutePath();
-            }
-
-            url = url.replace("&edge=curl","");
-            log.info("Downloading image from {}",url);
-
-            byte []downloaded = IOUtils.toByteArray(new URI(url).toURL());
-
-            if (Arrays.equals(invalidCoverImage,downloaded)) {
-                log.debug("Invalid cover image");
-                return null;
-            }
-
-            Path bookCoverPath = getBookCoverPath(b);
-            Files.write(bookCoverPath,downloaded);
-            return bookCoverPath;
-        }
-        catch (IOException | URISyntaxException e) {
-            log.error("Error while downloading image from {}",url,e);
-            throw new ApplicationException("Unable to download cover image");
         }
     }
 }
