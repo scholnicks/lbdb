@@ -4,6 +4,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ * BaseDialog for modal dialogs with OK and Cancel buttons.
+ *
+ * @author Steve Scholnick <scholnicks@gmail.com>
+ */
 public abstract class BaseDialog extends JDialog {
     private JButton okButton;
     private JButton cancelButton;
@@ -30,12 +35,14 @@ public abstract class BaseDialog extends JDialog {
         return rootPane;
     }
 
+    /** Build the GUI components of the dialog. */
     protected void buildGUI() {
         getContentPane().setLayout(new BorderLayout());
         getContentPane().add(getInputPanel(), BorderLayout.CENTER);
         getContentPane().add(getButtonPanel(), BorderLayout.SOUTH);
     }
 
+    /** Create the panel containing the OK and Cancel buttons. */
     protected JPanel getButtonPanel() {
         JPanel p = new JPanel();
         p.add(getOKButton());
@@ -43,6 +50,7 @@ public abstract class BaseDialog extends JDialog {
         return p;
     }
 
+    /** Get the OK button, creating it if necessary. */
     protected final JButton getOKButton() {
         if (okButton == null) {
             okButton = new JButton("Ok");
@@ -51,6 +59,7 @@ public abstract class BaseDialog extends JDialog {
         return okButton;
     }
 
+    /** Get the Cancel button, creating it if necessary. */
     private JButton getCancelButton() {
         if (cancelButton == null) {
             cancelButton = new JButton("Cancel");
@@ -59,23 +68,28 @@ public abstract class BaseDialog extends JDialog {
         return cancelButton;
     }
 
+    /** Handle the OK button being pressed. */
     protected void ok() {
         close(true);
     }
 
+    /** Handle the Cancel button being pressed. */
     private void cancel() {
         close(false);
     }
 
+    /** Close the dialog, setting the approved flag. */
     private void close(boolean approvedIn) {
         approved = approvedIn;
         setVisible(false);
     }
 
+    /** Get the panel containing the input components. Override to provide input fields. */
     protected JPanel getInputPanel() {
         return null;
     }
 
+    /** Get the component that should receive initial focus when the dialog is shown. */
     protected abstract JComponent getInitialFocusComponent();
 
     @Override
@@ -84,11 +98,13 @@ public abstract class BaseDialog extends JDialog {
         getInitialFocusComponent().requestFocus();
     }
 
+    /** Repaint and validate the dialog screen. */
     protected final void repaintScreen() {
         validate();
         repaint();
     }
 
+    /** Check if the dialog was approved (OK pressed). */
     public boolean isApproved() {
         return approved;
     }

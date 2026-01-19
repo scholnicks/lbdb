@@ -14,6 +14,11 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
+/**
+ *  Panel for searching titles in the database.
+ *
+ * @author Steve Scholnick <scholnicks@gmail.com>
+ */
 @Component
 public class SearchPanel extends BasePanel {
     private JButton searchButton;
@@ -48,6 +53,7 @@ public class SearchPanel extends BasePanel {
         super.paintComponent(g);
     }
 
+    /** Construct the panels. */
     private void makePanels() {
         JPanel middle = new JPanel(new BorderLayout());
         middle.add(getTopPanel(), BorderLayout.NORTH);
@@ -57,6 +63,7 @@ public class SearchPanel extends BasePanel {
         add(getBottomPanel(), BorderLayout.SOUTH);
     }
 
+    /** Construct the bottom panel. */
     private JPanel getBottomPanel() {
         JPanel p = new JPanel(new BorderLayout(1, 1));
         p.add(getButtonPanel(), BorderLayout.CENTER);
@@ -64,6 +71,7 @@ public class SearchPanel extends BasePanel {
         return p;
     }
 
+    /** Construct the button panel. */
     protected JPanel getButtonPanel() {
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(getEditBookButton());
@@ -71,6 +79,7 @@ public class SearchPanel extends BasePanel {
         return buttonPanel;
     }
 
+    /** Construct the info label. */
     private JLabel getInfoLabel() {
         if (infoLabel == null) {
             infoLabel = LabelFactory.createLabel(" ");    // don't use "", swing will hide the component
@@ -79,6 +88,7 @@ public class SearchPanel extends BasePanel {
         return infoLabel;
     }
 
+    /** Construct the top panel. */
     private JPanel getTopPanel() {
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.add(getCriteriaPanel(), BorderLayout.CENTER);
@@ -86,6 +96,7 @@ public class SearchPanel extends BasePanel {
         return topPanel;
     }
 
+    /** Construct the search button panel. */
     private JPanel getSearchButtonPanel() {
         JPanel p = new JPanel();
         p.add(getSearchButton());
@@ -94,6 +105,7 @@ public class SearchPanel extends BasePanel {
         return p;
     }
 
+    /** Construct the criteria panel. */
     private JPanel getCriteriaPanel() {
         JPanel cp = new JPanel(new GridBagLayout());
         cp.setBorder(BorderFactory.createEmptyBorder(10,10,5,10));
@@ -127,6 +139,7 @@ public class SearchPanel extends BasePanel {
         return cp;
     }
 
+    /** Construct the media combo box. */
     private JComboBox<MediaType> getMediaCombo() {
         if (mediaCombo == null) {
             Vector<MediaType> types = new Vector<>(Media.values().length + 1);
@@ -139,6 +152,7 @@ public class SearchPanel extends BasePanel {
         return mediaCombo;
     }
 
+    /** Construct the search button. */
     private JButton getSearchButton() {
         if (searchButton == null) {
             searchButton = GUIUtilities.createButton("Search");
@@ -147,6 +161,7 @@ public class SearchPanel extends BasePanel {
         return searchButton;
     }
 
+    /** Perform the search. */
     private void search() {
         Book b = new Book();
         b.setTitle(getTitleField().getText());
@@ -168,6 +183,7 @@ public class SearchPanel extends BasePanel {
         SoundPlayer.playAhh();
     }
 
+    /** Construct the clear button. */
     private JButton getClearButton() {
         if (clearButton == null) {
             clearButton = GUIUtilities.createButton("Clear");
@@ -176,6 +192,7 @@ public class SearchPanel extends BasePanel {
         return clearButton;
     }
 
+    /** Clear all input fields and table data. */
     private void clear() {
         getTitleField().setText("");
         getAuthorNameField().setText("");
@@ -188,12 +205,14 @@ public class SearchPanel extends BasePanel {
         repaint();
     }
 
+    /** Clear the table data. */
     private void clearTableData() {
         getDataTable().clearSelection();
         ((TitleSearchTableModel) getDataTable().getModel()).clear();
         getInfoLabel().setText("");
     }
 
+    /** Fill the table with data. */
     private void fillTable(java.util.List<Book> data) {
         clearTableData();
 
@@ -205,6 +224,7 @@ public class SearchPanel extends BasePanel {
         repaint();
     }
 
+    /** Construct the author name field. */
     private JTextField getAuthorNameField() {
         if (authorName == null) {
             authorName = new TrimmedTextField(20, 100);
@@ -214,6 +234,7 @@ public class SearchPanel extends BasePanel {
         return authorName;
     }
 
+    /** Construct the data table. */
     private JTable getDataTable() {
         if (dataTable == null) {
             dataTable = new TitleSearchTable();
@@ -229,6 +250,7 @@ public class SearchPanel extends BasePanel {
         return dataTable;
     }
 
+    /** Edit the selected title. */
     private void editTitle() {
         int row = getDataTable().getSelectedRow();
 
@@ -239,6 +261,7 @@ public class SearchPanel extends BasePanel {
         fireTitleSelection(new TitleSelectionEvent(data));
     }
 
+    /** Edit the selected author. */
     private void editAuthor() {
         int row = getDataTable().getSelectedRow();
 
@@ -253,6 +276,7 @@ public class SearchPanel extends BasePanel {
         }
     }
 
+    /** Get the selected author from the book. If there is more than one author, prompt the user to select one. */
     private Author getSelectedAuthor(Book b) {
         java.util.List<Author> authors = b.getAuthors();
 
@@ -263,6 +287,7 @@ public class SearchPanel extends BasePanel {
         return selection.isApproved() ? selection.getSelectedAuthor() : null;
     }
 
+    /** Construct the edit book button. */
     private JButton getEditBookButton() {
         if (editBookButton == null) {
             editBookButton = GUIUtilities.createButton("Edit Book");
@@ -271,6 +296,7 @@ public class SearchPanel extends BasePanel {
         return editBookButton;
     }
 
+    /** Construct the edit author button. */
     private JButton getEditAuthorButton() {
         if (editAuthorButton == null) {
             editAuthorButton = GUIUtilities.createButton("Edit Author");
@@ -279,6 +305,7 @@ public class SearchPanel extends BasePanel {
         return editAuthorButton;
     }
 
+    /** Construct the title field. */
     private JTextField getTitleField() {
         if (title == null) {
             title = new TrimmedTextField(20, 100);
@@ -288,6 +315,7 @@ public class SearchPanel extends BasePanel {
         return title;
     }
 
+    /** Construct the series field. */
     private JTextField getSeriesField() {
         if (series == null) {
             series = new TrimmedTextField(20, 100);
@@ -302,12 +330,14 @@ public class SearchPanel extends BasePanel {
         return null;
     }
 
+    /** Media type for combo box. */
     private record MediaType(String display, Integer id) {
         @Override public String toString() {
                 return display;
             }
     }
 
+    /** Action to perform the search in a separate thread. */
     private final class SearchAction extends AbstractAction implements Runnable {
         private Thread searchThread;
 
@@ -326,6 +356,7 @@ public class SearchPanel extends BasePanel {
         }
     }
 
+    /** Cell renderer for the search results table. */
     public static final class SearchTableCellRenderer extends DefaultTableCellRenderer {
         private static final SearchTableCellRenderer INSTANCE = new SearchTableCellRenderer();
 

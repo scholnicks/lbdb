@@ -10,6 +10,8 @@ import org.springframework.web.client.RestClient;
 
 import java.util.*;
 
+import static java.util.function.Predicate.not;
+
 /**
  * HardcoverClient - Client for Hardcover API
  *
@@ -36,7 +38,7 @@ public class HardcoverClient implements BookProvider {
             .retrieve()
             .body(String.class);
 
-        if (json == null || json.isBlank()) return null;
+        if (NullSafe.isEmpty(json)) return null;
 
         List<Edition> editions = JSONUtilities.fromJSON(json,OutsideWrapper.class).data().editions();
         if (NullSafe.isEmpty(editions)) return null;
@@ -44,10 +46,29 @@ public class HardcoverClient implements BookProvider {
         Edition edition = editions.getFirst();
         if (edition == null) return null;
 
+        List<Author> editors = NullSafe.stream(edition.book.contributions)
+            .filter(Contribution::isEditor)
+            .map(Contribution::author)
+            .map(HCAuthor::name)
+            .map(Author::of)
+            .toList();
+        editors.forEach(a -> a.setEditor(true));
+
+        List<Author> authors = NullSafe.stream(edition.book.contributions)
+            .filter(not(Contribution::isEditor))
+            .map(Contribution::author)
+            .map(HCAuthor::name)
+            .map(Author::of)
+            .toList();
+
+        List<Author> all = new ArrayList<>();
+        all.addAll(authors);
+        all.addAll(editors);
+
         return new Book()
             .setIsbn(isbn)
             .setTitle(edition.book().title())
-            .setAuthors(NullSafe.stream(edition.book.contributions).map(Contribution::author).map(HCAuthor::name).map(Author::of).toList())
+            .setAuthors(all)
             .setPublishedYear(Book.parseYear(edition.book.release_date))
             .setCoverURL(edition.book.cached_image == null ? null : edition.book.cached_image.url())
         ;
@@ -69,7 +90,11 @@ public class HardcoverClient implements BookProvider {
     public record Cover(String url) {}
 
     @JsonIgnoreProperties(ignoreUnknown=true)
-    public record Contribution(String contribution, HCAuthor author) {}
+    public record Contribution(String contribution, HCAuthor author) {
+        public boolean isEditor() {
+            return "Editor".equalsIgnoreCase(contribution);
+        }
+    }
 
     @JsonIgnoreProperties(ignoreUnknown=true)
     public record HCAuthor(String name) {}

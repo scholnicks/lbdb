@@ -5,12 +5,18 @@ import net.scholnick.lbdb.util.ApplicationException;
 import javax.sound.sampled.*;
 import java.net.URL;
 
-// TOOO: convert this to a spring class and use annotation to spin the thread
+/**
+ * SoundPlayer is a utility class to play sound files.
+ *
+ * @author Steve Scholnick <scholnicks@gmail.com>
+ */
 final class SoundPlayer {
+    /** Play the "aaaaahhhhh.aif" sound file in a separate thread. */
     static void playAhh() {
         new Thread(() -> playFile(SoundPlayer.class.getClassLoader().getResource("aaaaahhhhh.aif"))).start();
     }
 
+    /** Play the "boing.aif" sound file in a separate thread. */
     private static void playFile(URL soundURL) {
         try {
             Line.Info linfo = new Line.Info(Clip.class);

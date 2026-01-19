@@ -4,6 +4,11 @@ import lombok.Getter;
 
 import java.util.Arrays;
 
+/**
+ * Media enum
+ *
+ * @author Steve Scholnick <scholnicks@gmail.com>
+ */
 @Getter
 public enum Media {
     BOOK(1,"Book"),

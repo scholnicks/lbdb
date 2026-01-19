@@ -4,6 +4,11 @@ import lombok.Getter;
 
 import java.util.Arrays;
 
+/**
+ * BookType enum
+ *
+ * @author Steve Scholnick <scholnicks@gmail.com>
+ */
 @Getter
 public enum BookType {
     FICTION(1,"Fiction"),

@@ -5,6 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+/**
+ * CoverPhotoFacade - Facade for cover photo services
+ *
+ * @author Steve Scholnick <scholnicks@gmail.com>
+ */
 @Service
 @Primary
 public class CoverPhotoFacade implements CoverPhotoService {

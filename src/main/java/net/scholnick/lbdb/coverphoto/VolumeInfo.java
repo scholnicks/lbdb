@@ -6,6 +6,11 @@ import lombok.experimental.Accessors;
 
 import java.util.Set;
 
+/**
+ * VolumeInfo - VolumeInfo from Google Books API
+ *
+ * @author Steve Scholnick <scholnicks@gmail.com>
+ */
 @Accessors(chain=true)
 @Data
 @JsonIgnoreProperties(ignoreUnknown=true)

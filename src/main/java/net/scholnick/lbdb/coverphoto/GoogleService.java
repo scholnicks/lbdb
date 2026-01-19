@@ -1,7 +1,7 @@
 package net.scholnick.lbdb.coverphoto;
 
-import lombok.extern.slf4j.Slf4j;
 import net.scholnick.lbdb.domain.*;
+import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -11,9 +11,15 @@ import java.nio.charset.StandardCharsets;
 
 import static net.scholnick.lbdb.util.NullSafe.isClose;
 
-@Slf4j
+/**
+ * GoogleService - Service to get cover photos from Google Books API
+ *
+ * @author Steve Scholnick <scholnicks@gmail.com>
+ */
 @Service
 public class GoogleService implements CoverPhotoService {
+    private static final Logger log = LoggerFactory.getLogger(GoogleService.class);
+
     private static final String BOOK_SEARCH = "https://www.googleapis.com/books/v1/volumes?q=\"%s\"&printType=books";
     private static final String ISBN_SEARCH = "https://www.googleapis.com/books/v1/volumes?q=isbn:";
 
@@ -33,6 +39,7 @@ public class GoogleService implements CoverPhotoService {
         if (results != null) findImage(results,book);
     }
 
+    /** Find an image in the results that matches the book */
     private void findImage(BookResults results, Book book) {
         if (results.items() == null) return;
 
@@ -59,6 +66,7 @@ public class GoogleService implements CoverPhotoService {
         }
     }
 
+    /** Load data from the volume info into the book */
     private void loadData(VolumeInfo info, Book book) {
         log.debug("Volume info: {}",info);
 
