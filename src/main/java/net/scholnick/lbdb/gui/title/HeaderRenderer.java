@@ -6,6 +6,11 @@ import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.Component;
 
+/**
+ * HeaderRenderer for JTable headers in the Title List table.
+ *
+ * @author Steve Scholnick <scholnicks@gmail.com>
+ */
 final class HeaderRenderer implements TableCellRenderer {
     private final DefaultTableCellRenderer renderer;
 

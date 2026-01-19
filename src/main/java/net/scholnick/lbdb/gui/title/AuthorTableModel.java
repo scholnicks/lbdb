@@ -10,6 +10,11 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toSet;
 
+/**
+ * AuthorTableModel is the TableModel for authors in the Title edit dialog.
+ *
+ * @author Steve Scholnick <scholnicks@gmail.com>
+ */
 final class AuthorTableModel extends AbstractTableModel {
     private final List<Author> dataRows;
 
@@ -17,10 +22,12 @@ final class AuthorTableModel extends AbstractTableModel {
         dataRows = new LinkedList<>();
     }
 
+    /** Get the set of authors marked as editors. */
     Set<Author> getEditors() {
         return dataRows.stream().filter(Author::isEditor).collect(toSet());
     }
 
+    /** Check if the model contains the given author. */
     boolean contains(Author a) {
         return dataRows.contains(a);
     }
@@ -74,28 +81,34 @@ final class AuthorTableModel extends AbstractTableModel {
         fireTableDataChanged();
     }
 
+    /** Delete the author at the given row. */
     public void delete(int row) {
         dataRows.remove(row);
         fireTableDataChanged();
     }
 
+    /** Add the given author. */
     public void add(Author a) {
         dataRows.add(a);
         fireTableDataChanged();
     }
 
+    /** Get the author at the given row. */
     public Author get(int row) {
         return dataRows.get(row);
     }
 
-    int size() {
+    /** Get the number of authors in the model. */
+    public int size() {
         return dataRows.size();
     }
 
+    /** Get a stream of the authors in the model. */
     public Stream<Author> stream() {
         return dataRows.stream();
     }
 
+    /** Clear all authors from the model. */
     public void clear() {
         dataRows.clear();
         fireTableDataChanged();

@@ -1,6 +1,5 @@
 package net.scholnick.lbdb.gui.author;
 
-import lombok.Getter;
 import net.scholnick.lbdb.domain.Author;
 import net.scholnick.lbdb.gui.*;
 import net.scholnick.lbdb.service.AuthorService;
@@ -14,8 +13,12 @@ import java.awt.*;
 import static javax.swing.JOptionPane.*;
 import static net.scholnick.lbdb.util.GUIUtilities.showMessageDialog;
 
+/**
+ * AuthorMaintenance is a GUI component for adding, editing, and deleting Author records.
+ *
+ * @author Steve Scholnick <scholnicks@gmail.com>
+ */
 @Component
-@Getter
 public class AuthorMaintenance extends AbstractUpdateMaintenance {
     private JTextField nameField;
     private JButton deleteButton;
@@ -31,6 +34,7 @@ public class AuthorMaintenance extends AbstractUpdateMaintenance {
         buildGUI();
     }
 
+    @Override
     protected void resetFocus() {
         getNameField().requestFocus();
     }
@@ -41,6 +45,7 @@ public class AuthorMaintenance extends AbstractUpdateMaintenance {
         author = null;
     }
 
+    /** Create and return the Delete button. */
     private JButton getDeleteButton() {
         if (deleteButton == null) {
             deleteButton = GUIUtilities.createButton("Delete");
@@ -49,16 +54,17 @@ public class AuthorMaintenance extends AbstractUpdateMaintenance {
         return deleteButton;
     }
 
+    /** Remove the current Author after confirming with the user. */
     private void removeAuthor() {
         if (showConfirmDialog(this, "Delete Author?") == YES_OPTION) {
-            authorService.delete(getAuthor());
+            authorService.delete(author);
             showMessageDialog(author + " deleted");
             clear();
         }
     }
 
     @Override
-    protected JPanel getButtonPanel() {
+    protected final JPanel getButtonPanel() {
         JPanel p = new JPanel();
         p.add(getSaveButton());
         p.add(getDeleteButton());
@@ -67,7 +73,8 @@ public class AuthorMaintenance extends AbstractUpdateMaintenance {
         return p;
     }
 
-    protected JPanel getInputPanel() {
+    @Override
+    protected final JPanel getInputPanel() {
         JPanel p = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
 
@@ -83,22 +90,26 @@ public class AuthorMaintenance extends AbstractUpdateMaintenance {
         return p;
     }
 
+    /** Get the Name text field, creating it if necessary. */
     private JTextField getNameField() {
         if (nameField == null) nameField = new TrimmedTextField(30, 255);
         return nameField;
     }
 
+    /** Set the Author to be edited in this maintenance panel. */
     public void setAuthor(Author a) {
         author = a;
         if (author != null) loadData();
     }
 
+    /** Load the Author data into the input fields. */
     private void loadData() {
         getNameField().setText(author.getName());
         reload();
     }
 
-    protected void ok() {
+    @Override
+    protected final void ok() {
         author.setName(getNameField().getText());
         authorService.save(author);
         sendMessage(author.getName() + " has been saved");

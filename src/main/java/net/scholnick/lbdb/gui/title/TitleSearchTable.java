@@ -1,11 +1,16 @@
 package net.scholnick.lbdb.gui.title;
 
-import net.scholnick.lbdb.gui.*;
+import net.scholnick.lbdb.gui.SearchPanel;
 
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 import java.awt.event.*;
 
+/**
+ * TitleSearchTable - JTable for displaying title search results
+ *
+ * @author Steve Scholnick <scholnicks@gmail.com>
+ */
 public final class TitleSearchTable extends JTable {
     public TitleSearchTable() {
         super(new TitleSearchTableModel());
@@ -15,6 +20,7 @@ public final class TitleSearchTable extends JTable {
         addListeners();
     }
 
+    /** Initialize table properties */
     private void initialize() {
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         setCellSelectionEnabled(false);
@@ -23,6 +29,7 @@ public final class TitleSearchTable extends JTable {
         getTableHeader().setDefaultRenderer(new HeaderRenderer(this));
     }
 
+    /** Define preferred column widths */
     private void defineColumnWidths() {
         // 800
 
@@ -34,6 +41,7 @@ public final class TitleSearchTable extends JTable {
         columnModel.getColumn(4).setPreferredWidth(75);
     }
 
+    /** Load custom cell renderers */
     private void loadRenderers() {
         TableColumnModel columnModel = getColumnModel();
 
@@ -41,6 +49,7 @@ public final class TitleSearchTable extends JTable {
             columnModel.getColumn(i).setCellRenderer(SearchPanel.SearchTableCellRenderer.getInstance());
     }
 
+    /** Add event listeners */
     private void addListeners() {
         getTableHeader().addMouseListener(new MouseAdapter() {
             public void mouseReleased(MouseEvent e) {
@@ -54,5 +63,4 @@ public final class TitleSearchTable extends JTable {
     public String toString() {
         return String.valueOf(getModel());
     }
-
 }

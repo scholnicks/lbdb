@@ -3,9 +3,13 @@ package net.scholnick.lbdb.gui.author;
 import net.scholnick.lbdb.domain.Author;
 
 import javax.swing.table.AbstractTableModel;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
+/**
+ * AuthorTableModel for displaying authors in a JTable.
+ *
+ * @author Steve Scholnick <scholnicks@gmail.com>
+ */
 final class AuthorTableModel extends AbstractTableModel {
     private final List<Author> dataRows;
 
@@ -13,6 +17,7 @@ final class AuthorTableModel extends AbstractTableModel {
         dataRows = new ArrayList<>();
     }
 
+    /** Get all authors in the table model. */
     List<Author> getAllAuthors() {
         return dataRows;
     }
@@ -42,15 +47,18 @@ final class AuthorTableModel extends AbstractTableModel {
         return get(row).getName();
     }
 
+    /** Add an author to the table model. */
     public void add(Author data) {
         dataRows.add(data);
         fireTableDataChanged();
     }
 
+    /** Get the author at the specified row. */
     public Author get(int row) {
         return dataRows.get(row);
     }
 
+    /** Clear all authors from the table model. */
     public void clear() {
         dataRows.clear();
         fireTableDataChanged();

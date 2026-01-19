@@ -6,10 +6,14 @@ import net.scholnick.lbdb.util.GUIUtilities;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.List;
 
+/**
+ * AuthorSelectionPopUp is a dialog that allows the user to select an author from a list.
+ *
+ * @author Steve Scholnick <scholnicks@gmail.com>
+ */
 public final class AuthorSelectionPopUp extends BaseDialog {
     private JTable listingTable;
 
@@ -38,6 +42,7 @@ public final class AuthorSelectionPopUp extends BaseDialog {
         getContentPane().add(getButtonPanel(), BorderLayout.SOUTH);
     }
 
+    /** Lazy initialization of the listing table. */
     private JTable getListingTable() {
         if (listingTable == null) {
             listingTable = new JTable(new AuthorTableModel());
@@ -61,6 +66,7 @@ public final class AuthorSelectionPopUp extends BaseDialog {
         return listingTable;
     }
 
+    /** Populate the listing table with authors. */
     private void addAuthors(List<Author> authors) {
         getListingTable().clearSelection();
 
@@ -72,6 +78,7 @@ public final class AuthorSelectionPopUp extends BaseDialog {
         repaint();
     }
 
+    /** Get the selected author from the listing table. */
     public Author getSelectedAuthor() {
         int row = getListingTable().getSelectedRow();
 

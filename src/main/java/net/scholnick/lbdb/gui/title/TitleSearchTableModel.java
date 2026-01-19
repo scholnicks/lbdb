@@ -6,6 +6,11 @@ import net.scholnick.lbdb.util.NullSafe;
 import javax.swing.table.AbstractTableModel;
 import java.util.*;
 
+/**
+ * TitleSearchTableModel - Table model for displaying title search results
+ *
+ * @author Steve Scholnick <scholnicks@gmail.com>
+ */
 public final class TitleSearchTableModel extends AbstractTableModel {
     private final List<Book> dataRows;
     private int              sortedColumn;
@@ -16,6 +21,7 @@ public final class TitleSearchTableModel extends AbstractTableModel {
         setSortingDefaults();
     }
 
+    /** Set default sorting: first column ascending */
     private void setSortingDefaults() {
         sortedColumn = 0;
         sortingDirections = new Direction[columnNames.length];
@@ -60,21 +66,25 @@ public final class TitleSearchTableModel extends AbstractTableModel {
         };
     }
 
+    /** Get the Book data for the specified row */
     public Book getTitleData(int row) {
         return dataRows.get(row);
     }
 
+    /** Clear all data from the table */
     public void clear() {
         dataRows.clear();
         setSortingDefaults();
         fireTableDataChanged();
     }
 
+    /** Add a row of data to the table */
     public void addRow(Book data) {
         dataRows.add(data);
         fireTableDataChanged();
     }
 
+    /** Sort the table by the specified column */
     void sort(int column) {
         if (column == sortedColumn) {
             sortingDirections[column] = sortingDirections[column] == Direction.ASCENDING ? Direction.DESCENDING : Direction.ASCENDING;
@@ -87,10 +97,12 @@ public final class TitleSearchTableModel extends AbstractTableModel {
 
     private static final String[] columnNames = {"Title", "Authors", "Media", "Series", "Anthology"};
 
+    /** Sorting direction enum */
     private enum Direction {
         ASCENDING, DESCENDING
     }
 
+    /** Comparator for sorting the data rows */
     private final class DataSorter implements Comparator<Book> {
         private final int column;
 
