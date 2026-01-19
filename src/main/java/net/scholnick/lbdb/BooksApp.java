@@ -51,7 +51,7 @@ public class BooksApp {
     }
 
     @Bean
-    RestClient restClient() {
+    public RestClient restClient() {
         SimpleClientHttpRequestFactory rf = new SimpleClientHttpRequestFactory();
         rf.setConnectTimeout(10_000);
         rf.setReadTimeout(15_000);
