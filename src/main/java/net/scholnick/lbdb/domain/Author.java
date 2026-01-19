@@ -1,24 +1,23 @@
 package net.scholnick.lbdb.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.*;
+import lombok.Data;
 import lombok.experimental.Accessors;
-import net.scholnick.lbdb.gui.Identifiable;
 
+/**
+ * Author is a representation of a book author.
+ *
+ * @author Steve Scholnick <scholnicks@gmail.com>
+ */
 @Accessors(chain=true)
 @Data
 @JsonIgnoreProperties(ignoreUnknown=true)
-public final class Author implements Comparable<Author>, Identifiable {
+public final class Author {
     private Long id;
     private String name;
     private boolean editor;
 
     public static Author of(String name) {
         return new Author().setName(name);
-    }
-
-    @Override
-    public int compareTo(Author o) {
-        return name.compareTo(o.name);
     }
 }

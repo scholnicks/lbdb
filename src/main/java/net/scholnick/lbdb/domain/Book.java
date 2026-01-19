@@ -38,8 +38,9 @@ public final class Book implements Comparable<Book> {
         return parts.length > 0 ? parts[0] : null;
     }
 
+    /** Get a comma-separated list of author names, sorted alphabetically. */
     public String getAuthorNames() {
-        return authors.stream().sorted().map(Author::getName).collect(joining(", "));
+        return authors.stream().map(Author::getName).sorted().collect(joining(", "));
     }
 
     @Override
@@ -49,16 +50,19 @@ public final class Book implements Comparable<Book> {
         return getAuthorNames().compareTo(o.getAuthorNames());
     }
 
+    /** Remove all authors from this book. */
     public void clearAuthors() {
         authors.clear();
     }
 
+    /** Add an author to this book if not already present. */
     public void addAuthor(Author a) {
         if (! authors.contains(a)) {
             authors.add(a);
         }
     }
 
+    /** Add an editor to this book if not already present. */
     public void addEditor(Author editor) {
         if (! authors.contains(editor)) {
             editor.setEditor(true);
