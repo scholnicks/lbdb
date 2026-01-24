@@ -5,6 +5,7 @@ import net.scholnick.lbdb.gui.SearchPanel;
 import net.scholnick.lbdb.gui.author.AuthorMaintenance;
 import net.scholnick.lbdb.gui.title.TitleMaintenance;
 import net.scholnick.lbdb.service.*;
+import net.scholnick.lbdb.util.GUIUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,8 +14,6 @@ import javax.swing.text.DefaultEditorKit;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Objects;
-
-import static net.scholnick.lbdb.util.GUIUtilities.*;
 
 /**
  *  BooksDB is the main application window.
@@ -46,7 +45,7 @@ public final class BooksDB extends JFrame {
     /** Initialize the main window. */
     void init() {
         setSize(WINDOW_SIZE);
-        center(this);
+        GUIUtilities.center(this);
 
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -120,7 +119,7 @@ public final class BooksDB extends JFrame {
         menuBar.add(getEditMenu());
         setJMenuBar(menuBar);
 
-        Desktop.getDesktop().setAboutHandler(_ -> showMessageDialog(
+        Desktop.getDesktop().setAboutHandler(_ -> GUIUtilities.showMessageDialog(
             VERSION + "\nMode: " + System.getProperty("lbdb.environment","dev"),
             "About"
         ));
