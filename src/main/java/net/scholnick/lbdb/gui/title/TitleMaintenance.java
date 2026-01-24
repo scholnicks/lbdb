@@ -115,6 +115,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         reload();
     }
 
+    /** Add the given author to the given data table and clear the input field */
     private void addAuthor(Author a, AuthorTable dataTable, JTextField inputField) {
         if (a.getId() == null) {
             if (showConfirmDialog(this, a.getName() + " not found.","Add?",YES_NO_OPTION) == JOptionPane.NO_OPTION) {
@@ -125,6 +126,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         inputField.setText("");
     }
 
+    /** Show a pop-up menu of authors to select from */
     private void popUpMenu(java.util.List<Author> data, AuthorTable dataPanel, JTextField inputField) {
         JPopupMenu popup = new JPopupMenu();
         for (Author d : data) {
@@ -137,10 +139,12 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         popup.requestFocusInWindow();
     }
 
+    /** Search for authors matching the text in the given input field */
     private java.util.List<Author> searchForAuthors(JTextField inputField) {
         return authorService.search(inputField.getText()).stream().filter(Objects::nonNull).limit(20).collect(toList());
     }
 
+    /** Get the authors selection text field, creating it if necessary */
     private JTextField getAuthorsSelect() {
         if (authorsSelect == null) {
             authorsSelect = new JTextField(30);
@@ -158,6 +162,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         return authorsSelect;
     }
 
+    /** Get the editors selection text field, creating it if necessary */
     private JTextField getEditorsSelect() {
         if (editorsSelect == null) {
             editorsSelect = new JTextField(30);
@@ -175,6 +180,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         return editorsSelect;
     }
 
+    /** Get the delete button, creating it if necessary */
     private JButton getDeleteButton() {
         if (deleteButton == null) {
             deleteButton = GUIUtilities.createButton("Delete");
@@ -194,6 +200,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         titleField.requestFocus();
     }
 
+    /** Get the image label, creating it if necessary */
     private JLabel getImageLabel() {
         if (imageLabel == null) {
             imageLabel = new JLabel();
@@ -214,19 +221,26 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         return imageLabel;
     }
 
+    /** Download the cover photo for the current book */
     private void downloadCoverPhoto() {
         try {
             log.info("Downloading cover photo");
             coverPhotoService.setCoverPhoto(getBook());
-            loadImage(getBook().getCoverURL());
+            if (getBook().getCoverURL() == null) {
+                setDefaultBookIcon();
+            }
+            else {
+                loadImage(getBook().getCoverURL());
+            }
         }
         catch (Exception e) {
             log.error("Unable to download cover", e);
-            getImageLabel().setIcon(null);
-            reload();
+            setDefaultBookIcon();
         }
+        reload();
     }
 
+    /** Load an image from the given URL into the image label */
     private void loadImage(String url) {
         if (NullSafe.isEmpty(url)) return;
 
@@ -236,11 +250,13 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
                 getImageLabel().setIcon(new ImageIcon(image));
             }
             catch (IOException | URISyntaxException e) {
+                setDefaultBookIcon();
                 log.error("Unable to load cover image", e);
             }
         });
     }
 
+    @Override
     public void clear() {
         anthologyCheckBox.setSelected(false);
         commentsArea.setText("");
@@ -255,12 +271,17 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         authorsTable.clear();
         editorsTable.clear();
 
-        IconFontSwing.register(FontAwesome.getIconFont());
-        getImageLabel().setIcon(IconFontSwing.buildIcon(FontAwesome.BOOK, 48, Color.lightGray));
-
+        setDefaultBookIcon();
         book = null;
     }
 
+    /** Set the default book icon into the image label */
+    private void setDefaultBookIcon() {
+        IconFontSwing.register(FontAwesome.getIconFont());
+        getImageLabel().setIcon(IconFontSwing.buildIcon(FontAwesome.BOOK, 48, Color.lightGray));
+    }
+
+    /** Create a Book object from the data in the form */
     private Book createBookFromFormData() {
         Book b = getBook() == null ? new Book() : getBook();
 
@@ -291,6 +312,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         return book;
     }
 
+    /** Set the current book to the given book and load its data into the form */
     public void setBook(Book b) {
         clear();
         this.book = b;
@@ -305,6 +327,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         setBook(b);
     }
 
+    /** Load the data from the given Book into the form asynchronously */
     private void loadData(Book b) {
         SwingUtilities.invokeLater(() -> {
             getImageLabel().setIcon(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("images/loading.gif"))));
