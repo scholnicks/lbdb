@@ -11,7 +11,6 @@ import javax.swing.*;
 import java.awt.*;
 
 import static javax.swing.JOptionPane.*;
-import static net.scholnick.lbdb.util.GUIUtilities.showMessageDialog;
 
 /**
  * AuthorMaintenance is a GUI component for adding, editing, and deleting Author records.
@@ -58,7 +57,7 @@ public class AuthorMaintenance extends AbstractUpdateMaintenance {
     private void removeAuthor() {
         if (showConfirmDialog(this, "Delete Author?") == YES_OPTION) {
             authorService.delete(author);
-            showMessageDialog(author + " deleted");
+            GUIUtilities.showMessageDialog(this,author + " deleted","Author deleted");
             clear();
         }
     }

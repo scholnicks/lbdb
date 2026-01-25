@@ -6,7 +6,7 @@ rm -f LBDB-*.dmg
 
 appName="LBDB"
 vendor="Steve Scholnick"
-version="8.2.1"
+version="8.2.2"
 
 rm -f ${appName}.dmg
 

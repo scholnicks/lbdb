@@ -24,7 +24,6 @@ import java.util.Objects;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
 import static javax.swing.BorderFactory.*;
-import static javax.swing.JOptionPane.*;
 
 /**
  * TitleMaintenance is the GUI component for adding and editing {@link Book} records.
@@ -35,24 +34,24 @@ import static javax.swing.JOptionPane.*;
 public final class TitleMaintenance extends AbstractUpdateMaintenance {
     private static final Logger log = LoggerFactory.getLogger(TitleMaintenance.class);
 
-    private final JTextField titleField;
-    private final JTextField seriesField;
-    private final JTextField publishedYearField;
-    private final JTextField isbnField;
-    private final JTextField numberOfPagesField;
-    private final JCheckBox anthologyCheckBox;
-    private final JComboBox<BookType> typeCombo;
-    private final JComboBox<Media> mediaCombo;
-    private final JTextArea commentsArea;
+    private JTextField titleField;
+    private JTextField seriesField;
+    private JTextField publishedYearField;
+    private JTextField isbnField;
+    private JTextField numberOfPagesField;
+    private JCheckBox anthologyCheckBox;
+    private JComboBox<BookType> typeCombo;
+    private JComboBox<Media> mediaCombo;
+    private JTextArea commentsArea;
 
     private JLabel imageLabel;
     private JButton deleteButton;
 
     private JTextField authorsSelect;
-    private final AuthorTable authorsTable;
+    private AuthorTable authorsTable;
 
     private JTextField editorsSelect;
-    private final AuthorTable editorsTable;
+    private AuthorTable editorsTable;
 
     private Book book;
 
@@ -68,28 +67,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
 
     public TitleMaintenance() {
         super();
-
-        titleField           = TrimmedTextField.create(45, 255,TEXT_FIELD_SIZE);
-        seriesField          = TrimmedTextField.create(45, 255, TEXT_FIELD_SIZE);
-        publishedYearField   = TrimmedTextField.create(10, 4, TEXT_FIELD_SIZE);
-        isbnField            = TrimmedTextField.create(20, 20, TEXT_FIELD_SIZE);
-        numberOfPagesField   = TrimmedTextField.create(15, 20, TEXT_FIELD_SIZE);
-        anthologyCheckBox    = new JCheckBox();
-
-        typeCombo = new JComboBox<>(BookType.values());
-        typeCombo.setRenderer(new GUIUtilities.ListCellRenderer());
-
-        mediaCombo = new JComboBox<>(Media.values());
-        mediaCombo.setRenderer(new GUIUtilities.ListCellRenderer());
-
-        authorsTable = new AuthorTable();
-        editorsTable = new AuthorTable();
-
-        commentsArea = new JTextArea(5, 44);
-        commentsArea.setLineWrap(true);
-        commentsArea.setBorder(BorderFactory.createLineBorder(Color.white));
-        GUIUtilities.setSizes(commentsArea,new Dimension(400,75));
-
+        initializeGUI();
         buildGUI();
     }
 
@@ -97,13 +75,13 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     private void searchByISBN() {
         String isbn = isbnField.getText();
         if (NullSafe.isEmpty(isbn)) {
-            showMessageDialog(this, "Please enter an ISBN to search for.");
+            GUIUtilities.showMessageDialog(this, "Please enter an ISBN to search for.","Missing ISBN");
             return;
         }
 
         Book results = defaultBookProvider.search(isbn.replace("-",""));
         if (results == null) {
-            showMessageDialog(this, "No book found for ISBN " + isbn);
+            GUIUtilities.showMessageDialog(this, "No book found for ISBN " + isbn,"Book Not Found");
             return;
         }
 
@@ -118,7 +96,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     /** Add the given author to the given data table and clear the input field */
     private void addAuthor(Author a, AuthorTable dataTable, JTextField inputField) {
         if (a.getId() == null) {
-            if (showConfirmDialog(this, a.getName() + " not found.","Add?",YES_NO_OPTION) == JOptionPane.NO_OPTION) {
+            if (JOptionPane.showConfirmDialog(this, a.getName() + " not found.","Add?", JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION) {
                 return;
             }
         }
@@ -142,83 +120,6 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     /** Search for authors matching the text in the given input field */
     private java.util.List<Author> searchForAuthors(JTextField inputField) {
         return authorService.search(inputField.getText()).stream().filter(Objects::nonNull).limit(20).collect(toList());
-    }
-
-    /** Get the authors selection text field, creating it if necessary */
-    private JTextField getAuthorsSelect() {
-        if (authorsSelect == null) {
-            authorsSelect = new JTextField(30);
-            GUIUtilities.setSizes(authorsSelect,TEXT_FIELD_SIZE);
-            authorsSelect.addActionListener(_ -> {
-                var data = searchForAuthors(authorsSelect);
-                if (data.isEmpty()) {
-                    addAuthor(Author.of(authorsSelect.getText()),authorsTable,authorsSelect);
-                }
-                else {
-                    popUpMenu(data,authorsTable,authorsSelect);
-                }
-            });
-        }
-        return authorsSelect;
-    }
-
-    /** Get the editors selection text field, creating it if necessary */
-    private JTextField getEditorsSelect() {
-        if (editorsSelect == null) {
-            editorsSelect = new JTextField(30);
-            GUIUtilities.setSizes(editorsSelect,TEXT_FIELD_SIZE);
-            editorsSelect.addActionListener(_ -> {
-                var data = searchForAuthors(editorsSelect);
-                if (data.isEmpty()) {
-                    addAuthor(Author.of(editorsSelect.getText()),editorsTable,editorsSelect);
-                }
-                else {
-                    popUpMenu(data,editorsTable,editorsSelect);
-                }
-            });
-        }
-        return editorsSelect;
-    }
-
-    /** Get the delete button, creating it if necessary */
-    private JButton getDeleteButton() {
-        if (deleteButton == null) {
-            deleteButton = GUIUtilities.createButton("Delete");
-            deleteButton.addActionListener(_ -> {
-                if (showConfirmDialog(this, "Delete Book?") == JOptionPane.YES_OPTION) {
-                    bookService.delete(book);
-                    sendMessage(book + " deleted");
-                    clear();
-                }
-            });
-        }
-        return deleteButton;
-    }
-
-    @Override
-    protected void resetFocus() {
-        titleField.requestFocus();
-    }
-
-    /** Get the image label, creating it if necessary */
-    private JLabel getImageLabel() {
-        if (imageLabel == null) {
-            imageLabel = new JLabel();
-            imageLabel.setIconTextGap(0);
-            imageLabel.setBorder(null);
-            imageLabel.setText(null);
-            imageLabel.setOpaque(false);
-
-            Dimension d = new Dimension(WIDTH,HEIGHT);
-            imageLabel.setPreferredSize(d);
-            imageLabel.setSize(d);
-            imageLabel.setMaximumSize(d);
-            imageLabel.setMinimumSize(d);
-
-            IconFontSwing.register(FontAwesome.getIconFont());
-            imageLabel.setIcon(IconFontSwing.buildIcon(FontAwesome.BOOK, (float) WIDTH));
-        }
-        return imageLabel;
     }
 
     /** Download the cover photo for the current book */
@@ -277,6 +178,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
 
     /** Set the default book icon into the image label */
     private void setDefaultBookIcon() {
+        // TODO: do we need to register each time or just once?
         IconFontSwing.register(FontAwesome.getIconFont());
         getImageLabel().setIcon(IconFontSwing.buildIcon(FontAwesome.BOOK, 48, Color.lightGray));
     }
@@ -387,6 +289,29 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
 
     // GUI related methods
 
+    private void initializeGUI() {
+        titleField           = TrimmedTextField.create(45, 255,TEXT_FIELD_SIZE);
+        seriesField          = TrimmedTextField.create(45, 255, TEXT_FIELD_SIZE);
+        publishedYearField   = TrimmedTextField.create(10, 4, TEXT_FIELD_SIZE);
+        isbnField            = TrimmedTextField.create(20, 20, TEXT_FIELD_SIZE);
+        numberOfPagesField   = TrimmedTextField.create(15, 20, TEXT_FIELD_SIZE);
+        anthologyCheckBox    = new JCheckBox();
+
+        typeCombo = new JComboBox<>(BookType.values());
+        typeCombo.setRenderer(new GUIUtilities.ListCellRenderer());
+
+        mediaCombo = new JComboBox<>(Media.values());
+        mediaCombo.setRenderer(new GUIUtilities.ListCellRenderer());
+
+        authorsTable = new AuthorTable();
+        editorsTable = new AuthorTable();
+
+        commentsArea = new JTextArea(5, 44);
+        commentsArea.setLineWrap(true);
+        commentsArea.setBorder(BorderFactory.createLineBorder(Color.white));
+        GUIUtilities.setSizes(commentsArea,new Dimension(400,75));
+    }
+
     @Override
     protected void buildGUI() {
         setLayout(new BorderLayout());
@@ -404,6 +329,83 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         p.add(getDeleteButton());
         p.add(getClearButton());
         return p;
+    }
+
+    /** Get the authors selection text field, creating it if necessary */
+    private JTextField getAuthorsSelect() {
+        if (authorsSelect == null) {
+            authorsSelect = new JTextField(30);
+            GUIUtilities.setSizes(authorsSelect,TEXT_FIELD_SIZE);
+            authorsSelect.addActionListener(_ -> {
+                var data = searchForAuthors(authorsSelect);
+                if (data.isEmpty()) {
+                    addAuthor(Author.of(authorsSelect.getText()),authorsTable,authorsSelect);
+                }
+                else {
+                    popUpMenu(data,authorsTable,authorsSelect);
+                }
+            });
+        }
+        return authorsSelect;
+    }
+
+    @Override
+    protected void resetFocus() {
+        titleField.requestFocus();
+    }
+
+    /** Get the image label, creating it if necessary */
+    private JLabel getImageLabel() {
+        if (imageLabel == null) {
+            imageLabel = new JLabel();
+            imageLabel.setIconTextGap(0);
+            imageLabel.setBorder(null);
+            imageLabel.setText(null);
+            imageLabel.setOpaque(false);
+
+            Dimension d = new Dimension(WIDTH,HEIGHT);
+            imageLabel.setPreferredSize(d);
+            imageLabel.setSize(d);
+            imageLabel.setMaximumSize(d);
+            imageLabel.setMinimumSize(d);
+
+            IconFontSwing.register(FontAwesome.getIconFont());
+            imageLabel.setIcon(IconFontSwing.buildIcon(FontAwesome.BOOK, (float) WIDTH));
+        }
+        return imageLabel;
+    }
+
+    /** Get the editors selection text field, creating it if necessary */
+    private JTextField getEditorsSelect() {
+        if (editorsSelect == null) {
+            editorsSelect = new JTextField(30);
+            GUIUtilities.setSizes(editorsSelect,TEXT_FIELD_SIZE);
+            editorsSelect.addActionListener(_ -> {
+                var data = searchForAuthors(editorsSelect);
+                if (data.isEmpty()) {
+                    addAuthor(Author.of(editorsSelect.getText()),editorsTable,editorsSelect);
+                }
+                else {
+                    popUpMenu(data,editorsTable,editorsSelect);
+                }
+            });
+        }
+        return editorsSelect;
+    }
+
+    /** Get the delete button, creating it if necessary */
+    private JButton getDeleteButton() {
+        if (deleteButton == null) {
+            deleteButton = GUIUtilities.createButton("Delete");
+            deleteButton.addActionListener(_ -> {
+                if (JOptionPane.showConfirmDialog(this, "Delete Book?") == JOptionPane.YES_OPTION) {
+                    bookService.delete(book);
+                    sendMessage(book + " deleted");
+                    clear();
+                }
+            });
+        }
+        return deleteButton;
     }
 
     @Override

@@ -109,15 +109,15 @@ public class GUIUtilities {
         }
     }
 
-    /** Shows a message dialog with the given message and no title. */
-    public static void showMessageDialog(String message) {
-        showMessageDialog(message, null);
-    }
-
     /** Shows a message dialog with the given message and title. */
-    public static void showMessageDialog(String message, String title) {
-        ImageIcon BOOKCASE_ICON = new ImageIcon(Objects.requireNonNull(GUIUtilities.class.getClassLoader().getResource("images/bookcase.gif")));
-        JOptionPane.showMessageDialog(null, message, title, JOptionPane.PLAIN_MESSAGE, BOOKCASE_ICON);
+    public static void showMessageDialog(Component component, String message, String title) {
+        JOptionPane.showMessageDialog(
+            component,
+            message,
+            title,
+            JOptionPane.PLAIN_MESSAGE,
+            new ImageIcon(Objects.requireNonNull(GUIUtilities.class.getClassLoader().getResource("images/bookcase.gif")))
+        );
     }
 
     private GUIUtilities() {}

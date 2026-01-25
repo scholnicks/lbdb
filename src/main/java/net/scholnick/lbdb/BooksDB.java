@@ -32,7 +32,7 @@ public final class BooksDB extends JFrame {
     private AuthorService authorService;
 
     public static final Dimension WINDOW_SIZE = new Dimension(1000, 850);
-    private static final String       VERSION = "Version 8.2.1";
+    private static final String       VERSION = "Version 8.2.2";
 
     public static final Color BACKGROUND_COLOR = new Color(4,106,56);
     public static final Color FOREGROUND_COLOR = Color.white;
@@ -119,7 +119,7 @@ public final class BooksDB extends JFrame {
         menuBar.add(getEditMenu());
         setJMenuBar(menuBar);
 
-        Desktop.getDesktop().setAboutHandler(_ -> GUIUtilities.showMessageDialog(
+        Desktop.getDesktop().setAboutHandler(_ -> GUIUtilities.showMessageDialog(null,
             VERSION + "\nMode: " + System.getProperty("lbdb.environment","dev"),
             "About"
         ));

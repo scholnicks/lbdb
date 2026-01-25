@@ -2,15 +2,13 @@ package net.scholnick.lbdb.service;
 
 import net.scholnick.lbdb.domain.*;
 import net.scholnick.lbdb.repository.*;
-import net.scholnick.lbdb.util.NullSafe;
+import net.scholnick.lbdb.util.*;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-
-import static net.scholnick.lbdb.util.GUIUtilities.showMessageDialog;
 
 /**
  * BookService handles business logic related to books.
@@ -95,7 +93,7 @@ public class BookService {
         List<Book> searchResults = search(b);
         if (searchResults != null && searchResults.contains(b)) {
             log.info("Entry already present. Not creating duplicate for {}",b);
-            showMessageDialog(b.getTitle() + " already exists. Not creating duplicate");
+            GUIUtilities.showMessageDialog(null,b.getTitle() + " already exists. Not creating duplicate","Duplicate entry");
             throw new RuntimeException("Existing entry found");
         }
 
