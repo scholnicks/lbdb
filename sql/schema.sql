@@ -28,13 +28,15 @@ create table Book (
    bot_id               integer not null,
    med_id               integer not null,
    book_title           varchar(100) not null,
-   book_anthology       char(1) not null default 'n',
+   book_anthology       char(1) not null default 'N',
    book_series          varchar(100),
    book_published_year  varchar(4),
    book_isbn            varchar(20),
    book_number_of_pages integer,
    book_comments        text,
    book_cover_url       text,
+   book_asin            varchar(100),
+   book_cover_photo     blob,
    foreign key(bot_id) references Book_Type(bot_id),
    foreign key(med_id) references Media_Type(med_id)
 );
@@ -44,7 +46,7 @@ create table Author_Book_Xref (
    abx_modified_date    datetime,
    auth_id              integer not null,
    book_id              integer not null,
-   abx_editor           char(1) not null default 'n',
+   abx_editor           char(1) not null default 'N',
    primary key (auth_id,book_id),
    foreign key(auth_id) references Author(auth_id),
    foreign key(book_id) references Book(book_id)
