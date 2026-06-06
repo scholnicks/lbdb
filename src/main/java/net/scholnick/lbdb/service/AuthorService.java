@@ -38,13 +38,22 @@ public class AuthorService {
     }
 
     /** Search for authors whose names start with the given criteria. */
-    @Transactional(readOnly=true)
     public List<Author> search(String criteria) {
         if (NullSafe.isEmpty(criteria)) return List.of();
 
         return authorsCache.stream()
             .filter(a -> a.getName().toLowerCase().startsWith(criteria.toLowerCase()))
             .collect(toList());
+    }
+
+    /** Search for authors whose names start with the given criteria. */
+    public Author find(String name) {
+        if (NullSafe.isEmpty(name)) return null;
+
+        return authorsCache.stream()
+            .filter(a -> a.getName().equalsIgnoreCase(name.toLowerCase()))
+            .findFirst()
+                .orElse(null);
     }
 
     /** Get an author by ID. */

@@ -29,6 +29,7 @@ public final class Book implements Comparable<Book> {
     private boolean anthology;
     private Integer numberOfPages;
     private String coverURL;
+    private String asin;
     private List<Author> authors = new ArrayList<>();
 
     /** Parse the year from a release date string in the format "YYYY-MM-DD" or "YYYY". */

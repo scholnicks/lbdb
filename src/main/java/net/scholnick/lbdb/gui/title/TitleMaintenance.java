@@ -2,7 +2,7 @@ package net.scholnick.lbdb.gui.title;
 
 import jiconfont.icons.font_awesome.FontAwesome;
 import jiconfont.swing.IconFontSwing;
-import net.scholnick.lbdb.BooksDB;
+import net.scholnick.lbdb.*;
 import net.scholnick.lbdb.coverphoto.CoverPhotoService;
 import net.scholnick.lbdb.domain.*;
 import net.scholnick.lbdb.gui.*;
@@ -34,6 +34,7 @@ import static javax.swing.BorderFactory.*;
 public final class TitleMaintenance extends AbstractUpdateMaintenance {
     private static final Logger log = LoggerFactory.getLogger(TitleMaintenance.class);
 
+    private JTextField searchField;
     private JTextField titleField;
     private JTextField seriesField;
     private JTextField publishedYearField;
@@ -58,6 +59,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     private BookService       bookService;
     private AuthorService     authorService;
     private CoverPhotoService coverPhotoService;
+    private AmazonDataProvider amazonDataProvider;
     private DefaultBookProvider defaultBookProvider;
 
     private static final int WIDTH = 128;
@@ -71,26 +73,15 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         buildGUI();
     }
 
-    /** Search for a book by its ISBN using the BookProviderFacade */
-    private void searchByISBN() {
-        String isbn = isbnField.getText();
-        if (NullSafe.isEmpty(isbn)) {
-            GUIUtilities.showMessageDialog(this, "Please enter an ISBN to search for.","Missing ISBN");
+    /** Search for authors */
+    private void search() {
+        String criteria = searchField.getText();
+        if (NullSafe.isEmpty(criteria)) {
+            GUIUtilities.showMessageDialog(this, "Please enter a search criteria.","Missing search criteria");
             return;
         }
 
-        Book results = defaultBookProvider.search(isbn.replace("-",""));
-        if (results == null) {
-            GUIUtilities.showMessageDialog(this, "No book found for ISBN " + isbn,"Book Not Found");
-            return;
-        }
-
-        log.debug("Found results {}", results);
-
-        results.setType(BookType.FICTION);
-        results.setMedia(Media.KINDLE);
-        loadFields(results);
-        reload();
+        amazonDataProvider.authors(criteria).forEach(a -> authorsTable.add(a));
     }
 
     /** Add the given author to the given data table and clear the input field */
@@ -283,13 +274,19 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     }
 
     @Autowired
-    public void setBookProviderFacade(DefaultBookProvider defaultBookProvider) {
+    public void setDefaultBookProvider(DefaultBookProvider defaultBookProvider) {
         this.defaultBookProvider = defaultBookProvider;
+    }
+
+    @Autowired
+    public void setAmazonDataProvider(AmazonDataProvider amazonDataProvider) {
+        this.amazonDataProvider = amazonDataProvider;
     }
 
     // GUI related methods
 
     private void initializeGUI() {
+        searchField          = TrimmedTextField.create(35, 255,TEXT_FIELD_SIZE);
         titleField           = TrimmedTextField.create(45, 255,TEXT_FIELD_SIZE);
         seriesField          = TrimmedTextField.create(45, 255, TEXT_FIELD_SIZE);
         publishedYearField   = TrimmedTextField.create(10, 4, TEXT_FIELD_SIZE);
@@ -428,26 +425,26 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         double labelWeight = .10;
         double inputWeight = .90;
 
-        gbc.weightx = labelWeight;
-        p.add(LabelFactory.createLabel("ISBN"), gbc);
-        gbc.gridx++;
-        gbc.insets = indentInsets;
-        gbc.weightx = inputWeight;
-        JPanel isbnPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,0,0));
-        isbnPanel.setBorder(BorderFactory.createEmptyBorder());
-        isbnPanel.add(isbnField);
+        gbc.weightx = 1.00;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,0,0));
+        searchPanel.setBorder(BorderFactory.createEmptyBorder());
+        searchPanel.add(searchField);
 
         JLabel searchIcon = new JLabel(IconFontSwing.buildIcon(FontAwesome.SEARCH, 18, Color.BLACK));
         searchIcon.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         searchIcon.addMouseListener(new MouseAdapter() {
             @Override public void mouseClicked(MouseEvent e) {
-                searchByISBN();
+                search();
             }
         });
-        isbnPanel.add(searchIcon);
-        p.add(isbnPanel, gbc);
+        searchPanel.add(searchIcon);
+        p.add(searchPanel, gbc);
 
         gbc.gridy++;
+        gbc.gridwidth = 1;
+        gbc.fill = GridBagConstraints.NONE;
         gbc.gridx = 0;
         gbc.weightx = labelWeight;
         p.add(LabelFactory.createLabel("Title"), gbc);
@@ -537,6 +534,15 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         gbc.insets = indentInsets;
         gbc.weightx = inputWeight;
         p.add(mediaCombo, gbc);
+
+        gbc.gridy++;
+        gbc.gridx = 0;
+        gbc.weightx = labelWeight;
+        p.add(LabelFactory.createLabel("ISBN"), gbc);
+        gbc.gridx++;
+        gbc.insets = indentInsets;
+        gbc.weightx = inputWeight;
+        p.add(isbnField, gbc);
 
         gbc.gridy++;
         gbc.gridx = 0;
