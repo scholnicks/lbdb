@@ -43,16 +43,15 @@ public class BookRepository {
             b.getPublishedYear(),
             b.getIsbn(),    
             Objects.requireNonNullElse(b.getNumberOfPages(),0),
-            b.getComments(),
-            b.getCoverURL()
+            b.getComments()
         );
 
         return jdbcTemplate.queryForObject("select last_insert_rowid()",Long.class);
     }
 
     private static final String ADD = """
-        insert into book(book_title,bot_id,med_id,book_anthology,book_series,book_published_year,book_isbn,book_number_of_pages,book_comments,book_cover_url)
-        values(?,?,?,?,?,?,?,?,?,?)
+        insert into book(book_title,bot_id,med_id,book_anthology,book_series,book_published_year,book_isbn,book_number_of_pages,book_comments)
+        values(?,?,?,?,?,?,?,?,?)
     """;
 
     /** Add join records for a book's authors. */
@@ -60,7 +59,7 @@ public class BookRepository {
         removeJoinRecords(b);
 
         for (Author a : b.getAuthors()) {
-            jdbcTemplate.update(ADD_JOIN, b.getId(), a.getId(), a.isEditor() ? 'y' : 'n');
+            jdbcTemplate.update(ADD_JOIN, b.getId(), a.getId(), a.isEditor() ? 'Y' : 'N');
         }
     }
 
@@ -176,7 +175,6 @@ public class BookRepository {
         b.setType(BookType.from(rs.getInt("bot_id")));
         b.setMedia(Media.from(rs.getInt("med_id")));
         b.setAddedTimestamp(rs.getString("book_created_date"));
-        b.setCoverURL(rs.getString("book_cover_url"));
 
         return b;
     }
