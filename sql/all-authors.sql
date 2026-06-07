@@ -1,1 +1,0 @@
-select a.auth_name as "Name" from Author a order by 1

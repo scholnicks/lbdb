@@ -19,11 +19,11 @@ import static java.util.Comparator.comparing;
 @Service
 @Primary
 public class DefaultBookProvider implements BookProvider {
-    private static final Logger log = LoggerFactory.getLogger(DefaultBookProvider.class);
-
     private final GoogleClient      googleClient;
     private final OpenLibraryClient openLibraryClient;
     private final HardcoverClient   hardcoverClient;
+
+    private static final Logger log = LoggerFactory.getLogger(DefaultBookProvider.class);
 
     @Autowired
     public DefaultBookProvider(GoogleClient googleClient, OpenLibraryClient openLibraryClient, HardcoverClient hardcoverClient) {
@@ -55,13 +55,21 @@ public class DefaultBookProvider implements BookProvider {
             results.setAuthors(authors.stream().sorted(comparing(Author::getName)).toList());
             results.setIsbn(isbn);
 
-            // TODO: which service for the image. Hardcover is probably the best
+            // look through all 3 services for a cover photo
 
-            if (open != null && open.getCoverURL() != null)
+            if (open != null && open.getCoverURL() != null) {
                 results.setCoverURL(open.getCoverURL());
+                return results;
+            }
 
-            if (hardCover != null && hardCover.getCoverURL() != null)
+            if (hardCover != null && hardCover.getCoverURL() != null) {
                 results.setCoverURL(hardCover.getCoverURL());
+                return results;
+            }
+
+            if (google != null && google.getCoverURL() != null) {
+                results.setCoverURL(google.getCoverURL());
+            }
 
             return results;
         }

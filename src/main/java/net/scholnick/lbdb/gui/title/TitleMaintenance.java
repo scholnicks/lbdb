@@ -3,6 +3,7 @@ package net.scholnick.lbdb.gui.title;
 import jiconfont.icons.font_awesome.FontAwesome;
 import jiconfont.swing.IconFontSwing;
 import net.scholnick.lbdb.*;
+import net.scholnick.lbdb.AmazonDataProvider.AmazonData;
 import net.scholnick.lbdb.coverphoto.CoverPhotoService;
 import net.scholnick.lbdb.domain.*;
 import net.scholnick.lbdb.gui.*;
@@ -39,6 +40,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     private JTextField seriesField;
     private JTextField publishedYearField;
     private JTextField isbnField;
+    private JTextField asinField;
     private JTextField numberOfPagesField;
     private JCheckBox anthologyCheckBox;
     private JComboBox<BookType> typeCombo;
@@ -81,7 +83,18 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
             return;
         }
 
-        amazonDataProvider.authors(criteria).forEach(a -> authorsTable.add(a));
+        AmazonData data = amazonDataProvider.get(criteria);
+        data.authors().forEach(a -> authorsTable.add(a));
+        isbnField.setText(data.isbn() == null ? "" : data.isbn());
+        asinField.setText(data.asin() == null ? "" : data.asin());
+        mediaCombo.setSelectedItem(data.isKindle() ? Media.KINDLE : Media.BOOK);
+
+        if (data.isbn() != null) {
+            Book book = defaultBookProvider.search(data.isbn());
+            if (book != null) loadFields(book,false);
+        }
+
+        searchField.setText("");
     }
 
     /** Add the given author to the given data table and clear the input field */
@@ -156,9 +169,11 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         titleField.setText("");
         typeCombo.setSelectedIndex(0);
         isbnField.setText("");
+        asinField.setText("");
         publishedYearField.setText("");
         getAddedDateLabel().setText("");
         numberOfPagesField.setText("");
+        searchField.setText("");
 
         authorsTable.clear();
         editorsTable.clear();
@@ -181,6 +196,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         b.setTitle(titleField.getText());
         b.setSeries(seriesField.getText());
         b.setComments(commentsArea.getText());
+        b.setAsin(asinField.getText());
         b.setAnthology(anthologyCheckBox.isSelected());
         b.setPublishedYear(publishedYearField.getText());
         b.setType((BookType) typeCombo.getSelectedItem());
@@ -228,20 +244,18 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
             reload();
         });
 
-        loadFields(b);
+        loadFields(b,true);
         reload();
     }
 
     /** Load the fields from the given Book into the form */
-    private void loadFields(Book b) {
+    private void loadFields(Book b, boolean loadAll) {
         titleField.setText(b.getTitle());
         seriesField.setText(b.getSeries());
         commentsArea.setText(b.getComments());
         anthologyCheckBox.setSelected(b.isAnthology());
         typeCombo.setSelectedItem(b.getType());
-        isbnField.setText(b.getIsbn());
         publishedYearField.setText(b.getPublishedYear());
-        mediaCombo.setSelectedItem(b.getMedia());
 
         if (b.getNumberOfPages() != null && b.getNumberOfPages() > 0) {
             numberOfPagesField.setText(String.valueOf(b.getNumberOfPages()));
@@ -249,8 +263,13 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
 
         getAddedDateLabel().setText(b.getAddedTimestamp());
 
-        authorsTable.clear();
-        b.getAuthors().stream().filter(not(Author::isEditor)).forEach(authorsTable::add);
+        if (loadAll) {
+            mediaCombo.setSelectedItem(b.getMedia());
+            isbnField.setText(b.getIsbn());
+            asinField.setText(b.getAsin());
+            authorsTable.clear();
+            b.getAuthors().stream().filter(not(Author::isEditor)).forEach(authorsTable::add);
+        }
 
         editorsTable.clear();
         b.getAuthors().stream().filter(Author::isEditor).forEach(editorsTable::add);
@@ -291,6 +310,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         seriesField          = TrimmedTextField.create(45, 255, TEXT_FIELD_SIZE);
         publishedYearField   = TrimmedTextField.create(10, 4, TEXT_FIELD_SIZE);
         isbnField            = TrimmedTextField.create(20, 20, TEXT_FIELD_SIZE);
+        asinField            = TrimmedTextField.create(20, 20, TEXT_FIELD_SIZE);
         numberOfPagesField   = TrimmedTextField.create(15, 20, TEXT_FIELD_SIZE);
         anthologyCheckBox    = new JCheckBox();
 
@@ -534,6 +554,15 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         gbc.insets = indentInsets;
         gbc.weightx = inputWeight;
         p.add(mediaCombo, gbc);
+
+        gbc.gridy++;
+        gbc.gridx = 0;
+        gbc.weightx = labelWeight;
+        p.add(LabelFactory.createLabel("ASIN"), gbc);
+        gbc.gridx++;
+        gbc.insets = indentInsets;
+        gbc.weightx = inputWeight;
+        p.add(asinField, gbc);
 
         gbc.gridy++;
         gbc.gridx = 0;

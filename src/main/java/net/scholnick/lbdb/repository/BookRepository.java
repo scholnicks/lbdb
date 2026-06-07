@@ -28,7 +28,7 @@ public class BookRepository {
 
     /** Retrieve a book by its unique ID. */
     public Book get(Long id) {
-        return jdbcTemplate.queryForObject("select * from book where book_id=?", this::mapRow, id);
+        return jdbcTemplate.queryForObject("select * from Book where book_id=?", this::mapRow, id);
     }
 
     /** Create a new book record. */
@@ -41,7 +41,8 @@ public class BookRepository {
             b.isAnthology() ? "y" : "n",
             b.getSeries(),
             b.getPublishedYear(),
-            b.getIsbn(),    
+            b.getIsbn(),
+            b.getAsin(),
             Objects.requireNonNullElse(b.getNumberOfPages(),0),
             b.getComments()
         );
@@ -50,8 +51,8 @@ public class BookRepository {
     }
 
     private static final String ADD = """
-        insert into book(book_title,bot_id,med_id,book_anthology,book_series,book_published_year,book_isbn,book_number_of_pages,book_comments)
-        values(?,?,?,?,?,?,?,?,?)
+        insert into Book(book_title,bot_id,med_id,book_anthology,book_series,book_published_year,book_isbn,book_asin,book_number_of_pages,book_comments)
+        values(?,?,?,?,?,?,?,?,?,?)
     """;
 
     /** Add join records for a book's authors. */
@@ -63,7 +64,7 @@ public class BookRepository {
         }
     }
 
-    private static final String ADD_JOIN = "insert into author_book_xref(book_id,auth_id,abx_editor) values(?,?,?)";
+    private static final String ADD_JOIN = "insert into Author_Book_Xref(book_id,auth_id,abx_editor) values(?,?,?)";
 
     /** Update an existing book record. */
     public void update(Book b) {
@@ -77,6 +78,7 @@ public class BookRepository {
             b.getSeries(),
             b.getPublishedYear(),
             b.getIsbn(),
+            b.getAsin(),
             b.getNumberOfPages(),
             b.getComments(),
             b.getId()
@@ -85,10 +87,10 @@ public class BookRepository {
 
     private static final String UPDATE = """
         update
-            book
+            Book
         set
            book_title=?, bot_id=?, med_id=?, book_anthology=?, book_series=?,
-           book_published_year=?, book_isbn=?, book_number_of_pages=?, book_comments=?,
+           book_published_year=?, book_isbn=?, book_asin=?, book_number_of_pages=?, book_comments=?,
            book_modified_date=datetime(current_timestamp,'localtime')
         where
             book_id=?
@@ -96,17 +98,17 @@ public class BookRepository {
 
     /** Delete a book record. */
     public void delete(Book b) {
-        jdbcTemplate.update("delete from book where book_id=?", b.getId());
+        jdbcTemplate.update("delete from Book where book_id=?", b.getId());
     }
 
     /** Remove all join records for a book. */
     public void removeJoinRecords(Book b) {
-        jdbcTemplate.update("delete from author_book_xref where book_id=?", b.getId());
+        jdbcTemplate.update("delete from Author_Book_Xref where book_id=?", b.getId());
     }
 
     /** Count the total number of book records. */
     public Long count() {
-        return jdbcTemplate.queryForObject("select count(book_id) from book", Long.class);
+        return jdbcTemplate.queryForObject("select count(book_id) from Book", Long.class);
     }
 
     /** Search for books matching the given criteria. */
@@ -135,7 +137,7 @@ public class BookRepository {
         }
 
         if (!b.getAuthors().isEmpty()) {
-            sql += " and book_id in (select book_id from author_book_xref where auth_id in" +
+            sql += " and book_id in (select book_id from Author_Book_Xref where auth_id in" +
                     " (select auth_id from author where auth_id is not null";
 
             Author a = b.getAuthors().getFirst();
@@ -159,7 +161,7 @@ public class BookRepository {
         return jdbcTemplate.query(sql, this::mapRow, criteria.toArray());
     }
 
-    private static final String BASE_SEARCH = "select * from book where book_id is not null";
+    private static final String BASE_SEARCH = "select * from Book where book_id is not null";
 
     private Book mapRow(ResultSet rs, int rowCount) throws SQLException {
         Book b = new Book();
