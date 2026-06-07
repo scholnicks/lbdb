@@ -4,7 +4,7 @@ import net.scholnick.lbdb.domain.*;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.*;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -32,11 +32,16 @@ public class GoogleService implements CoverPhotoService {
 
     @Override
     public void setCoverPhoto(Book book) {
-        String url = book.getIsbn() != null ? ISBN_SEARCH + book.getIsbn() :
-            String.format(BOOK_SEARCH, URLEncoder.encode(book.getTitle(), StandardCharsets.UTF_8));
+        try {
+            String url = book.getIsbn() != null ? ISBN_SEARCH + book.getIsbn() :
+                String.format(BOOK_SEARCH, URLEncoder.encode(book.getTitle(), StandardCharsets.UTF_8));
 
-        BookResults results = restTemplate.getForObject(url,BookResults.class);
-        if (results != null) findImage(results,book);
+            BookResults results = restTemplate.getForObject(url,BookResults.class);
+            if (results != null) findImage(results,book);
+        }
+        catch (RestClientException e) {
+            log.error("Unable to retrieve photo {}",e.getMessage());
+        }
     }
 
     /** Find an image in the results that matches the book */
