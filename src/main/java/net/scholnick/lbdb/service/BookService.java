@@ -72,9 +72,16 @@ public class BookService {
     /** Search for books matching the given criteria. */
     @Transactional(readOnly=true)
     public List<Book> search(Book searchCriteria) {
-        List<Book> results = bookRepository.search(searchCriteria);
-        results.forEach(b -> b.setAuthors(authorRepository.get(b)));
-        return results;
+        try {
+            List<Book> results = bookRepository.search(searchCriteria);
+            results.forEach(b -> b.setAuthors(authorRepository.get(b)));
+            log.debug("Found {} books",results.size());
+            return results;
+        }
+        catch (Exception e) {
+            log.error("Unable to search books",e);
+            throw new RuntimeException(e);
+        }
     }
 
     /** Save a book, creating or updating as necessary. */

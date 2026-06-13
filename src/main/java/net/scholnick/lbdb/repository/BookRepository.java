@@ -173,7 +173,7 @@ public class BookRepository {
         b.setSeries(rs.getString("book_series"));
         b.setPublishedYear(rs.getString("book_published_year"));
         b.setIsbn(rs.getString("book_isbn"));
-        b.setAsin(rs.getString("book_asin "));
+        b.setAsin(rs.getString("book_asin"));
         b.setNumberOfPages(rs.getInt("book_number_of_pages"));
         b.setType(BookType.from(rs.getInt("bot_id")));
         b.setMedia(Media.from(rs.getInt("med_id")));
