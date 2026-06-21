@@ -177,6 +177,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
 
         authorsTable.clear();
         editorsTable.clear();
+        sendMessage("");
 
         setDefaultBookIcon();
         book = null;
@@ -231,6 +232,12 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     @Override
     protected void ok() {
         Book b = createBookFromFormData();
+
+        if (NullSafe.isEmpty(b.getTitle())) {
+            GUIUtilities.showMessageDialog(this, "Missing title","Missing title");
+            return;
+        }
+
         bookService.save(b);
         sendMessage(b.getTitle() + " has been saved.");
         setBook(b);
