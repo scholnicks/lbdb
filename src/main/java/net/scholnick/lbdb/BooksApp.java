@@ -12,6 +12,7 @@ import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
 import org.springframework.web.client.*;
 
 import javax.sql.DataSource;
@@ -68,7 +69,7 @@ public class BooksApp {
         properties.put("jdbcUrl", database);
         log.info("Connecting to {}",database);
 
-        return new HikariDataSource(new HikariConfig(properties));
+        return new LazyConnectionDataSourceProxy(new HikariDataSource(new HikariConfig(properties)));
     }
 
     private static final String DEV_DB  = "jdbc:sqlite:/Users/steve/development/java/lbdb/sql/test.db";
