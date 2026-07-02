@@ -9,8 +9,6 @@ import org.springframework.web.client.RestTemplate;
 
 /**
  * GoogleClient - Client for Google Books API
- *
- * @author Steve Scholnick <scholnicks@gmail.com>
  */
 @Component
 public class GoogleClient implements BookProvider {
@@ -37,7 +35,7 @@ public class GoogleClient implements BookProvider {
         book.setNumberOfPages(v.getPageCount());
 
         if (!NullSafe.isEmpty(v.getAuthors())) {
-            book.setAuthors( v.getAuthors().stream().map(Author::of).toList() );
+            book.setAuthors( v.getAuthors().stream().map(n -> new Author().setName(n)).toList() );
         }
 
         if (v.getImageLinks() != null) {

@@ -2,8 +2,6 @@ package net.scholnick.lbdb.util;
 
 /**
  * ApplicationException is a runtime exception that indicates an application-level error.
- *
- * @author Steve Scholnick <scholnicks@gmail.com>
  */
 public class ApplicationException extends RuntimeException {
     public ApplicationException(String message) {

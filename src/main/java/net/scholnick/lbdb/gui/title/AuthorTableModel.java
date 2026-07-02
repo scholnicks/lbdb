@@ -12,8 +12,6 @@ import static java.util.stream.Collectors.toSet;
 
 /**
  * AuthorTableModel is the TableModel for authors in the Title edit dialog.
- *
- * @author Steve Scholnick <scholnicks@gmail.com>
  */
 final class AuthorTableModel extends AbstractTableModel {
     private final List<Author> dataRows;

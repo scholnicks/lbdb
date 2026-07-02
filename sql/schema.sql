@@ -44,10 +44,10 @@ create table Book (
 create table Author_Book_Xref (
    abx_created_date     datetime not null default (datetime(current_timestamp,'localtime')),
    abx_modified_date    datetime,
+   abx_id               integer not null primary key autoincrement,
    auth_id              integer not null,
    book_id              integer not null,
    abx_editor           char(1) not null default 'N',
-   primary key (auth_id,book_id),
    foreign key(auth_id) references Author(auth_id),
    foreign key(book_id) references Book(book_id)
 );

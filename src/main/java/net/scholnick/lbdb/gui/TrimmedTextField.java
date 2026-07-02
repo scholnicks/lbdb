@@ -7,8 +7,6 @@ import java.awt.*;
 
 /**
  * TrimmedTextField is a JTextField that trims leading and trailing whitespace
- *
- * @author Steve Scholnick <scholnicks@gmail.com>
  */
 public final class TrimmedTextField extends JTextField {
     public static TrimmedTextField create(int columns, int maxChars, Dimension size) {

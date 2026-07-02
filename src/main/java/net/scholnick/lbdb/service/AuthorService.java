@@ -15,10 +15,7 @@ import static java.util.stream.Collectors.*;
 
 /**
  * AuthorService handles business logic related to {@link Author}s.
- *
- * @author Steve Scholnick <scholnicks@gmail.com>
  */
-
 @Service
 public class AuthorService {
     private static final Logger log = LoggerFactory.getLogger(AuthorService.class);
@@ -78,9 +75,10 @@ public class AuthorService {
 
     /** Get the authors for a given book. */
     @Transactional(readOnly=true)
-    public List<Author> get(Book b) {
+    @Deprecated
+    public List<Author> get(Book b, boolean editor) {
         log.debug("Returning authors for book {}",b);
-        return repository.get(b);
+        return repository.get(b,editor);
     }
 
     /** Save an author, creating or updating as necessary. */

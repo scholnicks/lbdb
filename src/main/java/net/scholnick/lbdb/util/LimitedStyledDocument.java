@@ -7,8 +7,6 @@ import java.awt.*;
 
 /**
  * LimitedStyledDocument is a StyledDocument that limits the number of characters
- *
- * @author Steve Scholnick <scholnicks@gmail.com>
  */
 public final class LimitedStyledDocument extends DefaultStyledDocument {
     private final int maxCharacters;

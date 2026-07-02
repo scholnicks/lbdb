@@ -14,8 +14,6 @@ import static java.util.function.Predicate.not;
 
 /**
  * HardcoverClient - Client for Hardcover API
- *
- * @author Steve Scholnick <scholnicks@gmail.com>
  */
 @Component
 public class HardcoverClient implements BookProvider {
@@ -50,7 +48,7 @@ public class HardcoverClient implements BookProvider {
             .filter(Contribution::isEditor)
             .map(Contribution::author)
             .map(HCAuthor::name)
-            .map(Author::of)
+            .map(n -> new Author().setName(n))
             .toList();
         editors.forEach(a -> a.setEditor(true));
 
@@ -58,7 +56,7 @@ public class HardcoverClient implements BookProvider {
             .filter(not(Contribution::isEditor))
             .map(Contribution::author)
             .map(HCAuthor::name)
-            .map(Author::of)
+            .map(n -> new Author().setName(n))
             .toList();
 
         List<Author> all = new ArrayList<>();

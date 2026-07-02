@@ -21,8 +21,6 @@ import java.util.Properties;
 
 /**
  * BooksApp is the main entry point for the application.
- *
- * @author Steve Scholnick <scholnicks@gmail.com>
  */
 @SpringBootApplication
 public class BooksApp {

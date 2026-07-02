@@ -11,8 +11,6 @@ import java.util.*;
 
 /**
  * AuthorRepository is a repository for managing {@link Author} records in the database.
- *
- * @author Steve Scholnick <scholnicks@gmail.com>
  */
 @Repository
 public class AuthorRepository {
@@ -52,15 +50,17 @@ public class AuthorRepository {
     }
 
     /** Get all authors for a given book. */
-    public List<Author> get(Book b) {
+    public List<Author> get(Book b, boolean editor) {
         return jdbcTemplate.query(
-            "select * from author where auth_id in (select auth_id from author_book_xref where book_id=?) order by auth_name",
-            this::mapRow,
-            b.getId()
+            "select * from author where auth_id in (select auth_id from author_book_xref where book_id=? and abx_editor=?) order by auth_name",
+            new Object[] {b.getId(), editor ? "Y" : "N"},
+            new int[] {Types.INTEGER, Types.VARCHAR},
+            this::mapRow
         );
     }
 
     /** Get all editor IDs for a given book. */
+    @Deprecated
     public Set<Long> getEditors(Book b) {
         return new HashSet<>(jdbcTemplate.queryForList(
             "select auth_id from author_book_xref where book_id=? and abx_editor='y'",
@@ -86,9 +86,6 @@ public class AuthorRepository {
     }
 
     private Author mapRow(ResultSet rs, int rowCount) throws SQLException {
-        Author a = new Author();
-        a.setId(rs.getLong("auth_id"));
-        a.setName(rs.getString("auth_name"));
-        return a;
+        return new Author().setId(rs.getLong("auth_id")).setName(rs.getString("auth_name"));
     }
 }

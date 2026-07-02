@@ -12,8 +12,6 @@ import java.util.*;
 
 /**
  * BookService handles business logic related to books.
- *
- * @author Steve Scholnick <scholnicks@gmail.com>
  */
 @Service
 public class BookService {
@@ -34,17 +32,10 @@ public class BookService {
     @Transactional(readOnly=true)
     public Book get(Long id) {
         Book b = bookRepository.get(id);
-        b.setAuthors(authorRepository.get(b));
-
-        Set<Long> editorIds = authorRepository.getEditors(b);
-
-        for (Author a : b.getAuthors()) {
-            if (editorIds.contains(a.getId())) {
-                a.setEditor(true);
-            }
-        }
-
+        b.setAuthors(authorRepository.get(b,false));
         b.getAuthors().sort(AUTHOR_SORTER);
+        b.setEditors(authorRepository.get(b,true));
+        b.getEditors().sort(AUTHOR_SORTER);
 
         return b;
     }
@@ -74,7 +65,7 @@ public class BookService {
     public List<Book> search(Book searchCriteria) {
         try {
             List<Book> results = bookRepository.search(searchCriteria);
-            results.forEach(b -> b.setAuthors(authorRepository.get(b)));
+            results.forEach(b -> b.setAuthors(authorRepository.get(b,true)));
             log.debug("Found {} books",results.size());
             return results;
         }
@@ -122,6 +113,7 @@ public class BookService {
     private void handleAuthors(Book b) {
         bookRepository.removeJoinRecords(b);
         authorService.save(b.getAuthors());
+        authorService.save(b.getEditors());
         bookRepository.addJoinRecords(b);
     }
 }

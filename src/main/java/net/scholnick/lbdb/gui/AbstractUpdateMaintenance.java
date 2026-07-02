@@ -6,8 +6,6 @@ import javax.swing.*;
 
 /**
  * AbstractUpdateMaintenance provides a base class for maintenance panels.
- *
- * @author Steve Scholnick <scholnicks@gmail.com>
  */
 public abstract class AbstractUpdateMaintenance extends BasePanel {
     private JButton saveButton;

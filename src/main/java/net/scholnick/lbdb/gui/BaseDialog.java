@@ -6,8 +6,6 @@ import java.awt.event.*;
 
 /**
  * BaseDialog for modal dialogs with OK and Cancel buttons.
- *
- * @author Steve Scholnick <scholnicks@gmail.com>
  */
 public abstract class BaseDialog extends JDialog {
     private JButton okButton;

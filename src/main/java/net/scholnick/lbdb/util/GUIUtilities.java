@@ -10,8 +10,6 @@ import java.util.*;
 
 /**
  * GUIUtilities is a collection of utility methods for GUI programming.
- *
- * @author Steve Scholnick <scholnicks@gmail.com>
  */
 public class GUIUtilities {
     public static final Border EMPTY_BORDER = BorderFactory.createEmptyBorder(5, 5, 5, 5);

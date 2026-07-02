@@ -10,8 +10,6 @@ import static java.util.stream.Collectors.joining;
 
 /**
  * Book is a representation of a physical or e-book.
- *
- * @author Steve Scholnick <scholnicks@gmail.com>
  */
 @Accessors(chain=true)
 @Data
@@ -31,6 +29,7 @@ public final class Book implements Comparable<Book> {
     private String coverURL;
     private String asin;
     private List<Author> authors = new ArrayList<>();
+    private List<Author> editors = new ArrayList<>();
 
     /** Parse the year from a release date string in the format "YYYY-MM-DD" or "YYYY". */
     public static String parseYear(String releaseDate) {
@@ -41,7 +40,9 @@ public final class Book implements Comparable<Book> {
 
     /** Get a comma-separated list of author names, sorted alphabetically. */
     public String getAuthorNames() {
-        return authors.stream().map(Author::getName).sorted().collect(joining(", "));
+        Set<Author> all = new HashSet<>(authors);
+        all.addAll(editors);
+        return all.stream().map(Author::getName).sorted().collect(joining(", "));
     }
 
     @Override
@@ -52,22 +53,26 @@ public final class Book implements Comparable<Book> {
     }
 
     /** Remove all authors from this book. */
-    public void clearAuthors() {
+    public Book clearAuthors() {
         authors.clear();
+        editors.clear();
+        return this;
     }
 
     /** Add an author to this book if not already present. */
-    public void addAuthor(Author a) {
+    public Book addAuthor(Author a) {
         if (! authors.contains(a)) {
             authors.add(a);
         }
+        return this;
     }
 
     /** Add an editor to this book if not already present. */
-    public void addEditor(Author editor) {
-        if (! authors.contains(editor)) {
-            editor.setEditor(true);
-            authors.add(editor);
+    public Book addEditor(Author a) {
+        a.setEditor(true);
+        if (! editors.contains(a)) {
+            editors.add(a);
         }
+        return this;
     }
 }

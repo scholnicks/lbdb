@@ -6,8 +6,6 @@ import lombok.experimental.Accessors;
 
 /**
  * Author is a representation of a book author.
- *
- * @author Steve Scholnick <scholnicks@gmail.com>
  */
 @Accessors(chain=true)
 @Data
@@ -16,8 +14,4 @@ public final class Author {
     private Long id;
     private String name;
     private boolean editor;
-
-    public static Author of(String name) {
-        return new Author().setName(name);
-    }
 }

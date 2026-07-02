@@ -11,8 +11,6 @@ import java.util.List;
 
 /**
  * AuthorSelectionPopUp is a dialog that allows the user to select an author from a list.
- *
- * @author Steve Scholnick <scholnicks@gmail.com>
  */
 public final class AuthorSelectionPopUp extends BaseDialog {
     private JTable listingTable;

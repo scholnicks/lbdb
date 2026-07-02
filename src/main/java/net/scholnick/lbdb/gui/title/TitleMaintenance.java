@@ -22,14 +22,11 @@ import java.io.IOException;
 import java.net.*;
 import java.util.Objects;
 
-import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
 import static javax.swing.BorderFactory.*;
 
 /**
  * TitleMaintenance is the GUI component for adding and editing {@link Book} records.
- *
- * @author Steve Scholnick <scholnicks@gmail.com>
  */
 @Component
 public final class TitleMaintenance extends AbstractUpdateMaintenance {
@@ -275,11 +272,11 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
             isbnField.setText(b.getIsbn());
             asinField.setText(b.getAsin());
             authorsTable.clear();
-            b.getAuthors().stream().filter(not(Author::isEditor)).forEach(authorsTable::add);
+            b.getAuthors().forEach(authorsTable::add);
         }
 
         editorsTable.clear();
-        b.getAuthors().stream().filter(Author::isEditor).forEach(editorsTable::add);
+        b.getEditors().forEach(editorsTable::add);
 
         loadImage(b.getCoverURL());
     }
@@ -363,7 +360,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
             authorsSelect.addActionListener(_ -> {
                 var data = searchForAuthors(authorsSelect);
                 if (data.isEmpty()) {
-                    addAuthor(Author.of(authorsSelect.getText()),authorsTable,authorsSelect);
+                    addAuthor(new Author().setName(authorsSelect.getText()),authorsTable,authorsSelect);
                 }
                 else {
                     popUpMenu(data,authorsTable,authorsSelect);
@@ -407,7 +404,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
             editorsSelect.addActionListener(_ -> {
                 var data = searchForAuthors(editorsSelect);
                 if (data.isEmpty()) {
-                    addAuthor(Author.of(editorsSelect.getText()),editorsTable,editorsSelect);
+                    addAuthor(new Author().setName(editorsSelect.getText()),editorsTable,editorsSelect);
                 }
                 else {
                     popUpMenu(data,editorsTable,editorsSelect);

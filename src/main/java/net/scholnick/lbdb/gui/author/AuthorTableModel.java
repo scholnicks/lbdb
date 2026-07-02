@@ -7,8 +7,6 @@ import java.util.*;
 
 /**
  * AuthorTableModel for displaying authors in a JTable.
- *
- * @author Steve Scholnick <scholnicks@gmail.com>
  */
 final class AuthorTableModel extends AbstractTableModel {
     private final List<Author> dataRows;

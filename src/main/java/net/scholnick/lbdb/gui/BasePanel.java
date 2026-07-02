@@ -8,8 +8,6 @@ import java.awt.*;
 
 /**
  * BasePanel provides a base class for all GUI panels.
- *
- * @author Steve Scholnick <scholnicks@gmail.com>
  */
 public abstract class BasePanel extends JPanel {
     /** Builds the GUI components. */

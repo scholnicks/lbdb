@@ -13,8 +13,6 @@ import static net.scholnick.lbdb.util.NullSafe.isClose;
 
 /**
  * GoogleService - Service to get cover photos from Google Books API
- *
- * @author Steve Scholnick <scholnicks@gmail.com>
  */
 @Service
 public class GoogleService implements CoverPhotoService {

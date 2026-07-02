@@ -7,8 +7,6 @@ import java.net.URL;
 
 /**
  * SoundPlayer is a utility class to play sound files.
- *
- * @author Steve Scholnick <scholnicks@gmail.com>
  */
 final class SoundPlayer {
     /** Play the "aaaaahhhhh.aif" sound file in a separate thread. */

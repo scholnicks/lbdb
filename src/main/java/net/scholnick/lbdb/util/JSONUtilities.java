@@ -5,8 +5,6 @@ import tools.jackson.databind.ObjectMapper;
 
 /**
  * JSONUtilities is a collection of utility methods for working with JSON.
- *
- * @author Steve Scholnick <scholnicks@gmail.com>
  */
 public final class JSONUtilities {
     private static final ObjectMapper MAPPER = new ObjectMapper();

@@ -5,8 +5,6 @@ import java.awt.*;
 
 /**
  * LabelFactory is a factory for creating JLabels with standard styling.
- *
- * @author Steve Scholnick <scholnicks@gmail.com>
  */
 public final class LabelFactory {
     private LabelFactory() {}

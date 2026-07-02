@@ -13,8 +13,6 @@ import static java.util.Comparator.comparing;
 
 /**
  * DefaultBookProvider - Implementation of BookProvider that uses Google and OpenLibrary clients to search for book information by ISBN.
- *
- * @author Steve Scholnick <scholnicks@gmail.com>
  */
 @Service
 @Primary

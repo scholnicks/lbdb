@@ -8,8 +8,6 @@ import java.util.*;
 
 /**
  * TitleSearchTableModel - Table model for displaying title search results
- *
- * @author Steve Scholnick <scholnicks@gmail.com>
  */
 public final class TitleSearchTableModel extends AbstractTableModel {
     private final List<Book> dataRows;

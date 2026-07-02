@@ -11,8 +11,6 @@ import java.util.List;
 
 /**
  * AuthorTable is a JTable that displays a list of Authors with the ability to add and remove them.
- *
- * @author Steve Scholnick <scholnicks@gmail.com>
  */
 final class AuthorTable extends JTable {
     static final Dimension SIZE = new Dimension(325,55);

@@ -8,8 +8,6 @@ import java.awt.event.*;
 
 /**
  * TitleSearchTable - JTable for displaying title search results
- *
- * @author Steve Scholnick <scholnicks@gmail.com>
  */
 public final class TitleSearchTable extends JTable {
     public TitleSearchTable() {

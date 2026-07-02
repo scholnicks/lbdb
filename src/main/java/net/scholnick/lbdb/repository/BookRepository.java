@@ -12,8 +12,6 @@ import java.util.*;
 
 /**
  * BookRepository is a repository for managing {@link Book} records in the database.
- *
- * @author Steve Scholnick <scholnicks@gmail.com>
  */
 @Repository
 public class BookRepository {
@@ -58,10 +56,8 @@ public class BookRepository {
     /** Add join records for a book's authors. */
     public void addJoinRecords(Book b) {
         removeJoinRecords(b);
-
-        for (Author a : b.getAuthors()) {
-            jdbcTemplate.update(ADD_JOIN, b.getId(), a.getId(), a.isEditor() ? 'Y' : 'N');
-        }
+        b.getAuthors().forEach(a -> jdbcTemplate.update(ADD_JOIN, b.getId(), a.getId(), 'N'));
+        b.getEditors().forEach(a -> jdbcTemplate.update(ADD_JOIN, b.getId(), a.getId(), 'Y'));
     }
 
     private static final String ADD_JOIN = "insert into Author_Book_Xref(book_id,auth_id,abx_editor) values(?,?,?)";

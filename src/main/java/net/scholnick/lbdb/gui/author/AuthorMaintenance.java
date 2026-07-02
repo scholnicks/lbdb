@@ -14,8 +14,6 @@ import static javax.swing.JOptionPane.*;
 
 /**
  * AuthorMaintenance is a GUI component for adding, editing, and deleting Author records.
- *
- * @author Steve Scholnick <scholnicks@gmail.com>
  */
 @Component
 public class AuthorMaintenance extends AbstractUpdateMaintenance {

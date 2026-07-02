@@ -11,8 +11,6 @@ import java.util.List;
 
 /**
  * TypeAheadTextField
- *
- * @author Steve Scholnick <scholnicks@gmail.com>
  */
 public final class TypeAheadTextField extends JTextField {
     private final DataProvider dataProvider;

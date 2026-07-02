@@ -15,9 +15,7 @@ import java.awt.event.*;
 import java.util.*;
 
 /**
- *  Panel for searching titles in the database.
- *
- * @author Steve Scholnick <scholnicks@gmail.com>
+ *  SearchPanel for searching titles in the database.
  */
 @Component
 public class SearchPanel extends BasePanel {
@@ -169,7 +167,7 @@ public class SearchPanel extends BasePanel {
         b.setMedia(Media.from(Objects.requireNonNull((MediaType) getMediaCombo().getSelectedItem()).id()));
 
         if (!NullSafe.isEmpty(getAuthorNameField().getText())) {
-            b.setAuthors(java.util.List.of(Author.of(getAuthorNameField().getText())));
+            b.setAuthors(java.util.List.of(new Author().setName(getAuthorNameField().getText())));
         }
 
         new SwingWorker<Object, Boolean>() {

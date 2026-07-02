@@ -6,8 +6,6 @@ import java.util.Arrays;
 
 /**
  * Media enum
- *
- * @author Steve Scholnick <scholnicks@gmail.com>
  */
 @Getter
 public enum Media {

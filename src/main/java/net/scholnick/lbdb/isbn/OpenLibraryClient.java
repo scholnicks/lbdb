@@ -11,8 +11,6 @@ import java.util.List;
 
 /**
  * OpenLibraryClient - Client for Open Library Books API
- *
- * @author Steve Scholnick <scholnicks@gmail.com>
  */
 @Component
 public class OpenLibraryClient implements BookProvider {
@@ -42,7 +40,7 @@ public class OpenLibraryClient implements BookProvider {
                 .setIsbn(isbn);
 
         if (!NullSafe.isEmpty(data.authors)) {
-            book.setAuthors( data.authors().stream().map(OLAuthor::name).map(Author::of).toList() );
+            book.setAuthors( data.authors().stream().map(OLAuthor::name).map(n -> new Author().setName(n)).toList() );
         }
 
         if (data.cover != null) {

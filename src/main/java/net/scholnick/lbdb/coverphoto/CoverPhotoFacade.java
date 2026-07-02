@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 
 /**
  * CoverPhotoFacade - Facade for cover photo services
- *
- * @author Steve Scholnick <scholnicks@gmail.com>
  */
 @Service
 @Primary
