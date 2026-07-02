@@ -61,7 +61,7 @@ public class BooksApp {
     }
 
     /** Configure the DataSource based on the environment. */
-    @Bean(destroyMethod="close")
+    @Bean
     public DataSource dataSource() {
         Properties properties = new Properties();
         properties.put("autoCommit","false");
