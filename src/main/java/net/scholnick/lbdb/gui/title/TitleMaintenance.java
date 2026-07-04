@@ -421,7 +421,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
             deleteButton.addActionListener(_ -> {
                 if (JOptionPane.showConfirmDialog(this, "Delete Book?") == JOptionPane.YES_OPTION) {
                     bookService.delete(book);
-                    sendMessage(book + " deleted");
+                    sendMessage(book.getTitle() + "has been deleted");
                     clear();
                 }
             });
