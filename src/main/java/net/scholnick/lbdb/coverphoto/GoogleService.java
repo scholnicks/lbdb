@@ -38,7 +38,7 @@ public class GoogleService implements CoverPhotoService {
             if (results != null) findImage(results,book);
         }
         catch (RestClientException e) {
-            log.error("Unable to retrieve photo {}",e.getMessage());
+            //log.error("Unable to retrieve photo {}",e.getMessage());
         }
     }
 

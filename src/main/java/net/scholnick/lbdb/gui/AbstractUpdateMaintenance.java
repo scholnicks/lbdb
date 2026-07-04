@@ -25,7 +25,7 @@ public abstract class AbstractUpdateMaintenance extends BasePanel {
     /** Set the message listener for sending messages. */
     protected final void sendMessage(String text) {
         if (messageListener != null) {
-            messageListener.send(text == null ? "" : text.trim());
+            messageListener.send("".equals(text) ? " " : text);
         }
     }
 
@@ -33,7 +33,7 @@ public abstract class AbstractUpdateMaintenance extends BasePanel {
     protected abstract void clear();
 
     /** Save the current data. */
-    protected abstract void ok();
+    protected abstract void saveData();
 
     /** Reset the focus to the appropriate field. */
     protected abstract void resetFocus();
@@ -58,7 +58,7 @@ public abstract class AbstractUpdateMaintenance extends BasePanel {
 
     /** Save the current data. */
     public final void save() {
-        ok();
+        saveData();
         resetFocus();
         repaint();
     }

@@ -24,19 +24,22 @@ public final class BooksDB extends JFrame {
     private SearchPanel       searchPanel;
     private TitleMaintenance  titleMaintenance;
     private AuthorMaintenance authorMaintenance;
+
+    private final JPanel notificationPanel;
     private final JLabel      notificationLabel;
 
     private BookService   bookService;
     private AuthorService authorService;
 
     public static final Dimension WINDOW_SIZE = new Dimension(1000, 850);
-    private static final String       VERSION = "Version 9.1.0";
+    private static final String       VERSION = "Version 9.1.1";
 
     public static final Color BACKGROUND_COLOR = new Color(4,106,56);
     public static final Color FOREGROUND_COLOR = Color.white;
 
     public BooksDB() {
         super("Laurel's Books Database");
+        notificationPanel = new JPanel();
         notificationLabel = new JLabel("",JLabel.CENTER);
     }
 
@@ -60,12 +63,12 @@ public final class BooksDB extends JFrame {
         loadSearchPanel();
         getContentPane().add(getTabbedPane(), BorderLayout.CENTER);
 
-        JPanel p = new JPanel();
+        GUIUtilities.setSizes(notificationPanel,new Dimension(WINDOW_SIZE.width-50,25));
         notificationLabel.setForeground(FOREGROUND_COLOR);
-        p.add(notificationLabel);
-        p.setForeground(FOREGROUND_COLOR);
-        p.setBackground(BACKGROUND_COLOR);
-        getContentPane().add(p, BorderLayout.SOUTH);
+        notificationPanel.add(notificationLabel);
+        notificationPanel.setForeground(FOREGROUND_COLOR);
+        notificationPanel.setBackground(BACKGROUND_COLOR);
+        getContentPane().add(notificationPanel, BorderLayout.SOUTH);
 
         setVisible(true);
     }
@@ -98,7 +101,7 @@ public final class BooksDB extends JFrame {
                 if (tp.getSelectedIndex() == 0) { // back to the search tab, so update the title
                     updateCounts();
                 }
-                notificationLabel.setText("");
+//                notificationLabel.setText("");
             });
         }
         return tabbedPane;
@@ -205,6 +208,12 @@ public final class BooksDB extends JFrame {
         });
     }
 
+    private void setNotificationText(String text) {
+        notificationLabel.setText(text);
+        notificationPanel.revalidate();
+        notificationPanel.repaint();
+    }
+
     @Override
     public Dimension getPreferredSize() {
         return WINDOW_SIZE;
@@ -228,13 +237,13 @@ public final class BooksDB extends JFrame {
     @Autowired
     public void setTitleMaintenance(TitleMaintenance titleMaintenance) {
         this.titleMaintenance = titleMaintenance;
-        this.titleMaintenance.setMessageListener(notificationLabel::setText);
+        this.titleMaintenance.setMessageListener(this::setNotificationText);
     }
 
     @Autowired
     public void setAuthorMaintenance(AuthorMaintenance authorMaintenance) {
         this.authorMaintenance = authorMaintenance;
-        this.authorMaintenance.setMessageListener(notificationLabel::setText);
+        this.authorMaintenance.setMessageListener(this::setNotificationText);
     }
 
     @Autowired

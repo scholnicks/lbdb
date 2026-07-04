@@ -106,7 +106,7 @@ public class AuthorMaintenance extends AbstractUpdateMaintenance {
     }
 
     @Override
-    protected final void ok() {
+    protected final void saveData() {
         author.setName(getNameField().getText());
         authorService.save(author);
         sendMessage(author.getName() + " has been saved");

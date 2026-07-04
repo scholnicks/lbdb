@@ -174,7 +174,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
 
         authorsTable.clear();
         editorsTable.clear();
-        sendMessage("");
+//        sendMessage(" ");
 
         setDefaultBookIcon();
         book = null;
@@ -227,7 +227,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     }
 
     @Override
-    protected void ok() {
+    protected void saveData() {
         Book b = createBookFromFormData();
 
         if (NullSafe.isEmpty(b.getTitle())) {
@@ -433,7 +433,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     protected JPanel getInputPanel() {
         JPanel p = new JPanel(new GridBagLayout());
         p.setBorder(createCompoundBorder(createEtchedBorder(), createEmptyBorder(5, 5, 5, 5)));
-        GUIUtilities.setSizes(p,new Dimension(BooksDB.WINDOW_SIZE.width - 20,BooksDB.WINDOW_SIZE.height-100));
+        GUIUtilities.setSizes(p,new Dimension(BooksDB.WINDOW_SIZE.width - 20,BooksDB.WINDOW_SIZE.height-150));
 
         GridBagConstraints gbc = new GridBagConstraints();
 
