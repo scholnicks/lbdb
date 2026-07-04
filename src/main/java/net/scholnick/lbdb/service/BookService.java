@@ -65,7 +65,8 @@ public class BookService {
     public List<Book> search(Book searchCriteria) {
         try {
             List<Book> results = bookRepository.search(searchCriteria);
-            results.forEach(b -> b.setAuthors(authorRepository.get(b,true)));
+            results.forEach(b -> b.setAuthors(authorRepository.get(b,false)));
+            results.forEach(b -> b.setEditors(authorRepository.get(b,true)));
             log.debug("Found {} books",results.size());
             return results;
         }

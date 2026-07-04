@@ -13,18 +13,17 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class GoogleClient implements BookProvider {
     private final RestTemplate restTemplate;
-
-    private static final String URL = "https://www.googleapis.com/books/v1/volumes?q=isbn:%s&maxResults=1";
+    private final GoogleService googleService;
 
     @Autowired
-    public GoogleClient(RestTemplate restTemplate) {
+    public GoogleClient(RestTemplate restTemplate, GoogleService googleService) {
         this.restTemplate = restTemplate;
+        this.googleService = googleService;
     }
 
     @Override
     public Book search(String isbn) {
-        // https://www.googleapis.com/books/v1/volumes?q=isbn:9780670451937&maxResults=1
-        BookResults results = restTemplate.getForObject(URL.formatted(isbn), BookResults.class);
+        BookResults results = restTemplate.getForObject(googleService.buildURL(new Book().setIsbn(isbn)), BookResults.class);
         if (results == null || NullSafe.isEmpty(results.items())) return null;
 
         VolumeInfo v = results.items().getFirst().volumeInfo();

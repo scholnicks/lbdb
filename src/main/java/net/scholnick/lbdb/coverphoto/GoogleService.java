@@ -2,7 +2,7 @@ package net.scholnick.lbdb.coverphoto;
 
 import net.scholnick.lbdb.domain.*;
 import org.slf4j.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.*;
 
@@ -18,8 +18,11 @@ import static net.scholnick.lbdb.util.NullSafe.isClose;
 public class GoogleService implements CoverPhotoService {
     private static final Logger log = LoggerFactory.getLogger(GoogleService.class);
 
-    private static final String BOOK_SEARCH = "https://www.googleapis.com/books/v1/volumes?q=\"%s\"&printType=books";
-    private static final String ISBN_SEARCH = "https://www.googleapis.com/books/v1/volumes?q=isbn:";
+    @Value("${google.books.api.key}")
+    private String googleBooksApiKey;
+
+    private static final String BOOK_SEARCH = "https://www.googleapis.com/books/v1/volumes?q=\"%s\"&printType=books&key=%s";
+    private static final String ISBN_SEARCH = "https://www.googleapis.com/books/v1/volumes?key=%s&q=isbn:%s&maxResults=1";
 
     private final RestTemplate restTemplate;
 
@@ -28,17 +31,24 @@ public class GoogleService implements CoverPhotoService {
         this.restTemplate = restTemplate;
     }
 
+    public String buildURL(Book book) {
+        if (book.getIsbn() == null) {
+            // https://www.googleapis.com/books/v1/volumes?q=isbn:9780670451937&maxResults=1
+            return BOOK_SEARCH.formatted(URLEncoder.encode(book.getTitle(),StandardCharsets.UTF_8),googleBooksApiKey);
+        }
+        else {
+            return ISBN_SEARCH.formatted(googleBooksApiKey,book.getIsbn());
+        }
+    }
+
     @Override
     public void setCoverPhoto(Book book) {
         try {
-            String url = book.getIsbn() != null ? ISBN_SEARCH + book.getIsbn() :
-                String.format(BOOK_SEARCH, URLEncoder.encode(book.getTitle(), StandardCharsets.UTF_8));
-
-            BookResults results = restTemplate.getForObject(url,BookResults.class);
+            BookResults results = restTemplate.getForObject(buildURL(book),BookResults.class);
             if (results != null) findImage(results,book);
         }
         catch (RestClientException e) {
-            //log.error("Unable to retrieve photo {}",e.getMessage());
+            log.error("Unable to retrieve photo {}",e.getMessage());
         }
     }
 

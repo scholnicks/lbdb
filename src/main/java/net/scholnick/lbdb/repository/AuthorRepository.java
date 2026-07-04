@@ -63,7 +63,7 @@ public class AuthorRepository {
     @Deprecated
     public Set<Long> getEditors(Book b) {
         return new HashSet<>(jdbcTemplate.queryForList(
-            "select auth_id from author_book_xref where book_id=? and abx_editor='y'",
+            "select auth_id from author_book_xref where book_id=? and abx_editor='Y'",
             new Long[] {b.getId()},
             new int[] {Types.INTEGER},
             Long.class
