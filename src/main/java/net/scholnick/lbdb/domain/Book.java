@@ -40,9 +40,13 @@ public final class Book implements Comparable<Book> {
 
     /** Get a comma-separated list of author names, sorted alphabetically. */
     public String getAuthorNames() {
+        return getAllAuthors().stream().map(Author::getName).sorted().collect(joining(", "));
+    }
+
+    public Set<Author> getAllAuthors() {
         Set<Author> all = new HashSet<>(authors);
         all.addAll(editors);
-        return all.stream().map(Author::getName).sorted().collect(joining(", "));
+        return all;
     }
 
     @Override

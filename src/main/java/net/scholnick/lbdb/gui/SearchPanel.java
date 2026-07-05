@@ -29,12 +29,12 @@ public class SearchPanel extends BasePanel {
     private JTextField series;
     private JComboBox<MediaType> mediaCombo;
 
-    private JLabel infoLabel;
-
     private JTable dataTable;
 
     private final SearchAction searchAction;
     private final BookService bookService;
+
+    private MessageListener messageListener;
 
     @Autowired
     public SearchPanel(BookService bookService) {
@@ -65,7 +65,6 @@ public class SearchPanel extends BasePanel {
     private JPanel getBottomPanel() {
         JPanel p = new JPanel(new BorderLayout(1, 1));
         p.add(getButtonPanel(), BorderLayout.CENTER);
-        p.add(getInfoLabel(), BorderLayout.SOUTH);
         return p;
     }
 
@@ -75,15 +74,6 @@ public class SearchPanel extends BasePanel {
         buttonPanel.add(getEditBookButton());
         buttonPanel.add(getEditAuthorButton());
         return buttonPanel;
-    }
-
-    /** Construct the info label. */
-    private JLabel getInfoLabel() {
-        if (infoLabel == null) {
-            infoLabel = LabelFactory.createLabel(" ");    // don't use "", swing will hide the component
-            infoLabel.setVisible(true);
-        }
-        return infoLabel;
     }
 
     /** Construct the top panel. */
@@ -196,7 +186,7 @@ public class SearchPanel extends BasePanel {
         getAuthorNameField().setText("");
         getSeriesField().setText("");
         getMediaCombo().setSelectedIndex(0);
-        getInfoLabel().setText(" ");
+        messageListener.clear();
 
         clearTableData();
         getTitleField().requestFocus();
@@ -207,7 +197,7 @@ public class SearchPanel extends BasePanel {
     private void clearTableData() {
         getDataTable().clearSelection();
         ((TitleSearchTableModel) getDataTable().getModel()).clear();
-        getInfoLabel().setText("");
+        messageListener.clear();
     }
 
     /** Fill the table with data. */
@@ -217,7 +207,7 @@ public class SearchPanel extends BasePanel {
         TitleSearchTableModel model = (TitleSearchTableModel) getDataTable().getModel();
 
         data.forEach(model::addRow);
-        getInfoLabel().setText(data.size() + " book" + (data.size() != 1 ? "s" : "") + " found");
+        messageListener.send(data.size() + " book" + (data.size() != 1 ? "s" : "") + " found");
         validate();
         repaint();
     }
@@ -255,7 +245,7 @@ public class SearchPanel extends BasePanel {
         TitleSearchTableModel model = (TitleSearchTableModel) getDataTable().getModel();
         Book data = bookService.get(model.getTitleData(row).getId());
 
-        getInfoLabel().setText("");
+        messageListener.clear();
         fireTitleSelection(new TitleSelectionEvent(data));
     }
 
@@ -269,7 +259,7 @@ public class SearchPanel extends BasePanel {
         Author a = getSelectedAuthor(data);
 
         if (a != null) {
-            getInfoLabel().setText("");
+            messageListener.clear();
             fireAuthorSelection(new AuthorSelectionEvent(a));
         }
     }
@@ -280,7 +270,7 @@ public class SearchPanel extends BasePanel {
 
         if (authors.size() == 1) return authors.getFirst();
 
-        AuthorSelectionPopUp selection = new AuthorSelectionPopUp(b.getAuthors());
+        AuthorSelectionPopUp selection = new AuthorSelectionPopUp(b.getAllAuthors());
         selection.setVisible(true);
         return selection.isApproved() ? selection.getSelectedAuthor() : null;
     }
@@ -373,5 +363,9 @@ public class SearchPanel extends BasePanel {
             if (column == 0) return FIRST_COLUMN_RENDERER.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         }
+    }
+
+    public void setMessageListener(MessageListener messageListener) {
+        this.messageListener = messageListener;
     }
 }

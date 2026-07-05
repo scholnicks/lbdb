@@ -7,7 +7,9 @@ import net.scholnick.lbdb.util.GUIUtilities;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.List;
+import java.util.Collection;
+
+import static java.util.Comparator.comparing;
 
 /**
  * AuthorSelectionPopUp is a dialog that allows the user to select an author from a list.
@@ -15,7 +17,7 @@ import java.util.List;
 public final class AuthorSelectionPopUp extends BaseDialog {
     private JTable listingTable;
 
-    public AuthorSelectionPopUp(List<Author> authors) {
+    public AuthorSelectionPopUp(Collection<Author> authors) {
         super();
         setTitle("Author Selection");
         setModal(true);
@@ -65,13 +67,13 @@ public final class AuthorSelectionPopUp extends BaseDialog {
     }
 
     /** Populate the listing table with authors. */
-    private void addAuthors(List<Author> authors) {
+    private void addAuthors(Collection<Author> authors) {
         getListingTable().clearSelection();
 
         AuthorTableModel model = (AuthorTableModel) getListingTable().getModel();
 
         model.clear();
-        authors.forEach(model::add);
+        authors.stream().sorted(comparing(Author::getName)).forEach(model::add);
         validate();
         repaint();
     }

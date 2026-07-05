@@ -32,7 +32,7 @@ public final class BooksDB extends JFrame {
     private AuthorService authorService;
 
     public static final Dimension WINDOW_SIZE = new Dimension(1000, 850);
-    private static final String       VERSION = "Version 9.1.3";
+    private static final String       VERSION = "Version 9.1.4";
 
     public static final Color BACKGROUND_COLOR = new Color(4,106,56);
     public static final Color FOREGROUND_COLOR = Color.white;
@@ -232,6 +232,7 @@ public final class BooksDB extends JFrame {
     @Autowired
     public void setSearchPanel(SearchPanel searchPanel) {
         this.searchPanel = searchPanel;
+        this.searchPanel.setMessageListener(this::setNotificationText);
     }
 
     @Autowired
