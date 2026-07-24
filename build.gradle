@@ -28,7 +28,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-jdbc:${springVersion}"
     implementation "org.springframework.boot:spring-boot-starter-jackson:${springVersion}"
 
-    implementation "org.xerial:sqlite-jdbc:3.53.2.0"
+    implementation "org.xerial:sqlite-jdbc:3.53.2.1"
     implementation "com.zaxxer:HikariCP:7.1.0"
 
     implementation "com.github.jiconfont:jiconfont-swing:1.0.1"
