@@ -1,2 +1,8 @@
+// vi: set syntax=groovy ts=4 sw=4 sts=4 et ff=unix ai si :
+
+plugins {
+  id 'io.github.ben-manes.versions.settings' version "0.58.0"
+}
+
 rootProject.name = 'lbdb'
 
