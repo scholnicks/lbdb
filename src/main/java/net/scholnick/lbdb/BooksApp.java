@@ -31,6 +31,7 @@ public class BooksApp {
             System.setProperty("apple.awt.application.appearance","system");
             System.setProperty("apple.laf.useScreenMenuBar","true");
             System.setProperty("com.apple.mrj.application.live-resize","true");
+            System.setProperty("apple.awt.application.name", "Laurel's Book Database");
 
             ApplicationContext context = new SpringApplicationBuilder(BooksApp.class).headless(false).run(args);
 
