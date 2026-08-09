@@ -309,7 +309,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     // GUI related methods
 
     private void initializeGUI() {
-        searchField          = TrimmedTextField.create(35, 255,TEXT_FIELD_SIZE);
+        searchField          = TrimmedTextField.create(35, Integer.MAX_VALUE,TEXT_FIELD_SIZE);
         titleField           = TrimmedTextField.create(45, 255,TEXT_FIELD_SIZE);
         seriesField          = TrimmedTextField.create(45, 255, TEXT_FIELD_SIZE);
         publishedYearField   = TrimmedTextField.create(10, 4, TEXT_FIELD_SIZE);
