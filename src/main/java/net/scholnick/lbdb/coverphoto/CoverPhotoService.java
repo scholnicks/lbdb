@@ -7,5 +7,6 @@ import net.scholnick.lbdb.domain.Book;
  */
 @FunctionalInterface
 public interface CoverPhotoService {
+    /** Sets the cover photo for the given book. */
     void setCoverPhoto(Book book);
 }

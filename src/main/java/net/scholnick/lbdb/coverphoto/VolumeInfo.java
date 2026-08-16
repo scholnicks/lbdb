@@ -20,8 +20,10 @@ public final class VolumeInfo {
     private String                  publishedDate;
     private ImageLinks              imageLinks;
 
+    /** Returns the ISBN-13 identifier for this volume, or null if not found. */
     public record IndustryIdentifier(@JsonProperty("type") String type, @JsonProperty("identifier") String identifier) {}
 
+    /** Returns the ISBN-13 identifier for this volume, or null if not found. */
     public record ImageLinks(String smallThumbnail, String thumbnail) {
         public String getImageURL() {
             return thumbnail != null ? thumbnail.replace("&edge=curl","") : smallThumbnail.replace("&edge=curl","");

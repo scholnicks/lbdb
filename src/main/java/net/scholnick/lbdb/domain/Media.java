@@ -28,6 +28,7 @@ public enum Media {
         return description;
     }
 
+    /** Returns the Media for the given id, or null if not found. */
     public static Media from(Integer id) {
         if (id == null) return null;
         return Arrays.stream(values()).filter(m -> m.id == id).findFirst().orElse(null);

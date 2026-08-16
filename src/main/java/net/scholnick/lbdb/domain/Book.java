@@ -28,6 +28,7 @@ public final class Book implements Comparable<Book> {
     private Integer numberOfPages;
     private String coverURL;
     private String asin;
+    private byte[] image;
     private List<Author> authors = new ArrayList<>();
     private List<Author> editors = new ArrayList<>();
 

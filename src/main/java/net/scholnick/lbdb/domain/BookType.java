@@ -27,6 +27,7 @@ public enum BookType {
         return description;
     }
 
+    /** Returns the BookType for the given id, or null if not found. */
     public static BookType from(Integer id) {
         if (id == null) return null;
         return Arrays.stream(values()).filter(m -> m.id == id).findFirst().orElse(null);

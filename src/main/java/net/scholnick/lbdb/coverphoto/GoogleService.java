@@ -18,8 +18,7 @@ import static net.scholnick.lbdb.util.NullSafe.isClose;
 public class GoogleService implements CoverPhotoService {
     private static final Logger log = LoggerFactory.getLogger(GoogleService.class);
 
-    @Value("${google.books.api.key}")
-    private String googleBooksApiKey;
+    @Value("${google.books.api.key}") private String googleBooksApiKey;
 
     private static final String BOOK_SEARCH = "https://www.googleapis.com/books/v1/volumes?q=\"%s\"&printType=books&key=%s";
     private static final String ISBN_SEARCH = "https://www.googleapis.com/books/v1/volumes?key=%s&q=isbn:%s&maxResults=1";
@@ -31,6 +30,7 @@ public class GoogleService implements CoverPhotoService {
         this.restTemplate = restTemplate;
     }
 
+    /** Build the URL to search for the book */
     public String buildURL(Book book) {
         if (book.getIsbn() == null) {
             // https://www.googleapis.com/books/v1/volumes?q=isbn:9780670451937&maxResults=1
