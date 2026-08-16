@@ -15,6 +15,9 @@ import java.util.regex.*;
 
 import static java.util.stream.Collectors.toSet;
 
+/**
+ * Fetches author data from Amazon.
+ */
 @Service
 public class AmazonDataProvider {
     private final AuthorService authorService;
@@ -30,6 +33,12 @@ public class AmazonDataProvider {
         this.authorService = authorService;
     }
 
+    /**
+     * Fetches author data from Amazon for the given identifier (ASIN or URL).
+     *
+     * @param identifier The ASIN or URL of the Amazon product.
+     * @return An {@link AmazonData} object containing the ASIN, ISBN (if applicable), and a set of authors.
+     */
     public AmazonData get(String identifier) {
         try {
             String asin = identifier.startsWith("http") ? extractAsin(identifier) : identifier;
