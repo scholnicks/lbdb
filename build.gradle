@@ -29,13 +29,13 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-jdbc:${springVersion}"
     implementation "org.springframework.boot:spring-boot-starter-jackson:${springVersion}"
 
-    implementation "org.xerial:sqlite-jdbc:3.53.2.1"
+    implementation "org.xerial:sqlite-jdbc:3.53.4.0"
     implementation "com.zaxxer:HikariCP:7.1.0"
 
     implementation "com.github.jiconfont:jiconfont-swing:1.0.1"
     implementation "com.github.jiconfont:jiconfont-font_awesome:4.7.0.1"
     implementation "org.apache.commons:commons-text:1.15.0"
-    implementation "org.jsoup:jsoup:1.23.1"
+    implementation "org.jsoup:jsoup:1.23.2"
 
     testCompileOnly         "org.projectlombok:lombok:${lombokVersion}"
     testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
