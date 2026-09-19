@@ -22,11 +22,12 @@ import static java.util.stream.Collectors.toSet;
 public class AmazonDataProvider {
     private final AuthorService authorService;
 
-    private static final Logger log = LoggerFactory.getLogger(AmazonDataProvider.class);
     private static final String BASE_URL = "https://www.amazon.com/dp/%s";
     private static final Pattern ASIN_PATTERN = Pattern.compile("/(?:dp|gp/product|product)/([A-Z0-9]{10})(?:[/?]|$)", Pattern.CASE_INSENSITIVE);
     private static final String KINDLE_PREFIX = "B0";
-    private static final AmazonData EMPTY_DATA = new AmazonData(null, null, Set.of());
+    private static final AmazonData EMPTY_DATA = new AmazonData(null, null, null, Set.of());
+
+    private static final Logger log = LoggerFactory.getLogger(AmazonDataProvider.class);
 
     @Autowired
     public AmazonDataProvider(AuthorService authorService) {
@@ -65,6 +66,7 @@ public class AmazonDataProvider {
             return new AmazonData(
                 asin,
                 asin.startsWith(KINDLE_PREFIX) ? null : asin,
+                doc.selectFirst("#productTitle") == null ? null : Objects.requireNonNull(doc.selectFirst("#productTitle")).text().strip(),
                 names.stream().map(this::convert).filter(Objects::nonNull).collect(toSet())
             );
         }
@@ -89,7 +91,7 @@ public class AmazonDataProvider {
         return null;
     }
 
-    public record AmazonData(String asin, String isbn, Set<Author> authors) {
+    public record AmazonData(String asin, String isbn, String title, Set<Author> authors) {
         public boolean isKindle() {
             return asin != null && asin.startsWith(KINDLE_PREFIX);
         }

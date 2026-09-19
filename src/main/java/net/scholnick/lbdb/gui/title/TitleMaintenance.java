@@ -84,6 +84,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         data.authors().forEach(a -> authorsTable.add(a));
         isbnField.setText(data.isbn() == null ? "" : data.isbn());
         asinField.setText(data.asin() == null ? "" : data.asin());
+        titleField.setText(data.title() == null ? "" : data.title());
         mediaCombo.setSelectedItem(data.isKindle() ? Media.KINDLE : Media.BOOK);
 
         if (data.isbn() != null) {
