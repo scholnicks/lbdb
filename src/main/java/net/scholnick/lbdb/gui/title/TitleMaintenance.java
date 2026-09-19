@@ -128,12 +128,12 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     private void downloadCoverPhoto() {
         try {
             log.info("Downloading cover photo");
-            coverPhotoService.setCoverPhoto(getBook());
-            if (getBook().getCoverURL() == null) {
+            coverPhotoService.setCoverPhoto(book);
+            if (book.getCoverURL() == null) {
                 setDefaultBookIcon();
             }
             else {
-                loadImage(getBook().getCoverURL());
+                loadImage(book.getCoverURL());
             }
         }
         catch (Exception e) {
@@ -175,7 +175,6 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
 
         authorsTable.clear();
         editorsTable.clear();
-//        sendMessage(" ");
 
         setDefaultBookIcon();
         book = null;
@@ -190,7 +189,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
 
     /** Create a Book object from the data in the form */
     private Book createBookFromFormData() {
-        Book b = getBook() == null ? new Book() : getBook();
+        Book b = book == null ? new Book() : book;
 
         b.setTitle(titleField.getText());
         b.setSeries(seriesField.getText());
@@ -214,10 +213,6 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         editorsTable.get().forEach(b::addEditor);
 
         return b;
-    }
-
-    private Book getBook() {
-        return book;
     }
 
     /** Set the current book to the given book and load its data into the form */

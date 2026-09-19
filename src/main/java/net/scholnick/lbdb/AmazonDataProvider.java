@@ -16,7 +16,8 @@ import java.util.regex.*;
 import static java.util.stream.Collectors.toSet;
 
 /**
- * Fetches author data from Amazon.
+ * AmazonDataProvider is a service that fetches author data from Amazon based on a given identifier (ASIN or URL).
+ * It uses Jsoup to scrape the Amazon product page and extract relevant information such as ASIN.
  */
 @Service
 public class AmazonDataProvider {
@@ -66,7 +67,7 @@ public class AmazonDataProvider {
             return new AmazonData(
                 asin,
                 asin.startsWith(KINDLE_PREFIX) ? null : asin,
-                doc.selectFirst("#productTitle") == null ? null : Objects.requireNonNull(doc.selectFirst("#productTitle")).text().strip(),
+                doc.selectFirst("#productTitle") == null ? null : Objects.requireNonNull(doc.selectFirst("#productTitle")).text().strip(), // quiet IJ wit the redundant null check
                 names.stream().map(this::convert).filter(Objects::nonNull).collect(toSet())
             );
         }
@@ -91,6 +92,7 @@ public class AmazonDataProvider {
         return null;
     }
 
+    /** Represents the data fetched from Amazon. */
     public record AmazonData(String asin, String isbn, String title, Set<Author> authors) {
         public boolean isKindle() {
             return asin != null && asin.startsWith(KINDLE_PREFIX);
