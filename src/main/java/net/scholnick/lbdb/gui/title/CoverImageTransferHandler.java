@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * CoverImageTransferHandler is a {@link TransferHandler} that allows the user to drag and drop an image file onto a {@link JLabel} to set the cover image.
+ * CoverImageTransferHandler is a {@link TransferHandler} that allows the user to drag and drop an image file
+ * onto a {@link JLabel} to set the cover image.
  */
-
 public class CoverImageTransferHandler extends TransferHandler {
     private final JLabel coverLabel;
     private final Consumer<byte[]> imageConsumer;
@@ -33,7 +33,7 @@ public class CoverImageTransferHandler extends TransferHandler {
 
     @Override
     public boolean importData(TransferSupport support) {
-        if (!canImport(support)) {
+        if (! canImport(support)) {
             return false;
         }
 
@@ -63,25 +63,13 @@ public class CoverImageTransferHandler extends TransferHandler {
         }
     }
 
-    /**
-     * Retrieves the list of dropped files from the TransferSupport object.
-     *
-     * @param support The TransferSupport object containing the dropped data.
-     * @return A list of dropped files.
-     * @throws UnsupportedFlavorException If the data flavor is not supported.
-     * @throws IOException                If an I/O error occurs while retrieving the data.
-     */
+    /** Retrieves the list of dropped files from the TransferSupport object. */
     @SuppressWarnings("unchecked")
     private List<File> getDroppedFiles(TransferSupport support) throws UnsupportedFlavorException, IOException {
         return (List<File>) support.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
     }
 
-    /**
-     * Creates a scaled preview of the given image to fit within the specified preview dimensions.
-     *
-     * @param image The original image to create a preview for.
-     * @return An ImageIcon containing the scaled preview image.
-     */
+    /** Creates a scaled preview of the given image to fit within the specified preview dimensions. */
     private ImageIcon createPreview(BufferedImage image) {
         double widthScale = (double) previewWidth / image.getWidth();
         double heightScale = (double) previewHeight / image.getHeight();
@@ -94,31 +82,23 @@ public class CoverImageTransferHandler extends TransferHandler {
         return new ImageIcon(scaledImage);
     }
 
-    /**
-     * Converts the given BufferedImage to a JPEG byte array.
-     *
-     * @param image The BufferedImage to convert.
-     * @return A byte array containing the JPEG representation of the image.
-     * @throws IOException If an I/O error occurs during the conversion.
-     */
+    /** Converts the given BufferedImage to a JPEG byte array. */
     private byte[] toJpeg(BufferedImage image) throws IOException {
         BufferedImage rgbImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_RGB);
 
         Graphics2D graphics = rgbImage.createGraphics();
 
-        try {
-            graphics.drawImage(image, 0, 0, null);
-        }
-        finally {
-            graphics.dispose();
-        }
-
         try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
+            graphics.drawImage(image, 0, 0, null);
+
             if (!ImageIO.write(rgbImage, "jpg", output)) {
                 throw new IOException("No JPEG ImageIO writer available");
             }
 
             return output.toByteArray();
+        }
+        finally {
+            graphics.dispose();
         }
     }
 }
