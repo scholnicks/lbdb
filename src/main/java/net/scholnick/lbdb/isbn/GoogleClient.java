@@ -33,7 +33,7 @@ public class GoogleClient implements BookProvider {
         book.setTitle(v.getTitle());
         book.setNumberOfPages(v.getPageCount());
 
-        if (!NullSafe.isEmpty(v.getAuthors())) {
+        if (! NullSafe.isEmpty(v.getAuthors())) {
             book.setAuthors( v.getAuthors().stream().map(n -> new Author().setName(n)).toList() );
         }
 
