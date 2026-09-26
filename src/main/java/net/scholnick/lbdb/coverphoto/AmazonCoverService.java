@@ -22,7 +22,6 @@ public class AmazonCoverService {
         .followRedirects(HttpClient.Redirect.NORMAL)
         .build();
 
-
     /** Fetches the cover image of a book from Amazon based on the given URL. */
     public byte[] getCover(String imageUrl) {
         byte[] image = downloadImage(imageUrl);
