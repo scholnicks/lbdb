@@ -9,6 +9,8 @@ import org.jsoup.nodes.*;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.util.*;
@@ -27,7 +29,7 @@ public class AmazonDataProvider {
     private static final String BASE_URL = "https://www.amazon.com/dp/%s";
     private static final Pattern ASIN_PATTERN = Pattern.compile("/(?:dp|gp/product|product)/([A-Z0-9]{10})(?:[/?]|$)", Pattern.CASE_INSENSITIVE);
     private static final String KINDLE_PREFIX = "B0";
-    private static final AmazonData EMPTY_DATA = new AmazonData(null, null, null, Set.of());
+    private static final AmazonData EMPTY_DATA = new AmazonData(null, null, null, Set.of(), null);
 
     private static final Logger log = LoggerFactory.getLogger(AmazonDataProvider.class);
 
@@ -69,13 +71,70 @@ public class AmazonDataProvider {
                 asin,
                 asin.startsWith(KINDLE_PREFIX) ? null : asin,
                 doc.selectFirst("#productTitle") == null ? null : Objects.requireNonNull(doc.selectFirst("#productTitle")).text().strip(), // quiet IJ wit the redundant null check
-                names.stream().map(this::convert).filter(Objects::nonNull).collect(toSet())
+                names.stream().map(this::convert).filter(Objects::nonNull).collect(toSet()),
+                findCoverUrl(doc)
             );
         }
         catch (IOException e) {
             log.error("Error while fetching authors", e);
             return EMPTY_DATA;
         }
+    }
+
+    /** Finds the cover image URL from the Amazon product page. */
+    private String findCoverUrl(Document document)  {
+        Element image = document.selectFirst("#landingImage, #imgBlkFront");
+
+        if (image == null) {
+            return null;
+        }
+
+        String dynamicImages = image.attr("data-a-dynamic-image");
+
+        if (!dynamicImages.isBlank()) {
+            String url = findLargestImage(dynamicImages);
+
+            if (url != null) {
+                return url;
+            }
+        }
+
+        String src = image.absUrl("src");
+
+        if (src.isBlank()) {
+            src = image.attr("src");
+        }
+
+        if (src.isBlank()) {
+            return null;
+        }
+
+        return src;
+    }
+
+    /** Finds the largest image URL from the JSON string of dynamic images. */
+    private String findLargestImage(String json)  {
+        Map<String, int[]> images = new ObjectMapper().readValue(json, new TypeReference<>() {});
+
+        String largestUrl = null;
+        long largestArea = 0;
+
+        for (Map.Entry<String, int[]> entry : images.entrySet()) {
+            int[] dimensions = entry.getValue();
+
+            if (dimensions.length < 2) {
+                continue;
+            }
+
+            long area = (long) dimensions[0] * dimensions[1];
+
+            if (area > largestArea) {
+                largestArea = area;
+                largestUrl = entry.getKey();
+            }
+        }
+
+        return largestUrl;
     }
 
     private Author convert(String name) {
@@ -94,7 +153,7 @@ public class AmazonDataProvider {
     }
 
     /** Represents the data fetched from Amazon. */
-    public record AmazonData(String asin, String isbn, String title, Set<Author> authors) {
+    public record AmazonData(String asin, String isbn, String title, Set<Author> authors, String coverURL) {
         public boolean isKindle() {
             return asin != null && asin.startsWith(KINDLE_PREFIX);
         }
