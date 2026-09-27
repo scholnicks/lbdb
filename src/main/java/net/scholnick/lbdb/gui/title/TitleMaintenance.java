@@ -117,24 +117,6 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         return authorService.search(inputField.getText()).stream().filter(Objects::nonNull).limit(20).collect(toList());
     }
 
-    /** Download the cover photo for the current book */
-    private void downloadCoverPhoto() {
-        try {
-            log.info("Downloading cover photo");
-            if (book.getCoverURL() == null) {
-                setDefaultBookIcon();
-            }
-            else {
-                loadImage(book.getCoverURL());
-            }
-        }
-        catch (Exception e) {
-            log.error("Unable to download cover", e);
-            setDefaultBookIcon();
-        }
-        reload();
-    }
-
     /** Load an image from the given URL into the image label */
     private void loadImage(String url) {
         if (NullSafe.isEmpty(url)) return;
@@ -232,16 +214,15 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     private void loadData(Book b) {
         SwingUtilities.invokeLater(() -> {
             getImageLabel().setIcon(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("images/loading.gif"))));
-            downloadCoverPhoto();
             reload();
         });
 
-        loadFields(b,true);
+        loadFields(b);
         reload();
     }
 
     /** Load the fields from the given Book into the form */
-    private void loadFields(Book b, boolean loadAll) {
+    private void loadFields(Book b) {
         titleField.setText(b.getTitle());
         seriesField.setText(b.getSeries());
         commentsArea.setText(b.getComments());
@@ -255,18 +236,14 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
 
         getAddedDateLabel().setText(b.getAddedTimestamp());
 
-        if (loadAll) {
-            mediaCombo.setSelectedItem(b.getMedia());
-            isbnField.setText(b.getIsbn());
-            asinField.setText(b.getAsin());
-            authorsTable.clear();
-            b.getAuthors().forEach(authorsTable::add);
-        }
+        mediaCombo.setSelectedItem(b.getMedia());
+        isbnField.setText(b.getIsbn());
+        asinField.setText(b.getAsin());
+        authorsTable.clear();
+        b.getAuthors().forEach(authorsTable::add);
 
         editorsTable.clear();
         b.getEditors().forEach(editorsTable::add);
-
-        loadImage(b.getCoverURL());
     }
 
     @Autowired

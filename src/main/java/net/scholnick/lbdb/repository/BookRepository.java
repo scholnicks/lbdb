@@ -49,8 +49,8 @@ public class BookRepository {
     }
 
     private static final String ADD = """
-        insert into Book(book_title,bot_id,med_id,book_anthology,book_series,book_published_year,book_isbn,book_asin,book_number_of_pages,book_comments)
-        values(?,?,?,?,?,?,?,?,?,?)
+        insert into Book(book_title,bot_id,med_id,book_anthology,book_series,book_published_year,book_isbn,book_asin,book_number_of_pages,book_comments,book_cover_photo)
+        values(?,?,?,?,?,?,?,?,?,?,?)
     """;
 
     /** Add join records for a book's authors. */
@@ -77,6 +77,7 @@ public class BookRepository {
             b.getAsin(),
             b.getNumberOfPages(),
             b.getComments(),
+            b.getCoverPhoto(),
             b.getId()
         );
     }
@@ -86,7 +87,7 @@ public class BookRepository {
             Book
         set
            book_title=?, bot_id=?, med_id=?, book_anthology=?, book_series=?,
-           book_published_year=?, book_isbn=?, book_asin=?, book_number_of_pages=?, book_comments=?,
+           book_published_year=?, book_isbn=?, book_asin=?, book_number_of_pages=?, book_comments=?,book_cover_photo=?,
            book_modified_date=datetime(current_timestamp,'localtime')
         where
             book_id=?
@@ -174,6 +175,7 @@ public class BookRepository {
         b.setType(BookType.from(rs.getInt("bot_id")));
         b.setMedia(Media.from(rs.getInt("med_id")));
         b.setAddedTimestamp(rs.getString("book_created_date"));
+        b.setCoverPhoto(rs.getBytes("book_cover_photo"));
 
         return b;
     }
