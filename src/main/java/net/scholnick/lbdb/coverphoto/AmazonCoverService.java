@@ -1,56 +1,31 @@
 package net.scholnick.lbdb.coverphoto;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.URI;
-import java.net.http.*;
-import java.time.Duration;
 
 /**
  * AmazonCoverService is a service that fetches the cover image of a book from Amazon based on a given URL.
  */
 @Service
 @Log4j2
-public class AmazonCoverService {
-    private final HttpClient httpClient = HttpClient.newBuilder()
-        .connectTimeout(Duration.ofSeconds(15))
-        .followRedirects(HttpClient.Redirect.NORMAL)
-        .build();
+public class AmazonCoverService implements CoverProvider {
+    private final PhotoDownloader downloader;
 
-    /** Fetches the cover image of a book from Amazon based on the given URL. */
-    public byte[] getCover(String imageUrl) {
-        byte[] image = downloadImage(imageUrl);
-        return convertToJpeg(image);
+    @Autowired
+    public AmazonCoverService(PhotoDownloader downloader) {
+        this.downloader = downloader;
     }
 
-    /** Downloads the image from the given URL. */
-    private byte[] downloadImage(String imageUrl) {
-        try {
-            HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(imageUrl))
-                .header("User-Agent", CoverPhotoService.USER_AGENT)
-                .timeout(Duration.ofSeconds(30))
-                .GET()
-                .build();
-
-            HttpResponse<byte[]> response = httpClient.send(request, HttpResponse.BodyHandlers.ofByteArray());
-
-            if (response.statusCode() < 200 || response.statusCode() >= 300) {
-                log.warn("Failed to download image from {}: HTTP {}", imageUrl, response.statusCode());
-                return null;
-            }
-
-            return response.body();
-        }
-        catch (IOException | InterruptedException e) {
-            log.error("Failed to download image from {}: {}", imageUrl, e.getMessage());
-            return null;
-        }
+    @Override
+    public byte[] downloadCover(CoverInquiry inquiry) {
+        byte[] image = downloader.downloadImage(inquiry.url());
+        return convertToJpeg(image);
     }
 
     /** Converts the given image data to JPEG format. */

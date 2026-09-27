@@ -8,5 +8,5 @@ import java.util.List;
  * BookResults record to hold results from Google Books API
  */
 public record BookResults(@JsonProperty("items") List<BookData> items) {
-    public record BookData(@JsonProperty("volumeInfo") VolumeInfo volumeInfo) {}
+    public record BookData(@JsonProperty("volumeInfo") GoogleClient.VolumeInfo volumeInfo) {}
 }

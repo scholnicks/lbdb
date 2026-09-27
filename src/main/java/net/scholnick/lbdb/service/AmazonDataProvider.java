@@ -1,8 +1,7 @@
-package net.scholnick.lbdb;
+package net.scholnick.lbdb.service;
 
-import net.scholnick.lbdb.coverphoto.CoverPhotoService;
+import net.scholnick.lbdb.coverphoto.*;
 import net.scholnick.lbdb.domain.Author;
-import net.scholnick.lbdb.service.AuthorService;
 import net.scholnick.lbdb.util.NullSafe;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.*;
@@ -50,7 +49,7 @@ public class AmazonDataProvider {
             if (asin == null) return EMPTY_DATA;
 
             Document doc = Jsoup.connect(BASE_URL.formatted(asin))
-                .userAgent(CoverPhotoService.USER_AGENT)
+                .userAgent(CoverProvider.USER_AGENT)
                 .header("Accept-Language", "en-US,en;q=0.9")
                 .timeout(15_000)
                 .get();

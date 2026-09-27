@@ -3,11 +3,10 @@ package net.scholnick.lbdb.gui.title;
 import jiconfont.icons.font_awesome.FontAwesome;
 import jiconfont.swing.IconFontSwing;
 import net.scholnick.lbdb.*;
-import net.scholnick.lbdb.AmazonDataProvider.AmazonData;
-import net.scholnick.lbdb.coverphoto.CoverPhotoService;
+import net.scholnick.lbdb.service.AmazonDataProvider.AmazonData;
+import net.scholnick.lbdb.coverphoto.*;
 import net.scholnick.lbdb.domain.*;
 import net.scholnick.lbdb.gui.*;
-import net.scholnick.lbdb.isbn.DefaultBookProvider;
 import net.scholnick.lbdb.service.*;
 import net.scholnick.lbdb.util.*;
 import org.slf4j.*;
@@ -57,9 +56,8 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
 
     private BookService       bookService;
     private AuthorService     authorService;
-    private CoverPhotoService coverPhotoService;
     private AmazonDataProvider amazonDataProvider;
-    private DefaultBookProvider defaultBookProvider;
+    private DefaultCoverProvider defaultCoverProvider;
 
     private static final int WIDTH = 128;
     private static final int HEIGHT = 198;
@@ -86,11 +84,6 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         asinField.setText(data.asin() == null ? "" : data.asin());
         titleField.setText(data.title() == null ? "" : data.title());
         mediaCombo.setSelectedItem(data.isKindle() ? Media.KINDLE : Media.BOOK);
-
-        if (data.isbn() != null) {
-            Book book = defaultBookProvider.search(data.isbn());
-            if (book != null) loadFields(book,false);
-        }
 
         searchField.setText("");
     }
@@ -128,7 +121,6 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     private void downloadCoverPhoto() {
         try {
             log.info("Downloading cover photo");
-            coverPhotoService.setCoverPhoto(book);
             if (book.getCoverURL() == null) {
                 setDefaultBookIcon();
             }
@@ -283,18 +275,8 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     }
 
     @Autowired
-    public void setCoverPhotoService(CoverPhotoService coverPhotoService) {
-        this.coverPhotoService = coverPhotoService;
-    }
-
-    @Autowired
     public void setAuthorService(AuthorService authorService) {
         this.authorService = authorService;
-    }
-
-    @Autowired
-    public void setDefaultBookProvider(DefaultBookProvider defaultBookProvider) {
-        this.defaultBookProvider = defaultBookProvider;
     }
 
     @Autowired
