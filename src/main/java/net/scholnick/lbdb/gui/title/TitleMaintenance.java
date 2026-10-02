@@ -2,12 +2,12 @@ package net.scholnick.lbdb.gui.title;
 
 import jiconfont.icons.font_awesome.FontAwesome;
 import jiconfont.swing.IconFontSwing;
-import net.scholnick.lbdb.*;
-import net.scholnick.lbdb.service.AmazonDataProvider.AmazonData;
-import net.scholnick.lbdb.coverphoto.*;
+import net.scholnick.lbdb.BooksDB;
+import net.scholnick.lbdb.coverphoto.DefaultCoverProvider;
 import net.scholnick.lbdb.domain.*;
 import net.scholnick.lbdb.gui.*;
 import net.scholnick.lbdb.service.*;
+import net.scholnick.lbdb.service.AmazonDataProvider.AmazonData;
 import net.scholnick.lbdb.util.*;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +53,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     private AuthorTable editorsTable;
 
     private Book book;
+    private byte[] currentCoverImage;
 
     private BookService       bookService;
     private AuthorService     authorService;
@@ -348,6 +349,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
 
             IconFontSwing.register(FontAwesome.getIconFont());
             imageLabel.setIcon(IconFontSwing.buildIcon(FontAwesome.BOOK, (float) WIDTH));
+            imageLabel.setTransferHandler(new CoverImageTransferHandler(imageLabel, bytes -> currentCoverImage = bytes, WIDTH, HEIGHT));
         }
         return imageLabel;
     }

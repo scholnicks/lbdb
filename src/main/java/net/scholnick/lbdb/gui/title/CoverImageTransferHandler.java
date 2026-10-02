@@ -1,5 +1,7 @@
 package net.scholnick.lbdb.gui.title;
 
+import org.slf4j.*;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -13,16 +15,18 @@ import java.util.function.Consumer;
  * CoverImageTransferHandler is a {@link TransferHandler} that allows the user to drag and drop an image file
  * onto a {@link JLabel} to set the cover image.
  */
-public class CoverImageTransferHandler extends TransferHandler {
-    private final JLabel coverLabel;
+public final class CoverImageTransferHandler extends TransferHandler {
+    private final JLabel           coverLabel;
     private final Consumer<byte[]> imageConsumer;
-    private final int previewWidth;
-    private final int previewHeight;
+    private final int              previewWidth;
+    private final int              previewHeight;
+
+    private static final Logger log = LoggerFactory.getLogger(CoverImageTransferHandler.class);
 
     public CoverImageTransferHandler(JLabel coverLabel, Consumer<byte[]> imageConsumer, int previewWidth, int previewHeight) {
-        this.coverLabel = coverLabel;
+        this.coverLabel    = coverLabel;
         this.imageConsumer = imageConsumer;
-        this.previewWidth = previewWidth;
+        this.previewWidth  = previewWidth;
         this.previewHeight = previewHeight;
     }
 
@@ -59,6 +63,7 @@ public class CoverImageTransferHandler extends TransferHandler {
 
         }
         catch (IOException | UnsupportedFlavorException e) {
+            log.error("Error importing image", e);
             return false;
         }
     }
