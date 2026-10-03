@@ -13,12 +13,9 @@ import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
-import java.net.*;
 import java.util.Objects;
 
 import static java.util.stream.Collectors.toList;
@@ -53,7 +50,6 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     private AuthorTable editorsTable;
 
     private Book book;
-    private byte[] currentCoverImage;
 
     private BookService       bookService;
     private AuthorService     authorService;
@@ -118,21 +114,21 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         return authorService.search(inputField.getText()).stream().filter(Objects::nonNull).limit(20).collect(toList());
     }
 
-    /** Load an image from the given URL into the image label */
-    private void loadImage(String url) {
-        if (NullSafe.isEmpty(url)) return;
-
-        SwingUtilities.invokeLater(() -> {
-            try {
-                Image image = ImageIO.read(new URI(url).toURL()).getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
-                getImageLabel().setIcon(new ImageIcon(image));
-            }
-            catch (IOException | URISyntaxException e) {
-                setDefaultBookIcon();
-                log.error("Unable to load cover image", e);
-            }
-        });
-    }
+//    /** Load an image from the given URL into the image label */
+//    private void loadImage(String url) {
+//        if (NullSafe.isEmpty(url)) return;
+//
+//        SwingUtilities.invokeLater(() -> {
+//            try {
+//                Image image = ImageIO.read(new URI(url).toURL()).getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
+//                getImageLabel().setIcon(new ImageIcon(image));
+//            }
+//            catch (IOException | URISyntaxException e) {
+//                setDefaultBookIcon();
+//                log.error("Unable to load cover image", e);
+//            }
+//        });
+//    }
 
     @Override
     public void clear() {
@@ -162,9 +158,16 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         getImageLabel().setIcon(IconFontSwing.buildIcon(FontAwesome.BOOK, 48, Color.lightGray));
     }
 
+    private Book getBook() {
+        if (book == null) {
+            book = new Book();
+        }
+        return book;
+    }
+
     /** Create a Book object from the data in the form */
     private Book createBookFromFormData() {
-        Book b = book == null ? new Book() : book;
+        Book b = getBook();
 
         b.setTitle(titleField.getText());
         b.setSeries(seriesField.getText());
@@ -194,7 +197,11 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     public void setBook(Book b) {
         clear();
         this.book = b;
-        loadData(b);
+
+        SwingUtilities.invokeLater(() -> {
+            loadFields(b);
+            reload();
+        });
     }
 
     @Override
@@ -209,17 +216,6 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         bookService.save(b);
         sendMessage(b.getTitle() + " has been saved.");
         setBook(b);
-    }
-
-    /** Load the data from the given Book into the form asynchronously */
-    private void loadData(Book b) {
-        SwingUtilities.invokeLater(() -> {
-            getImageLabel().setIcon(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("images/loading.gif"))));
-            reload();
-        });
-
-        loadFields(b);
-        reload();
     }
 
     /** Load the fields from the given Book into the form */
@@ -349,7 +345,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
 
             IconFontSwing.register(FontAwesome.getIconFont());
             imageLabel.setIcon(IconFontSwing.buildIcon(FontAwesome.BOOK, (float) WIDTH));
-            imageLabel.setTransferHandler(new CoverImageTransferHandler(imageLabel, bytes -> currentCoverImage = bytes, WIDTH, HEIGHT));
+            imageLabel.setTransferHandler(new CoverImageTransferHandler(imageLabel, bytes -> getBook().setCoverPhoto(bytes), WIDTH, HEIGHT));
         }
         return imageLabel;
     }
