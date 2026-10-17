@@ -42,7 +42,8 @@ public class BookRepository {
             b.getIsbn(),
             b.getAsin(),
             Objects.requireNonNullElse(b.getNumberOfPages(),0),
-            b.getComments()
+            b.getComments(),
+            b.getCoverPhoto()
         );
 
         return jdbcTemplate.queryForObject("select last_insert_rowid()",Long.class);

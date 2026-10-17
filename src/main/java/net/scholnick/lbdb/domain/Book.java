@@ -1,7 +1,7 @@
 package net.scholnick.lbdb.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Data;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.util.*;
@@ -27,9 +27,9 @@ public final class Book implements Comparable<Book> {
     private boolean anthology;
     private Integer numberOfPages;
     private String asin;
-    private byte[] coverPhoto;
     private List<Author> authors = new ArrayList<>();
     private List<Author> editors = new ArrayList<>();
+    @ToString.Exclude private byte[] coverPhoto;
 
     /** Parse the year from a release date string in the format "YYYY-MM-DD" or "YYYY". */
     public static String parseYear(String releaseDate) {
