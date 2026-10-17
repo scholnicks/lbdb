@@ -233,6 +233,15 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
 
         getAddedDateLabel().setText(b.getAddedTimestamp());
 
+        if (b.getCoverPhoto() != null && b.getCoverPhoto().length > 0) {
+            ImageIcon icon = new ImageIcon(b.getCoverPhoto());
+            Image image = icon.getImage().getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
+            getImageLabel().setIcon(new ImageIcon(image));
+        }
+        else {
+            setDefaultBookIcon();
+        }
+
         mediaCombo.setSelectedItem(b.getMedia());
         isbnField.setText(b.getIsbn());
         asinField.setText(b.getAsin());
