@@ -15,6 +15,7 @@
     <logger name="com.zaxxer"          level="ERROR" />
     <logger name="org.hibernate"       level="ERROR" />
     <logger name="org.apache"          level="ERROR" />
+    <logger name="io.micrometer"       level="OFF"   />
 
     <root level="debug">
         <appender-ref ref="STDOUT"/>

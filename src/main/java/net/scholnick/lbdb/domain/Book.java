@@ -30,6 +30,7 @@ public final class Book implements Comparable<Book> {
     private List<Author> authors = new ArrayList<>();
     private List<Author> editors = new ArrayList<>();
     @ToString.Exclude private byte[] coverPhoto;
+    @ToString.Exclude private String photoUrl;
 
     /** Parse the year from a release date string in the format "YYYY-MM-DD" or "YYYY". */
     public static String parseYear(String releaseDate) {

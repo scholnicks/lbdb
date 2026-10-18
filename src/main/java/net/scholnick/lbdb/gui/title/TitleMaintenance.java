@@ -3,7 +3,8 @@ package net.scholnick.lbdb.gui.title;
 import jiconfont.icons.font_awesome.FontAwesome;
 import jiconfont.swing.IconFontSwing;
 import net.scholnick.lbdb.BooksDB;
-import net.scholnick.lbdb.coverphoto.DefaultCoverProvider;
+import net.scholnick.lbdb.coverphoto.*;
+import net.scholnick.lbdb.coverphoto.CoverProvider.CoverInquiry;
 import net.scholnick.lbdb.domain.*;
 import net.scholnick.lbdb.gui.*;
 import net.scholnick.lbdb.service.*;
@@ -81,6 +82,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         asinField.setText(data.asin() == null ? "" : data.asin());
         titleField.setText(data.title() == null ? "" : data.title());
         mediaCombo.setSelectedItem(data.isKindle() ? Media.KINDLE : Media.BOOK);
+        getBook().setPhotoUrl(data.coverURL());
 
         searchField.setText("");
     }
@@ -113,22 +115,6 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     private java.util.List<Author> searchForAuthors(JTextField inputField) {
         return authorService.search(inputField.getText()).stream().filter(Objects::nonNull).limit(20).collect(toList());
     }
-
-//    /** Load an image from the given URL into the image label */
-//    private void loadImage(String url) {
-//        if (NullSafe.isEmpty(url)) return;
-//
-//        SwingUtilities.invokeLater(() -> {
-//            try {
-//                Image image = ImageIO.read(new URI(url).toURL()).getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
-//                getImageLabel().setIcon(new ImageIcon(image));
-//            }
-//            catch (IOException | URISyntaxException e) {
-//                setDefaultBookIcon();
-//                log.error("Unable to load cover image", e);
-//            }
-//        });
-//    }
 
     @Override
     public void clear() {
@@ -213,9 +199,29 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
             return;
         }
 
+        loadCoverImage();
         bookService.save(b);
         sendMessage(b.getTitle() + " has been saved.");
         setBook(b);
+    }
+
+    private void loadCoverImage() {
+        if (getImageLabel().getIcon() != null && !NullSafe.isEmpty(getBook().getCoverPhoto())) {
+            return;
+        }
+
+        Thread.startVirtualThread(() -> {
+            CoverInquiry coverInquiry = new CoverInquiry(getBook().getIsbn(), getBook().getTitle(), getBook().getPhotoUrl());
+            byte[] coverPhoto = defaultCoverProvider.downloadCover(coverInquiry);
+            if (!NullSafe.isEmpty(coverPhoto)) {
+                getBook().setCoverPhoto(coverPhoto);
+                SwingUtilities.invokeLater(() -> {
+                    Image image = new ImageIcon(coverPhoto).getImage().getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);        // TODO: make this a utility method
+                    getImageLabel().setIcon(new ImageIcon(image));
+                    reload();
+                });
+            }
+        });
     }
 
     /** Load the fields from the given Book into the form */
@@ -233,9 +239,8 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
 
         getAddedDateLabel().setText(b.getAddedTimestamp());
 
-        if (b.getCoverPhoto() != null && b.getCoverPhoto().length > 0) {
-            ImageIcon icon = new ImageIcon(b.getCoverPhoto());
-            Image image = icon.getImage().getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
+        if (!NullSafe.isEmpty(b.getCoverPhoto())) {
+            Image image = new ImageIcon(b.getCoverPhoto()).getImage().getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);
             getImageLabel().setIcon(new ImageIcon(image));
         }
         else {
@@ -265,6 +270,11 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
     @Autowired
     public void setAmazonDataProvider(AmazonDataProvider amazonDataProvider) {
         this.amazonDataProvider = amazonDataProvider;
+    }
+
+    @Autowired
+    public void setDefaultCoverProvider(DefaultCoverProvider defaultCoverProvider) {
+        this.defaultCoverProvider = defaultCoverProvider;
     }
 
     // GUI related methods
@@ -352,11 +362,15 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
             imageLabel.setMaximumSize(d);
             imageLabel.setMinimumSize(d);
 
-            IconFontSwing.register(FontAwesome.getIconFont());
-            imageLabel.setIcon(IconFontSwing.buildIcon(FontAwesome.BOOK, (float) WIDTH));
+            imageLabel.setIcon(getDefaultBookIcon());
             imageLabel.setTransferHandler(new CoverImageTransferHandler(imageLabel, bytes -> getBook().setCoverPhoto(bytes), WIDTH, HEIGHT));
         }
         return imageLabel;
+    }
+
+    private Icon getDefaultBookIcon() {
+        IconFontSwing.register(FontAwesome.getIconFont());
+        return IconFontSwing.buildIcon(FontAwesome.BOOK, (float) WIDTH);
     }
 
     /** Get the editors selection text field, creating it if necessary */

@@ -1,7 +1,8 @@
 package net.scholnick.lbdb.coverphoto;
 
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
+import net.scholnick.lbdb.util.NullSafe;
+import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
@@ -17,6 +18,9 @@ import java.io.*;
 public class AmazonCoverService implements CoverProvider {
     private final PhotoDownloader downloader;
 
+    @Value("${AMAZON_COVER_ENABLED:false}")
+    private boolean amazonCoverEnabled;
+
     @Autowired
     public AmazonCoverService(PhotoDownloader downloader) {
         this.downloader = downloader;
@@ -24,6 +28,15 @@ public class AmazonCoverService implements CoverProvider {
 
     @Override
     public byte[] downloadCover(CoverInquiry inquiry) {
+        if (!amazonCoverEnabled) {
+            log.info("Amazon cover service is disabled.");
+            return null;
+        }
+
+        if (NullSafe.isEmpty(inquiry.url())) {
+            return null;
+        }
+
         byte[] image = downloader.downloadImage(inquiry.url());
         return convertToJpeg(image);
     }
@@ -36,7 +49,7 @@ public class AmazonCoverService implements CoverProvider {
             source = ImageIO.read(input);
         }
         catch (IOException e) {
-            log.error("Failed to read image data: {}", e.getMessage());
+            log.error("Failed to read image data: {}", e.getMessage(),e);
             return null;
         }
 

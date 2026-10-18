@@ -25,6 +25,10 @@ public class HardcoverClient implements CoverProvider {
 
     @Override
     public byte[] downloadCover(CoverInquiry inquiry) {
+        if (NullSafe.isEmpty(inquiry.isbn())) {
+            return null;
+        }
+
         // 978-1668057551
 
         String json = restClient.post()

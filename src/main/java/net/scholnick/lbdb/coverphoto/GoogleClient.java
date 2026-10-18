@@ -2,6 +2,7 @@ package net.scholnick.lbdb.coverphoto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import net.scholnick.lbdb.util.NullSafe;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,10 @@ public class GoogleClient implements CoverProvider {
 
     @Override
     public byte[] downloadCover(CoverInquiry inquiry) {
+        if (NullSafe.isEmpty(inquiry.isbn()) && NullSafe.isEmpty(inquiry.title())) {
+            return null;
+        }
+
         try {
             BookResults results = restTemplate.getForObject(buildURL(inquiry),BookResults.class);
             if (results != null) {

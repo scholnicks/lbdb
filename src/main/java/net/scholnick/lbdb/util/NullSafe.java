@@ -20,6 +20,16 @@ public final class NullSafe {
         return c == null || c.isEmpty();
     }
 
+    /** Checks if an array is null or empty. */
+    public static <T> boolean isEmpty(T[] array) {
+        return array == null || array.length == 0;
+    }
+
+    /** Checks if a byte array is null or empty. */
+    public static boolean isEmpty(byte[] array) {
+        return array == null || array.length == 0;
+    }
+
     public static <T> Stream<T> stream(Collection<T> c) {
         return isEmpty(c) ? Stream.empty() : c.stream();
     }
