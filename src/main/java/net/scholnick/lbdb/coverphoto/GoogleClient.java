@@ -18,8 +18,6 @@ import java.nio.charset.StandardCharsets;
 public class GoogleClient implements CoverProvider {
     private static final Logger log = LoggerFactory.getLogger(GoogleClient.class);
 
-    @Value("${google.books.api.key}") private String googleBooksApiKey;
-
     private static final String BOOK_SEARCH = "https://www.googleapis.com/books/v1/volumes?q=\"%s\"&printType=books&key=%s";
     private static final String ISBN_SEARCH = "https://www.googleapis.com/books/v1/volumes?key=%s&q=isbn:%s&maxResults=1";
 
@@ -39,7 +37,9 @@ public class GoogleClient implements CoverProvider {
         }
 
         try {
-            BookResults results = restTemplate.getForObject(buildURL(inquiry),BookResults.class);
+            String url = buildURL(inquiry);
+            log.info("Downloading book information from {}", url);
+            BookResults results = restTemplate.getForObject(url,BookResults.class);
             if (results != null) {
                 String imageUrl = findImage(results,inquiry);
                 if (imageUrl != null) {
@@ -55,12 +55,14 @@ public class GoogleClient implements CoverProvider {
 
     /** Build the URL to search for the book */
     private String buildURL(CoverInquiry inquiry) {
+        String apiKey = NullSafe.getPassword("google-books-api-token");
+
         if (inquiry.isbn() == null) {
             // https://www.googleapis.com/books/v1/volumes?q=isbn:9780670451937&maxResults=1
-            return BOOK_SEARCH.formatted(URLEncoder.encode(inquiry.title(),StandardCharsets.UTF_8),googleBooksApiKey);
+            return BOOK_SEARCH.formatted(URLEncoder.encode(inquiry.title(),StandardCharsets.UTF_8),apiKey);
         }
         else {
-            return ISBN_SEARCH.formatted(googleBooksApiKey,inquiry.isbn());
+            return ISBN_SEARCH.formatted(apiKey,inquiry.isbn());
         }
     }
 

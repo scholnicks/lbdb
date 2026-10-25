@@ -2,6 +2,8 @@ package net.scholnick.lbdb.util;
 
 import org.apache.commons.text.similarity.LevenshteinDistance;
 
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -60,6 +62,34 @@ public final class NullSafe {
             s1.replaceAll("\\s*","").trim().toLowerCase(),
             s2.replaceAll("\\s*","").trim().toLowerCase()
         ) < 2;
+    }
+
+    /** Retrieves a password from the system's password manager using the 'pass' command. */
+    public static String getPassword(String entry) {
+        try {
+            Process process = new ProcessBuilder("pass", entry)
+                .redirectError(ProcessBuilder.Redirect.INHERIT)
+                .start();
+
+            String password;
+            try (var reader = new BufferedReader(new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
+                password = reader.readLine();
+            }
+
+            int exitCode = process.waitFor();
+            if (exitCode != 0) {
+                throw new IOException("pass failed with exit code: " + exitCode);
+            }
+
+            if (password == null || password.isEmpty()) {
+                throw new IOException("No password returned for: " + entry);
+            }
+
+            return password;
+        }
+        catch (IOException | InterruptedException e) {
+            throw new ApplicationException(e);
+        }
     }
 
     private NullSafe() {}
