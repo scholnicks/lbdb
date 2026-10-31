@@ -67,7 +67,7 @@ public final class NullSafe {
     /** Retrieves a password from the system's password manager using the 'pass' command. */
     public static String getPassword(String entry) {
         try {
-            Process process = new ProcessBuilder("pass", entry)
+            Process process = new ProcessBuilder("/opt/homebrew/bin/pass", entry)
                 .redirectError(ProcessBuilder.Redirect.INHERIT)
                 .start();
 
