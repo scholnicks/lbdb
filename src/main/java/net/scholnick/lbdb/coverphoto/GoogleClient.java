@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import net.scholnick.lbdb.util.NullSafe;
 import org.slf4j.*;
-import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.*;
 
@@ -23,11 +23,13 @@ public class GoogleClient implements CoverProvider {
 
     private final RestTemplate restTemplate;
     private final PhotoDownloader downloader;
+    private final String apiKey;
 
     @Autowired
     public GoogleClient(RestTemplate restTemplate, PhotoDownloader downloader) {
         this.restTemplate = restTemplate;
         this.downloader   = downloader;
+        this.apiKey       = NullSafe.getPassword("google-books-api-token");
     }
 
     @Override
@@ -55,8 +57,6 @@ public class GoogleClient implements CoverProvider {
 
     /** Build the URL to search for the book */
     private String buildURL(CoverInquiry inquiry) {
-        String apiKey = NullSafe.getPassword("google-books-api-token");
-
         if (inquiry.isbn() == null) {
             // https://www.googleapis.com/books/v1/volumes?q=isbn:9780670451937&maxResults=1
             return BOOK_SEARCH.formatted(URLEncoder.encode(inquiry.title(),StandardCharsets.UTF_8),apiKey);

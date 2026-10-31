@@ -16,11 +16,13 @@ import java.util.*;
 public class HardcoverClient implements CoverProvider {
     private final RestClient      restClient;
     private final PhotoDownloader downloader;
+    private final String          apiKey;
 
     @Autowired
     public HardcoverClient(RestClient restClient, PhotoDownloader downloader) {
         this.restClient = restClient;
         this.downloader = downloader;
+        this.apiKey     = NullSafe.getPassword("hardcover.token");
     }
 
     @Override
@@ -32,12 +34,12 @@ public class HardcoverClient implements CoverProvider {
         // 978-1668057551
 
         String json = restClient.post()
-                .uri("https://api.hardcover.app/v1/graphql")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + System.getenv("HARDCOVER_TOKEN"))
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(Map.of("query", QUERY, "variables", Map.of("isbn", inquiry.isbn())))
-                .retrieve()
-                .body(String.class);
+            .uri("https://api.hardcover.app/v1/graphql")
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + apiKey)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(Map.of("query", QUERY, "variables", Map.of("isbn", inquiry.isbn())))
+            .retrieve()
+            .body(String.class);
 
         if (NullSafe.isEmpty(json)) return null;
 
