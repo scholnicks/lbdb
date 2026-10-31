@@ -40,7 +40,7 @@ public class GoogleClient implements CoverProvider {
 
         try {
             String url = buildURL(inquiry);
-            log.info("Downloading book information from {}", url);
+//            log.info("Downloading book information from {}", url);
             BookResults results = restTemplate.getForObject(url,BookResults.class);
             if (results != null) {
                 String imageUrl = findImage(results,inquiry);

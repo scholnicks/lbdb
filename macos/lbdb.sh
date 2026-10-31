@@ -2,6 +2,7 @@
 # vi: set syntax=sh ts=4 sw=4 sts=4 et ff=unix ai si :
 
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-25.jdk/Contents/Home
+export PATH=/opt/homebrew/bin:/opt/homebrew/opt/curl/bin:/usr/bin:/bin:/usr/sbin:/sbin
 
 cd `dirname $0`/../Resources
 java -Dapple.laf.useScreenMenuBar=true -Xdock:name="Laurel's Book Database" -Xdock:icon=book_case.icns \
