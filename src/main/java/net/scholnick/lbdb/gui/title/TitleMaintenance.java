@@ -200,9 +200,9 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
         }
 
         loadCoverImage();
+        setBook(b);
         bookService.save(b);
         sendMessage(b.getTitle() + " has been saved.");
-        setBook(b);
     }
 
     private void loadCoverImage() {
@@ -219,6 +219,7 @@ public final class TitleMaintenance extends AbstractUpdateMaintenance {
                     Image image = new ImageIcon(coverPhoto).getImage().getScaledInstance(WIDTH, HEIGHT, Image.SCALE_SMOOTH);        // TODO: make this a utility method
                     getImageLabel().setIcon(new ImageIcon(image));
                     reload();
+                    bookService.save(getBook());
                 });
             }
         });
