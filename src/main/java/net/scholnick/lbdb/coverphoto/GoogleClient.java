@@ -1,6 +1,6 @@
 package net.scholnick.lbdb.coverphoto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
 import net.scholnick.lbdb.util.NullSafe;
 import org.slf4j.*;
@@ -10,6 +10,7 @@ import org.springframework.web.client.*;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 /**
  * GoogleClient - Service to get cover photos from Google Books API
@@ -92,4 +93,10 @@ public class GoogleClient implements CoverProvider {
             }
         }
     }
+
+    /** BookResults record to hold results from Google Books API */
+    public record BookResults(List<BookData> items) {
+        public record BookData(VolumeInfo volumeInfo) {}
+    }
 }
+

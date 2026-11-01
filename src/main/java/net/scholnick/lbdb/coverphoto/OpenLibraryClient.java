@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
  */
 @Component
 public class OpenLibraryClient implements CoverProvider {
-    private final RestTemplate restTemplate;
+    private final RestTemplate    restTemplate;
     private final PhotoDownloader downloader;
 
     private static final String URL = "https://openlibrary.org/api/books?format=json&jscmd=data&bibkeys=ISBN:%s";
